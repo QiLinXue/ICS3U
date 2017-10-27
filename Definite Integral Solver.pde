@@ -11,6 +11,7 @@ int calculate = 0;
 int mode = 0; // 0=Home, 1=Free Draw, 2=Equation
 String functionMode = ""; //'TYPE' 'PLOT'
 float scaler = 20;
+float zoom = 20;
 
 //Input
 String operation = "";
@@ -105,12 +106,20 @@ void keyPressed(){
     if(key == 'r'){
       operation = "";
       scaler = 20;
+      zoom = 20;
     }
     if(key == BACKSPACE && mode == 2 && operation.length() > 0 && calculate == 0){
         operation = operation.substring(0, operation.length()-1);
     }
     if(key == DELETE && mode == 2){
-      operation = "";}}
+      operation = "";}
+    if(key == 'c'){
+      storedvershift = 0;
+      storedhorshift = 0;
+      horshift = 0;
+      vershift = 0;
+    }
+  }
   if(key == 'r' || key == 'h' || key == 'd'){
     background(230, 255, 255);
     sum = 0;
@@ -129,6 +138,11 @@ void keyPressed(){
     intercept = 0;
     calculate = 0;
     functionMode = "TYPE";
+    horshift = 0;
+    vershift = 0;
+    scaler = 20;
+    zoom = 20;
+
 
   }
   if(key == 'h'){
@@ -155,10 +169,12 @@ void keyPressed(){
     calculate = 1;
   }
   }
+
 void mouseWheel(MouseEvent event) {
 
-    if(functionMode == "PLOT" && scaler + event.getAmount()/5 > 0){
-      scaler = scaler + event.getAmount()/5;
+    if(functionMode == "PLOT" && scaler + event.getAmount()/10 > 0){
+      scaler = scaler + event.getAmount()/10;
+      zoom = zoom - event.getAmount()/5;
     }}
 
 //Work Begins for Free Hand Drawing
@@ -202,13 +218,16 @@ void graphingCalculator(){
     background(230, 255, 255);
 
     //Grid Lines
+    strokeWeight(1);
+    gridLines();
+    strokeWeight(3);
     line(0,height/2+vershift,width,height/2+vershift);
     line(width/2+horshift,0,width/2+horshift,height);
 
     //Draw the Actual Function
+
     for(float i=0+horshift;i<width+horshift;i = i + 0.2){
       line(width+horshift-i,height/2+vershift-calculateFormula(operation,height/2-i),width+horshift-(i+1),height/2+vershift-calculateFormula(operation,height/2-(i+1)));
-      //line(width/2-i,height/2-calculateFormula(operation,i),width/2-(i+1),height/2-calculateFormula(operation,(i+1)));
     } //25x^2+2x+500
   }}
 
@@ -248,7 +267,9 @@ void getVariables(String operation){
     else if(operation.charAt(i) == 'x' && i != operation.length()-1 && operation.charAt(i+1) == '^' && operation.charAt(i+2) == '2'){
         //This happens when there is an ^3 term
         try{
-          if(operation.charAt(i-1) == '+'){
+          if(operation.charAt(0) == 'x'){
+            co2 = 1;
+          } else if(operation.charAt(i-1) == '+'){
             co2 = 1;
           } else if(operation.charAt(i-1) == '-'){
             co2 = -1;
@@ -265,7 +286,7 @@ void getVariables(String operation){
 
         //This happens when there is no ^3 term
         catch(StringIndexOutOfBoundsException e){
-          co2 = Integer.valueOf(operation.substring(0,i));
+          co2 = float(operation.substring(0,i));
         }
     }
 
@@ -290,15 +311,20 @@ void getVariables(String operation){
       }
 
       //Happens when there is no '^2' or '^3' term
-      else if(co2 == 0 && co3 == 0){
+      if(operation.charAt(0) == 'x'){
+        co1 = 1;
+      } else if(co2 == 0 && co3 == 0){
         co1 = Integer.valueOf(operation.substring(0,i));
       }
+
     }
 
     else if(i == operation.length()-1){
       //Figures out the 'd' variable
       try{
-        if(operation.charAt(i-1) == '+' || operation.charAt(i-1) == '-'){
+        if(co3 == 0 && co2 == 0 && co1 == 0){
+          intercept = Integer.valueOf(operation.substring(0,operation.length()));
+        } else if(operation.charAt(i-1) == '+' || operation.charAt(i-1) == '-'){
           intercept = Integer.valueOf(operation.substring(i-1,operation.length()));
         }else if(operation.charAt(i-2) == '+' || operation.charAt(i-2) == '-'){
           intercept = Integer.valueOf(operation.substring(i-2,operation.length()));
@@ -325,3 +351,27 @@ void getVariables(String operation){
   intercept = ((height/2)*intercept)/scaler;
   co2 = (co2*scaler)/(height/2);
   co3 = co3*(pow(scaler,2)/pow(height/2,2));}
+
+//Grid Lines
+//      line(width+horshift-i,height/2+vershift-calculateFormula(operation,height/2-i),width+horshift-(i+1),height/2+vershift-calculateFormula(operation,height/2-(i+1)));
+
+void gridLines(){
+  fill(0);
+  if(zoom>40){
+    zoom = 15;
+  } else if(zoom<15){
+    zoom = 40;
+  }
+  for(float i = width/2; i<width-horshift; i = i+zoom*6){
+    line(i+horshift,height,i+horshift,0);
+  }
+  for(float i = width/2; i>0-horshift; i = i-zoom*6){
+    line(i+horshift,height,i+horshift,0);
+  }
+  for(float i = height/2; i<height-vershift; i = i+zoom*6){
+    line(width,i+vershift,0,i+vershift);
+  }
+  for(float i = height/2; i>0-vershift; i = i-zoom*6){
+    line(width,i+vershift,0,i+vershift);
+  }
+}
