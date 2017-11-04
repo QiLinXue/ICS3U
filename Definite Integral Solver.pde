@@ -1,6 +1,7 @@
 //General Arrays and Variables
 IntList mousepositionx, mousepositiony, xpositiondifference, ypositiondifference;
 float sum, placeholdersum, placeholderperimeter, perimeter, horshift, vershift, curmouseX, curmouseY, storedhorshift, storedvershift;
+int equationmode1CHANGE, equationmode2CHANGE, equationmode2CHANGE, currentInput;
 
 //Booleans
 int mouseDragged = 0;
@@ -18,7 +19,6 @@ String operation1 = "";
 String operation2 = "";
 String operation3 = "";
 String operation4 = "";
-
 
 //General Setups
 void settings() {
@@ -39,12 +39,7 @@ void draw() {
 
 //General Keys For Both Modes
 
-int equationmode1CHANGE;
-int equationmode2CHANGE;
-int equationmode3CHANGE;
-
-int currentInput;;
-
+//User Input
 void mousePressed(){
   if(startdrag == 1){
     curmouseX = mouseX;
@@ -65,8 +60,7 @@ void mousePressed(){
   }
   if(mode == 2 && mouseX>120 && mouseX<960 && mouseY>280 && mouseY<380){
     currentInput = 2;
-  }
-}
+  }}
 void mouseDragged(){
   mouseDragged = 1;
   if(mode == 2){
@@ -130,13 +124,13 @@ void keyPressed(){
     if(calculate == 0 && calcmode1 == 1 && currentInput == 1 && (key == '.' || key == '1' || key == '2' || key == '3' || key == '4' || key == '5' || key == '6' || key == '7' || key == '8' || key == '9' || key == '0' || key == '+' || key == '-' || key == '*' || key == '/' || key == 'x' || key == '(' || key == ')' || key == '^')){
         operation1 = operation1 + key;
     }
-    if(calculate == 0 && calcmode1 == 2 && currentInput == 1 && (key == '.' || key == '1' || key == '2' || key == '3' || key == '4' || key == '5' || key == '6' || key == '7' || key == '8' || key == '9' || key == '0' || key == 'x' || key == '(' || key == ')' || key == 'c' || key == 'o' || key =='s' || key == 't' || key == 'a' || key == 'n' || key == 'i')){
+    if(calculate == 0 && calcmode1 == 2 && currentInput == 1 && (key == '.' || key == '1' || key == '2' || key == '3' || key == '4' || key == '5' || key == '6' || key == '7' || key == '8' || key == '9' || key == '0' || key == 'x' || key == '(' || key == ')' || key == 'c' || key == 'o' || key =='s' || key == 't' || key == 'a' || key == 'n' || key == 'i' || key == 'e')){
         operation1 = operation1 + key;
     }
     if(calculate == 0 && calcmode2 == 1 && currentInput == 2 && (key == '.' || key == '1' || key == '2' || key == '3' || key == '4' || key == '5' || key == '6' || key == '7' || key == '8' || key == '9' || key == '0' || key == '+' || key == '-' || key == '*' || key == '/' || key == 'x' || key == '(' || key == ')' || key == '^')){
         operation2 = operation2 + key;
     }
-    if(calculate == 0 && calcmode2 == 2 && currentInput == 2 && (key == '.' || key == '1' || key == '2' || key == '3' || key == '4' || key == '5' || key == '6' || key == '7' || key == '8' || key == '9' || key == '0' || key == 'x' || key == '(' || key == ')' || key == 'c' || key == 'o' || key =='s' || key == 't' || key == 'a' || key == 'n' || key == 'i')){
+    if(calculate == 0 && calcmode2 == 2 && currentInput == 2 && (key == '.' || key == '1' || key == '2' || key == '3' || key == '4' || key == '5' || key == '6' || key == '7' || key == '8' || key == '9' || key == '0' || key == 'x' || key == '(' || key == ')' || key == 'c' || key == 'o' || key =='s' || key == 't' || key == 'a' || key == 'n' || key == 'i' || key == 'e')){
         operation2 = operation2 + key;
     }
     if(key == 'r'){
@@ -221,7 +215,6 @@ void keyPressed(){
     calculate = 1;
   }
   }
-
 void mouseWheel(MouseEvent event) {
 
     if(functionMode == "PLOT" && scaler + event.getAmount()/10 > 0){
@@ -250,7 +243,13 @@ void freehanddraw(){
   mousepositionx.append(mouseX);
   mousepositiony.append(mouseY);}}
 
+//
+//
+//
 //Work begins for Graphing Calculator
+//
+//
+//
 
 //Variables specific to function calculator
 float co3 = 0;
@@ -264,6 +263,7 @@ int typeTrig = 0;
 float trigxco = 0;
 float trigyco = 0;
 
+//Type of function 
 int calcmode;
 int calcmode1 = 1;
 int calcmode2 = 1;
@@ -315,9 +315,7 @@ void graphingCalculator(){
     for(float i=0+horshift;i<width+horshift;i = i + 0.2){
       calcmode = calcmode2;
       line(width+horshift-i,height/2+vershift-calculateFormula(operation2,height/2-i),width+horshift-(i+1),height/2+vershift-calculateFormula(operation2,height/2-(i+1)));
-    }
-
-  }}
+    }}}
 
 //Preparation
 void PrepareDrawing(){
@@ -349,15 +347,9 @@ void PrepareDrawing(){
   fill(0);
   textSize(50);
   text(operation1,140,150);
-  text(operation2,140,350);
-
-
-
-
-}
+  text(operation2,140,350);}
 
 //Calculations
-
 float calculateFormula(String anything, Float xco){
 
     //polynomial
@@ -389,13 +381,18 @@ float calculateFormula(String anything, Float xco){
         case 6:
           result = trigyco * atan(trigxco * xco);
           break;
+        case 7:
+          result = trigyco * 1/sin(trigxco * xco);
+          break;
+        case 8:
+          result = trigyco * 1/cos(trigxco * xco);
+          break;
+        case 9:
+          result = trigyco * 1/tan(trigxco * xco);
+          break;
       }
     }
-    return result;
-
-
-}
-
+    return result;}
 
 //3cos(4x);
 void getTrigVariables(String operation){
@@ -415,8 +412,7 @@ void getTrigVariables(String operation){
       } else{
         trigyco = Float.valueOf(operation.substring(0,i));
       }
-
-    } else if(operation.charAt(i) == 's' && operation.charAt(i+1) == 'i'){
+    } else if(operation.charAt(i) == 's' && operation.charAt(i+1) == 'i' && operation.charAt(i+2) == 'n'){
         if(i == 0){
           trigyco = 1;
           typeTrig  = 1;
@@ -429,7 +425,7 @@ void getTrigVariables(String operation){
             trigyco = Float.valueOf(operation.substring(0,i));
           }
         }
-    } else if(operation.charAt(i) == 'c' && operation.charAt(i+1) == 'o'){
+    } else if(operation.charAt(i) == 'c' && operation.charAt(i+1) == 'o' && operation.charAt(i+2) == 's'){
       if(i == 0){
         trigyco = 1;
         typeTrig  = 2;
@@ -442,12 +438,11 @@ void getTrigVariables(String operation){
           trigyco = Float.valueOf(operation.substring(0,i));
         }
       }
-    } else if(operation.charAt(i) == 't'){
+    } else if(operation.charAt(i) == 't' && operation.charAt(i+1) == 'a' && operation.charAt(i+2) == 'n'){
       if(i == 0){
         trigyco = 1;
         typeTrig  = 3;
-      }
-      else if(operation.charAt(i-1) != 'a'){
+      } else if(operation.charAt(i-1) != 'a'){
         typeTrig  = 3;
         if(operation.charAt(i-1) == '-'){
           trigyco = -1;
@@ -455,7 +450,43 @@ void getTrigVariables(String operation){
           trigyco = Float.valueOf(operation.substring(0,i));
         }
       }
-    }
+    } else if(operation.charAt(i) == 's' && operation.charAt(i+1) == 'c' && operation.charAt(i+2) == 's'){
+      if(i == 0){
+        trigyco = 1;
+        typeTrig  = 7;
+      } else if(operation.charAt(i-1) != 'a'){
+        typeTrig  = 7;
+        if(operation.charAt(i-1) == '-'){
+          trigyco = -1;
+        } else{
+          trigyco = Float.valueOf(operation.substring(0,i));
+        }
+      }
+    } else if(operation.charAt(i) == 's' && operation.charAt(i+1) == 'e' && operation.charAt(i+2) == 'c'){
+      if(i == 0){
+        trigyco = 1;
+        typeTrig  = 8;
+      } else if(operation.charAt(i-1) != 'a'){
+        typeTrig  = 8;
+        if(operation.charAt(i-1) == '-'){
+          trigyco = -1;
+        } else{
+          trigyco = Float.valueOf(operation.substring(0,i));
+        }
+      }
+    } else if(operation.charAt(i) == 'c' && operation.charAt(i+1) == 'o' && operation.charAt(i+2) == 't'){
+      if(i == 0){
+        trigyco = 1;
+        typeTrig  = 9;
+      } else if(operation.charAt(i-1) != 'a'){
+        typeTrig  = 9;
+        if(operation.charAt(i-1) == '-'){
+          trigyco = -1;
+        } else{
+          trigyco = Float.valueOf(operation.substring(0,i));
+        }
+      }
+    } 
 
     //figures out the coefficient for x
     else if(operation.charAt(i) == 'x'){
@@ -472,11 +503,11 @@ void getTrigVariables(String operation){
       }
     }
   }
+  
   trigyco = trigyco * ((height/2)/scaler);
-  trigxco = trigxco * (scaler/(height/2));
+  trigxco = trigxco * (scaler/(height/2));}
 
-}
-
+//2x^3-3x^2-4x+5
 void getPolyVariables(String operation){
   // Gets all the values
   //Form ax^3+bx^2+cx+d
@@ -583,6 +614,7 @@ void getPolyVariables(String operation){
   co2 = (co2*scaler)/(height/2);
   co3 = co3*(pow(scaler,2)/pow(height/2,2));}
 
+//Creates the grid lines
 void gridLines(){
   fill(0);
   if(zoom>40){
@@ -601,5 +633,4 @@ void gridLines(){
   }
   for(float i = height/2; i>0-vershift; i = i-zoom*6){
     line(width,i+vershift,0,i+vershift);
-  }
-}
+  }}
