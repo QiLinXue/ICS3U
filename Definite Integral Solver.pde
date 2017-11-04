@@ -1,7 +1,7 @@
 //General Arrays and Variables
 IntList mousepositionx, mousepositiony, xpositiondifference, ypositiondifference;
 float sum, placeholdersum, placeholderperimeter, perimeter, horshift, vershift, curmouseX, curmouseY, storedhorshift, storedvershift;
-int equationmode1CHANGE, equationmode2CHANGE, equationmode2CHANGE, currentInput;
+int equationmode1CHANGE, equationmode2CHANGE, equationmode3CHANGE, currentInput;
 
 //Booleans
 int mouseDragged = 0;
@@ -54,12 +54,19 @@ void mousePressed(){
     equationmode2CHANGE++;
     operation2 = "";
   }
+  if(mode == 2 && mouseX>20 && mouseX<120 && mouseY>450 && mouseY<550){
+    equationmode3CHANGE++;
+    operation3 = "";
+  }
 
   if(mode == 2 && mouseX>120 && mouseX<960 && mouseY>80 && mouseY<180){
     currentInput = 1;
   }
   if(mode == 2 && mouseX>120 && mouseX<960 && mouseY>280 && mouseY<380){
     currentInput = 2;
+  }
+  if(mode == 2 && mouseX>120 && mouseX<960 && mouseY>480 && mouseY<580){
+    currentInput = 3;
   }}
 void mouseDragged(){
   mouseDragged = 1;
@@ -133,6 +140,12 @@ void keyPressed(){
     if(calculate == 0 && calcmode2 == 2 && currentInput == 2 && (key == '.' || key == '1' || key == '2' || key == '3' || key == '4' || key == '5' || key == '6' || key == '7' || key == '8' || key == '9' || key == '0' || key == 'x' || key == '(' || key == ')' || key == 'c' || key == 'o' || key =='s' || key == 't' || key == 'a' || key == 'n' || key == 'i' || key == 'e')){
         operation2 = operation2 + key;
     }
+    if(calculate == 0 && calcmode3 == 1 && currentInput == 3 && (key == '.' || key == '1' || key == '2' || key == '3' || key == '4' || key == '5' || key == '6' || key == '7' || key == '8' || key == '9' || key == '0' || key == '+' || key == '-' || key == '*' || key == '/' || key == 'x' || key == '(' || key == ')' || key == '^')){
+        operation3 = operation3 + key;
+    }
+    if(calculate == 0 && calcmode3 == 2 && currentInput == 3 && (key == '.' || key == '1' || key == '2' || key == '3' || key == '4' || key == '5' || key == '6' || key == '7' || key == '8' || key == '9' || key == '0' || key == 'x' || key == '(' || key == ')' || key == 'c' || key == 'o' || key =='s' || key == 't' || key == 'a' || key == 'n' || key == 'i' || key == 'e')){
+        operation3 = operation3 + key;
+    }
     if(key == 'r'){
       operation1 = "";
       operation2 = "";
@@ -146,6 +159,8 @@ void keyPressed(){
         operation1 = operation1.substring(0, operation1.length()-1);
       } else if(currentInput == 2 && operation2.length() > 0){
         operation2 = operation2.substring(0, operation2.length()-1);
+      } else if(currentInput == 3 && operation3.length() > 0){
+        operation3 = operation3.substring(0, operation3.length()-1);
       }
     }
     if(key == DELETE && mode == 2){
@@ -153,6 +168,8 @@ void keyPressed(){
         operation1 = "";
       } else if(currentInput == 2){
         operation2 = "";
+      } else if(currentInput == 3){
+        operation3 = "";
       }
     }
     if(key == 'c'){
@@ -189,7 +206,6 @@ void keyPressed(){
     trigxco = 0;
     trigyco = 0;
     typeTrig = 0;
-
   }
   if(key == 'h'){
     mode = 0;}
@@ -263,12 +279,11 @@ int typeTrig = 0;
 float trigxco = 0;
 float trigyco = 0;
 
-//Type of function 
+//Type of function
 int calcmode;
 int calcmode1 = 1;
 int calcmode2 = 1;
 int calcmode3 = 1;
-
 
 //Overaching Code
 void graphingCalculator(){
@@ -282,6 +297,11 @@ void graphingCalculator(){
   } else{
     calcmode2 = 1;
   }
+  if(equationmode3CHANGE % 2 == 1){
+    calcmode3 = 2;
+  } else{
+    calcmode3 = 1;
+  }
   if(functionMode == "TYPE"){
     PrepareDrawing();
   }
@@ -294,7 +314,8 @@ void graphingCalculator(){
     line(0,height/2+vershift,width,height/2+vershift);
     line(width/2+horshift,0,width/2+horshift,height);
 
-    //Draw the Actual Function
+    //Draws f(x)
+    stroke(0);
     if(calcmode1 == 1){
         getPolyVariables(operation1);
     }
@@ -306,6 +327,8 @@ void graphingCalculator(){
       line(width+horshift-i,height/2+vershift-calculateFormula(operation1,height/2-i),width+horshift-(i+1),height/2+vershift-calculateFormula(operation1,height/2-(i+1)));
     }
 
+    //Draws g(x)
+    stroke(0,0,255);
     if(calcmode2 == 1){
         getPolyVariables(operation2);
     }
@@ -315,7 +338,23 @@ void graphingCalculator(){
     for(float i=0+horshift;i<width+horshift;i = i + 0.2){
       calcmode = calcmode2;
       line(width+horshift-i,height/2+vershift-calculateFormula(operation2,height/2-i),width+horshift-(i+1),height/2+vershift-calculateFormula(operation2,height/2-(i+1)));
-    }}}
+    }
+
+    //Draws h(x)
+    stroke(220,20,60);
+    if(calcmode3 == 1){
+        getPolyVariables(operation3);
+    }
+    if(calcmode3 == 2){
+        getTrigVariables(operation3);
+    }
+    for(float i=0+horshift;i<width+horshift;i = i + 0.2){
+      calcmode = calcmode3;
+      line(width+horshift-i,height/2+vershift-calculateFormula(operation3,height/2-i),width+horshift-(i+1),height/2+vershift-calculateFormula(operation3,height/2-(i+1)));
+    }
+    stroke(0);
+
+    }}
 
 //Preparation
 void PrepareDrawing(){
@@ -324,11 +363,17 @@ void PrepareDrawing(){
   fill(255);
   rect(120,80,840,100);
   rect(120,280,840,100);
+  rect(120,480,840,100);
+
 
   fill(0);
   rect(20,80,100,100);
+
+  fill(0,0,255);
   rect(20,280,100,100);
 
+  fill(220,20,60);
+  rect(20,480,100,100);
 
   strokeWeight(1);
   fill(255);
@@ -343,11 +388,17 @@ void PrepareDrawing(){
   } else{
     text("P0LY",24,350);
   }
+  if(equationmode3CHANGE % 2 == 1){
+    text("TRIG",24,550);
+  } else{
+    text("P0LY",24,550);
+  }
 
   fill(0);
   textSize(50);
   text(operation1,140,150);
-  text(operation2,140,350);}
+  text(operation2,140,350);
+  text(operation3,140,550);}
 
 //Calculations
 float calculateFormula(String anything, Float xco){
@@ -486,7 +537,7 @@ void getTrigVariables(String operation){
           trigyco = Float.valueOf(operation.substring(0,i));
         }
       }
-    } 
+    }
 
     //figures out the coefficient for x
     else if(operation.charAt(i) == 'x'){
@@ -503,12 +554,17 @@ void getTrigVariables(String operation){
       }
     }
   }
-  
+
   trigyco = trigyco * ((height/2)/scaler);
   trigxco = trigxco * (scaler/(height/2));}
 
 //2x^3-3x^2-4x+5
 void getPolyVariables(String operation){
+  co3 = 0;
+  co2 = 0;
+  co1 = 0;
+  intercept = 0;
+
   // Gets all the values
   //Form ax^3+bx^2+cx+d
 
