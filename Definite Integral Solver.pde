@@ -22,9 +22,9 @@ String operation4 = "";
 
 //General Setups
 void settings() {
-  size(1000, 1000);}
+  size(600, 600);}
 void setup() {
-  frameRate(120);
+  frameRate(80);
   mousepositionx = new IntList();
   mousepositiony = new IntList();
   xpositiondifference = new IntList();
@@ -32,9 +32,12 @@ void setup() {
   background(230, 255, 255);
   fill(0);}
 void draw() {
+
   switch(mode){
+    case 3: DonaldTrumpWillHelpTheWorld();
     case 2: graphingCalculator(); break;
     case 1: freehanddraw(); break;
+    case 0: homescreen(); break;
   }}
 
 //General Keys For Both Modes
@@ -46,28 +49,40 @@ void mousePressed(){
     curmouseY = mouseY;
     startdrag = 0;
   }
-  if(mode == 2 && mouseX>20 && mouseX<120 && mouseY>50 && mouseY<150){
+  if(mode == 2 && mouseX>20 && mouseX<width/8.33333333 && mouseY>width/20 && mouseY<width/6.66666667){
     equationmode1CHANGE++;
     operation1 = "";
   }
-  if(mode == 2 && mouseX>20 && mouseX<120 && mouseY>250 && mouseY<350){
+  if(mode == 2 && mouseX>20 && mouseX<width/8.33333333 && mouseY>width/4 && mouseY<width/2.85714286){
     equationmode2CHANGE++;
     operation2 = "";
   }
-  if(mode == 2 && mouseX>20 && mouseX<120 && mouseY>450 && mouseY<550){
+  if(mode == 2 && mouseX>20 && mouseX<width/8.33333333 && mouseY>width/2.22222222 && mouseY<width/1.81818182){
     equationmode3CHANGE++;
     operation3 = "";
   }
 
-  if(mode == 2 && mouseX>120 && mouseX<960 && mouseY>80 && mouseY<180){
+  if(mode == 2 && mouseX>width/8.33333333 && mouseX<width/1.04166667 && mouseY>width/12.5 && mouseY<width/5.55555556){
     currentInput = 1;
   }
-  if(mode == 2 && mouseX>120 && mouseX<960 && mouseY>280 && mouseY<380){
+  if(mode == 2 && mouseX>width/8.33333333 && mouseX<width/1.04166667 && mouseY>width/3.57142857 && mouseY<width/2.63157895){
     currentInput = 2;
   }
-  if(mode == 2 && mouseX>120 && mouseX<960 && mouseY>480 && mouseY<580){
+  if(mode == 2 && mouseX>width/8.33333333 && mouseX<width/1.04166667 && mouseY>width/2.08333333 && mouseY<width/1.72413793){
     currentInput = 3;
-  }}
+  }
+  if(mode == 0 && mouseX>width/3.33333333 && mouseX<width/1.42857143 && mouseY>width/5 && mouseY<width/3.33333333){
+    mode = 2;
+    functionMode = "TYPE";
+    background(230, 255, 255);
+  }
+  if(mode == 0 && mouseX>width/3.33333333 && mouseX<width/1.42857143 && mouseY>width/2.5 && mouseY<width/2){
+    resetDrawBoard();
+  }
+  if(mode == 0 && mouseX>width/3.33333333 && mouseX<width/1.42857143 && mouseY>width/1.66666667 && mouseY<width/1.42857143){
+    mode = 3;
+  }
+}
 void mouseDragged(){
   mouseDragged = 1;
   if(mode == 2){
@@ -101,10 +116,11 @@ void mouseReleased(){
         fill(255, 230, mousepositiony.get(j)/(height/250));
       }
       rect(mousepositionx.get(j),mousepositiony.get(j),xpositiondifference.get(j),ypositiondifference.get(j));
-      fill(0);}
-    sum = (sum/100)+placeholdersum;
+      fill(0);
+    }
+    sum = (sum/pow((width/100),2))+placeholdersum;
     placeholdersum = sum;
-    perimeter = (perimeter/10) + placeholderperimeter;
+    perimeter = (perimeter/(width/100)) + placeholderperimeter;
     placeholderperimeter = perimeter;
     xpositiondifference.clear();
     ypositiondifference.clear();
@@ -112,13 +128,13 @@ void mouseReleased(){
     mousepositiony.clear();
     sum = 0;
     perimeter = 0;
-    textSize(20);
+    textSize(width/50);
     fill(255);
     strokeWeight(0);
-    rect(0,0,300,150);
+    rect(0,0,width*3/10,width*3/20);
     fill(0);
-    text("Area Under Curve: "+placeholdersum,5,50);
-    text("Length of Curve: " + placeholderperimeter,5,75);
+    text("Area Under Curve: "+placeholdersum,width/200,height/20);
+    text("Length of Curve: " + placeholderperimeter,width/200,height*3/40);
   }}
 void keyPressed(){
   //When a key is pressed
@@ -210,15 +226,7 @@ void keyPressed(){
   if(key == 'h'){
     mode = 0;}
   if(key == 'd' || (key == 'r' && mode == 1)){
-    mode = 1;
-    background(230, 255, 255);
-    textSize(20);
-    fill(255);
-    strokeWeight(0);
-    rect(0,0,300,150);
-    fill(0);
-    text("Area Under Curve: "+placeholdersum,5,50);
-    text("Length of Curve: " + placeholderperimeter,5,75);
+    resetDrawBoard();
   }
   if(key == 'f'){
     mode = 2;
@@ -238,18 +246,44 @@ void mouseWheel(MouseEvent event) {
       zoom = zoom - event.getAmount()/5;
     }}
 
+PImage homeImage = loadImage("https://wallpapercave.com/wp/qQnruxx.jpg");
+//Work Begins For homescreen
+void homescreen(){
+  imageMode(CENTER);
+  image(homeImage,width/2,height/2);
+
+  noStroke();
+  fill(235, 137, 33);
+  rect(width/3.33333333,width/5,width/2.5,width/10);
+  rect(width/3.33333333,width/2.5,width/2.5,width/10);
+  rect(width/3.33333333,width/1.66666667,width/2.5,width/10);
+
+  fill(0);
+  textSize(width/20);
+  text("Enter Function",width/3.05810398,width/3.66300366);
+  text("Draw Function",width/2.98507463,width/2.1141649);
+  text("Help",width/2.25769231,width/1.49253731);
+  stroke(0);}
+
+//Work Begins for settings
+void DonaldTrumpWillHelpTheWorld(){
+  background(230, 255, 255);
+  textSize(width/10);
+  text("Keyboard Shortcuts",width/50,height/10);
+}
+
 //Work Begins for Free Hand Drawing
 void freehanddraw(){
   line(0,height/2,width,height/2);
   line(width/2,0,width/2,height);
-  textSize(20);
-  text("10",width/2+87,height/2-10);
-  text("-10",width/2-120,height/2-10);
-  text("10",width/2+10,height/2-95);
-  text("-10",width/2+10,height/2+105);
-  for(int z=0;z<width;z=z+100){
-    ellipse(width/2,z,10,10);
-    ellipse(z,height/2,10,10);
+  textSize(width/50);
+  text("10",width/2+width/11.4942529,height/2-height/100);
+  text("-10",width/2-width/8.33333333,height/2-width/100);
+  text("10",width/2+width/100,height/2-height/10.5263158);
+  text("-10",width/2+width/100,height/2+height/9.52380952);
+  for(int z=0;z<width;z=z+width/10){
+    ellipse(width/2,z,width/100,width/100);
+    ellipse(z,height/2,width/100,width/100);
   }
 
     //Line Drawing Portion
@@ -258,7 +292,17 @@ void freehanddraw(){
   ellipse(mouseX,mouseY,5,5);
   mousepositionx.append(mouseX);
   mousepositiony.append(mouseY);}}
-
+void resetDrawBoard(){
+  mode = 1;
+  background(230, 255, 255);
+  textSize(width/50);
+  fill(255);
+  strokeWeight(0);
+  rect(0,0,width*3/10,width*3/20);
+  fill(0);
+  text("Area Under Curve: "+placeholdersum,width/200,height/20);
+  text("Length of Curve: " + placeholderperimeter,width/200,height*3/40);
+}
 //
 //
 //
@@ -285,7 +329,7 @@ int calcmode1 = 1;
 int calcmode2 = 1;
 int calcmode3 = 1;
 
-//Overaching Code
+//Overarching Code
 void graphingCalculator(){
   if(equationmode1CHANGE % 2 == 1){
     calcmode1 = 2;
@@ -315,90 +359,100 @@ void graphingCalculator(){
     line(width/2+horshift,0,width/2+horshift,height);
 
     //Draws f(x)
-    stroke(0);
     if(calcmode1 == 1){
         getPolyVariables(operation1);
     }
     if(calcmode1 == 2){
         getTrigVariables(operation1);
     }
-    for(float i=0+horshift;i<width+horshift;i = i + 0.2){
+    if(operation1 != ""){
+      stroke(0);
       calcmode = calcmode1;
-      line(width+horshift-i,height/2+vershift-calculateFormula(operation1,height/2-i),width+horshift-(i+1),height/2+vershift-calculateFormula(operation1,height/2-(i+1)));
+      drawTheLine(operation1);
     }
 
     //Draws g(x)
-    stroke(0,0,255);
     if(calcmode2 == 1){
         getPolyVariables(operation2);
     }
     if(calcmode2 == 2){
         getTrigVariables(operation2);
     }
-    for(float i=0+horshift;i<width+horshift;i = i + 0.2){
+    if(operation2 != ""){
+      stroke(0,0,255);
       calcmode = calcmode2;
-      line(width+horshift-i,height/2+vershift-calculateFormula(operation2,height/2-i),width+horshift-(i+1),height/2+vershift-calculateFormula(operation2,height/2-(i+1)));
+      drawTheLine(operation2);
+      }
     }
 
+
     //Draws h(x)
-    stroke(220,20,60);
     if(calcmode3 == 1){
         getPolyVariables(operation3);
     }
     if(calcmode3 == 2){
         getTrigVariables(operation3);
     }
-    for(float i=0+horshift;i<width+horshift;i = i + 0.2){
+    if(operation3 != ""){
+      stroke(220,20,60);
       calcmode = calcmode3;
-      line(width+horshift-i,height/2+vershift-calculateFormula(operation3,height/2-i),width+horshift-(i+1),height/2+vershift-calculateFormula(operation3,height/2-(i+1)));
+      drawTheLine(operation3);
     }
     stroke(0);
 
-    }}
+    }
+
+void drawTheLine(String operation){
+  for(float i=0+horshift;i<width+horshift;i = i + 0.2){
+    if(abs((height/2+vershift-calculateFormula(operation,height/2-i))-(height/2+vershift-calculateFormula(operation,height/2-(i+1)))) < width/1.25 || (height/2+vershift-calculateFormula(operation,height/2-i) > 0 && height/2+vershift-calculateFormula(operation,height/2-(i+1)) > 0)){
+      line(width+horshift-i,height/2+vershift-calculateFormula(operation,height/2-i),width+horshift-(i+1),height/2+vershift-calculateFormula(operation,height/2-(i+1)));
+    }
+  }
+}
 
 //Preparation
 void PrepareDrawing(){
   background(230, 255, 255);
   strokeWeight(5);
   fill(255);
-  rect(120,80,840,100);
-  rect(120,280,840,100);
-  rect(120,480,840,100);
+  rect(width/8.33333333,width/12.5,width/1.19047619,width/10);
+  rect(width/8.33333333,width/3.57142857,width/1.19047619,width/10);
+  rect(width/8.33333333,width/2.08333333,width/1.19047619,width/10);
 
 
   fill(0);
-  rect(20,80,100,100);
+  rect(width/50,width/12.5,width/10,width/10);
 
   fill(0,0,255);
-  rect(20,280,100,100);
+  rect(width/50,width/3.57142857,width/10,width/10);
 
   fill(220,20,60);
-  rect(20,480,100,100);
+  rect(width/50,width/2.08333333,width/10,width/10);
 
   strokeWeight(1);
   fill(255);
-  textSize(40);
+  textSize(width/25);
   if(equationmode1CHANGE % 2 == 1){
-    text("TRIG",24,150);
+    text("TRIG",width/41.6666667,width/6.66666667);
   } else{
-    text("P0LY",24,150);
+    text("P0LY",width/41.6666667,width/6.66666667);
   }
   if(equationmode2CHANGE % 2 == 1){
-    text("TRIG",24,350);
+    text("TRIG",width/41.6666667,width/2.85714286);
   } else{
-    text("P0LY",24,350);
+    text("P0LY",width/41.6666667,width/2.85714286);
   }
   if(equationmode3CHANGE % 2 == 1){
-    text("TRIG",24,550);
+    text("TRIG",width/41.6666667,width/1.81818182);
   } else{
-    text("P0LY",24,550);
+    text("P0LY",width/41.6666667,width/1.81818182);
   }
 
   fill(0);
-  textSize(50);
-  text(operation1,140,150);
-  text(operation2,140,350);
-  text(operation3,140,550);}
+  textSize(width/20);
+  text(operation1,width/7.14285714,width/6.66666667);
+  text(operation2,width/7.14285714,width/2.85714286);
+  text(operation3,width/7.14285714,width/1.81818182);}
 
 //Calculations
 float calculateFormula(String anything, Float xco){
