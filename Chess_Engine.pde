@@ -11,6 +11,18 @@ float[][] allPieces = {
 
 };
 
+/*float[][] allPieces = {
+
+  //White Pieces
+  {0,1,1,2,1},{0,1,2,2,1},{0,1,3,2,1},{0,1,4,2,1},{0,1,5,2,1},{0,1,6,2,1},{0,1,7,2,1},{0,1,8,2,1},
+  {0,1,1,1,5},{0,1,2,1,3},{1,1,4,4,3},{0,1,4,1,9},{0,1,5,1,0},{0,1,6,1,3},{0,1,7,1,3},{0,1,8,1,5},
+
+  //Black Pieces
+  {0,-1,1,8,5},{0,-1,2,8,3},{0,-1,3,8,3},{0,-1,4,8,9},{0,-1,5,8,0},{0,-1,6,8,3},{0,-1,7,8,3},{0,-1,8,8,5},
+  {0,-1,1,7,1},{0,-1,2,7,1},{0,-1,3,7,1},{0,-1,4,7,1},{0,-1,5,7,1},{0,-1,6,7,1},{0,-1,7,7,1},{0,-1,8,7,1},
+
+};*/
+
 int[] pieceSelected = {0,0}; //Placeholder numbers
 int startxco, startyco, endxco, endyco; //Coordinates of the start and finish when moving a piece
 int selectedPieceNumber; //The number coresponding to each piece (0-31)
@@ -95,17 +107,30 @@ void place(int pieceNumber){
   }}
 
 //Actual Moving Around
+
+int[] square(){
+  int[] currentsquare = {(floor(mouseX/(width/8))+1),8 - (floor(mouseY/(height/8)))};
+  return currentsquare;
+}
+
 void mousePressed(){
+  if(mouseButton == RIGHT && currentStance == 1){
+    currentStance = 0;
+  }
+  else{
   if(turnNumber == 1){ //White to Move
-    if(currentStance == 0 && exists((floor(mouseX/(width/8))+1),8 - (floor(mouseY/(height/8))))[0] == 1 && exists((floor(mouseX/(width/8))+1),8 - (floor(mouseY/(height/8))))[1] < 16){
-      startxco = (floor(mouseX/(width/8))+1);
-      startyco = 8 - (floor(mouseY/(height/8)));
+    if(currentStance == 0 && exists(square()[0],square()[1])[0] == 1 && exists(square()[0],square()[1])[1] < 16){
+      startxco = square()[0];
+      startyco = square()[1];
       selectedPieceNumber = exists(startxco,startyco)[1];
       currentStance = 1;
     }
-    if(moveLegal() == 1 && currentStance == 1 && (exists((floor(mouseX/(width/8))+1),8 - (floor(mouseY/(height/8))))[0] == 0 || (exists((floor(mouseX/(width/8))+1),8 - (floor(mouseY/(height/8))))[0] == 1 && exists((floor(mouseX/(width/8))+1),8 - (floor(mouseY/(height/8))))[1] >= 16))){
-        endxco = (floor(mouseX/(width/8))+1);
-        endyco = 8 - (floor(mouseY/(height/8)));
+
+
+
+    if(realmoveLegal(startxco,startyco,square()[0],square()[1]) == 1 && currentStance == 1 && (exists(square()[0],square()[1])[0] == 0 || (exists(square()[0],square()[1])[0] == 1 && exists(square()[0],square()[1])[1] >= 16))){
+        endxco = square()[0];
+        endyco = square()[1];
         if(exists(endxco,endyco)[1] >= 16 && exists(endxco,endyco)[0] == 1){
           allPieces[exists(endxco,endyco)[1]][0] = 0;
         }
@@ -115,15 +140,15 @@ void mousePressed(){
         turnNumber = 2;
     }
   } else if(turnNumber == 2){ //Black to move
-    if(currentStance == 0 && exists((floor(mouseX/(width/8))+1),8 - (floor(mouseY/(height/8))))[0] == 1 && exists((floor(mouseX/(width/8))+1),8 - (floor(mouseY/(height/8))))[1] >= 16){
-      startxco = (floor(mouseX/(width/8))+1);
-      startyco = 8 - (floor(mouseY/(height/8)));
+    if(currentStance == 0 && exists(square()[0],square()[1])[0] == 1 && exists(square()[0],square()[1])[1] >= 16){
+      startxco = square()[0];
+      startyco = square()[1];
       selectedPieceNumber = exists(startxco,startyco)[1];
       currentStance = 1;
     }
-    if(moveLegal() == 1 && currentStance == 1 && (exists((floor(mouseX/(width/8))+1),8 - (floor(mouseY/(height/8))))[0] == 0 || (exists((floor(mouseX/(width/8))+1),8 - (floor(mouseY/(height/8))))[0] == 1 && exists((floor(mouseX/(width/8))+1),8 - (floor(mouseY/(height/8))))[1] < 16))){
-        endxco = (floor(mouseX/(width/8))+1);
-        endyco = 8 - (floor(mouseY/(height/8)));
+    if(moveLegal() == 1 && currentStance == 1 && (exists(square()[0],square()[1])[0] == 0 || (exists(square()[0],square()[1])[0] == 1 && exists(square()[0],square()[1])[1] < 16))){
+        endxco = square()[0];
+        endyco = square()[1];
         if(exists(endxco,endyco)[1] < 16 && exists(endxco,endyco)[0] == 1 ){
           allPieces[exists(endxco,endyco)[1]][0] = 0;
           //println(exists(endxco,endyco));
@@ -134,13 +159,13 @@ void mousePressed(){
         turnNumber = 1;
     }
 
-  }}
+  }}}
 
 //For the input coordinate, it will output whether that piece is occupied, and if so, what piece number it has (0-31)
 int[] exists(int x, int y){
   pieceSelected[0] = 0;
   pieceSelected[1] = 0;
-  if(x < 0 || x > 8 || y < 0 || y > 8){
+  if(x <= 0 || x > 8 || y <= 0 || y > 8){
     pieceSelected[0] = -1;
   } else{
     for(int i = 0; i<32; i++){
@@ -157,6 +182,15 @@ int[] exists(int x, int y){
 int moveLegal(){
   return 1;}
 
+void keyPressed(){
+  for(int i = 0; i<possibleMoves().length; i++){
+    println(possibleMoves()[i][0],possibleMoves()[i][1],possibleMoves()[i][2],possibleMoves()[i][3]);
+  }
+  println(possibleMoves().length);
+
+
+}
+
 //Executes a move given its 2 coordinates
 void execute(int startx, int starty, int endx, int endy){
   if(turnNumber == 1){ //White to move
@@ -165,6 +199,9 @@ void execute(int startx, int starty, int endx, int endy){
       allPieces[selectedPieceNumber][2] = endx;
       allPieces[selectedPieceNumber][3] = endy;
       turnNumber = 2;
+      if(exists(endx,endy)[1] >= 16){
+        allPieces[exists(endx,endy)[1]][0] = 0;
+      }
     }
   } else if(turnNumber == 2){ //Black to move
       selectedPieceNumber = exists(startx,starty)[1];
@@ -172,15 +209,21 @@ void execute(int startx, int starty, int endx, int endy){
         allPieces[selectedPieceNumber][2] = endx;
         allPieces[selectedPieceNumber][3] = endy;
         turnNumber = 1;
+        if(exists(endx,endy)[1] < 16){
+          allPieces[exists(endx,endy)[1]][0] = 0;
+        }
       }
     }}
 
 //Uses the current coordinates from allPieces to generate a 2d array with all the neccessary coordinates to be executed
+
 int[][] possibleMoves(){
-  int[] nothing = {0,0,0,0};
+  int[] bob = {4,5,6,7};
+  int[] nothing = {};
   int[][] moves = {};
-  for(int i=0;i<16;i++){ //All possible pieces for white
-    int[] onemove = {0,0,0,0};
+  if(turnNumber == 1){
+    for(int i=0;i<16;i++){ //All possible pieces for white
+    int[] onemove = {};
     if(allPieces[i][0] == 1){
 
       //If piece is a pawn
@@ -188,44 +231,660 @@ int[][] possibleMoves(){
 
         //Check if it can move up by 1
         if(exists(int(allPieces[i][2]),int((allPieces[i][3] + 1)))[0] == 0){
-          onemove[0] = int(allPieces[i][2]);
-          onemove[1] = int(allPieces[i][3]);
-          onemove[2] = int(allPieces[i][2]);
-          onemove[3] = int(allPieces[i][3] + 1);
+          onemove = append(onemove, int(allPieces[i][2]));
+          onemove = append(onemove, int(allPieces[i][3]));
+          onemove = append(onemove, int(allPieces[i][2]));
+          onemove = append(onemove, int(allPieces[i][3] + 1));
           moves = (int[][])append(moves,onemove);
           onemove = nothing;
         }
 
         //Check if it can move up by 2
        if(allPieces[i][3] == 2 && exists(int(allPieces[i][2]),int((allPieces[i][3] + 1)))[0] == 0 && exists(int(allPieces[i][2]),int((allPieces[i][3] + 2)))[0] == 0){
-          onemove[0] = int(allPieces[i][2]);
-          onemove[1] = int(allPieces[i][3]);
-          onemove[2] = int(allPieces[i][2]);
-          onemove[3] = int(allPieces[i][3] + 2);
+         onemove = append(onemove, int(allPieces[i][2]));
+         onemove = append(onemove, int(allPieces[i][3]));
+         onemove = append(onemove, int(allPieces[i][2]));
+         onemove = append(onemove, int(allPieces[i][3] + 2));
+
           moves = (int[][])append(moves,onemove);
           onemove = nothing;
         }
 
         //Check if it can capture to the right
         if(exists(int(allPieces[i][2] + 1),int((allPieces[i][3] + 1)))[0] == 1 && exists(int(allPieces[i][2] + 1),int((allPieces[i][3] + 1)))[1] >= 16){
-           onemove[0] = int(allPieces[i][2]);
-           onemove[1] = int(allPieces[i][3]);
-           onemove[2] = int(allPieces[i][2] + 1);
-           onemove[3] = int(allPieces[i][3] + 1);
-           moves = (int[][])append(moves,onemove);
-           onemove = nothing;
+          onemove = append(onemove, int(allPieces[i][2]));
+          onemove = append(onemove, int(allPieces[i][3]));
+          onemove = append(onemove, int(allPieces[i][2] + 1));
+          onemove = append(onemove, int(allPieces[i][3] + 1));
+          moves = (int[][])append(moves,onemove);
+          onemove = nothing;
          }
 
-         //Check if it can capture to the right
+         //Check if it can capture to the left
          if(exists(int(allPieces[i][2] - 1),int((allPieces[i][3] + 1)))[0] == 1 && exists(int(allPieces[i][2] - 1),int((allPieces[i][3] + 1)))[1] >= 16){
-            onemove[0] = int(allPieces[i][2]);
-            onemove[1] = int(allPieces[i][3]);
-            onemove[2] = int(allPieces[i][2] - 1);
-            onemove[3] = int(allPieces[i][3] + 1);
+          onemove = append(onemove, int(allPieces[i][2]));
+          onemove = append(onemove, int(allPieces[i][3]));
+          onemove = append(onemove, int(allPieces[i][2] - 1));
+          onemove = append(onemove, int(allPieces[i][3] + 1));
+          moves = (int[][])append(moves,onemove);
+          onemove = nothing;
+         }
+      }
+
+
+      //If piece is a rook
+      else if(i == 8 || i == 15){
+         //Checks if it can move up;
+         for(int j = 1; j<=8; j++){
+           if(
+             exists(int(allPieces[i][2]),int(allPieces[i][3] + j))[0] == 0
+             || ((exists(int(allPieces[i][2]),int(allPieces[i][3] + j))[0] == 1)
+                && (exists(int(allPieces[i][2]),int(allPieces[i][3] + j))[1] >= 16))
+             )
+             {
+               onemove = append(onemove, int(allPieces[i][2]));
+               onemove = append(onemove, int(allPieces[i][3]));
+               onemove = append(onemove, int(allPieces[i][2]));
+               onemove = append(onemove, int(allPieces[i][3] + j));
+               moves = (int[][])append(moves,onemove);
+               onemove = nothing;
+           } else{
+                j = 10;
+                onemove = nothing;
+           }
+         }
+
+         //Checks if it can move down;
+         for(int j = -1; j>=-8; j--){
+           if(
+             exists(int(allPieces[i][2]),int(allPieces[i][3] + j))[0] == 0
+             || ((exists(int(allPieces[i][2]),int(allPieces[i][3] + j))[0] == 1)
+                && (exists(int(allPieces[i][2]),int(allPieces[i][3] + j))[1] >= 16))
+             )
+             {
+               onemove = append(onemove, int(allPieces[i][2]));
+               onemove = append(onemove, int(allPieces[i][3]));
+               onemove = append(onemove, int(allPieces[i][2]));
+               onemove = append(onemove, int(allPieces[i][3] + j));
+               moves = (int[][])append(moves,onemove);
+               onemove = nothing;
+           } else{
+                j = -10;
+                onemove = nothing;
+           }
+         }
+
+         //Checks if it can move right;
+         for(int j = 1; j<=8; j++){
+           if(
+             exists(int(allPieces[i][2] + j),int(allPieces[i][3] + 0))[0] == 0
+             || ((exists(int(allPieces[i][2] + j),int(allPieces[i][3] + 0))[0] == 1)
+                && (exists(int(allPieces[i][2] + j),int(allPieces[i][3] + 0))[1] >= 16))
+             )
+             {
+               onemove = append(onemove, int(allPieces[i][2]));
+               onemove = append(onemove, int(allPieces[i][3]));
+               onemove = append(onemove, int(allPieces[i][2] + j));
+               onemove = append(onemove, int(allPieces[i][3]));
+               moves = (int[][])append(moves,onemove);
+               onemove = nothing;
+           } else{
+                j = 10;
+                onemove = nothing;
+           }
+         }
+
+         //Checks if it can move left;
+         for(int j = -1; j>=-8; j--){
+           if(
+             exists(int(allPieces[i][2] + j),int(allPieces[i][3] + 0))[0] == 0
+             || ((exists(int(allPieces[i][2] + j),int(allPieces[i][3] + 0))[0] == 1)
+                && (exists(int(allPieces[i][2] + j),int(allPieces[i][3] + 0))[1] >= 16))
+             )
+             {
+               onemove = append(onemove, int(allPieces[i][2]));
+               onemove = append(onemove, int(allPieces[i][3]));
+               onemove = append(onemove, int(allPieces[i][2] + j));
+               onemove = append(onemove, int(allPieces[i][3]));
+               moves = (int[][])append(moves,onemove);
+               onemove = nothing;
+           } else{
+                j = -10;
+                onemove = nothing;
+           }
+         }
+
+      }
+
+      //If piece is knight
+      else if(i == 9 || i == 14){
+
+        //If piece can move 1 up 2 right
+        if(
+          exists(int(allPieces[i][2] + 2),int(allPieces[i][3] + 1))[0] == 0
+          || ((exists(int(allPieces[i][2] + 2),int(allPieces[i][3] + 1))[0] == 1)
+             && (exists(int(allPieces[i][2] + 2),int(allPieces[i][3] + 1))[1] >= 16))
+          )
+          {
+          onemove = append(onemove, int(allPieces[i][2]));
+          onemove = append(onemove, int(allPieces[i][3]));
+          onemove = append(onemove, int(allPieces[i][2] + 2));
+          onemove = append(onemove, int(allPieces[i][3] + 1));
+          moves = (int[][])append(moves,onemove);
+          onemove = nothing;
+        }
+
+        //If piece can move 1 up 2 left
+        if(
+          exists(int(allPieces[i][2] - 2),int(allPieces[i][3] + 1))[0] == 0
+          || ((exists(int(allPieces[i][2] - 2),int(allPieces[i][3] + 1))[0] == 1)
+             && (exists(int(allPieces[i][2] - 2),int(allPieces[i][3] + 1))[1] >= 16))
+          )
+          {
+          onemove = append(onemove, int(allPieces[i][2]));
+          onemove = append(onemove, int(allPieces[i][3]));
+          onemove = append(onemove, int(allPieces[i][2] - 2));
+          onemove = append(onemove, int(allPieces[i][3] + 1));
+          moves = (int[][])append(moves,onemove);
+          onemove = nothing;
+        }
+
+        //If piece can move 1 up 2 right
+        if(
+          exists(int(allPieces[i][2] + 2),int(allPieces[i][3] + 1))[0] == 0
+          || ((exists(int(allPieces[i][2] + 2),int(allPieces[i][3] + 1))[0] == 1)
+             && (exists(int(allPieces[i][2] + 2),int(allPieces[i][3] + 1))[1] >= 16))
+          )
+          {
+          onemove = append(onemove, int(allPieces[i][2]));
+          onemove = append(onemove, int(allPieces[i][3]));
+          onemove = append(onemove, int(allPieces[i][2] + 2));
+          onemove = append(onemove, int(allPieces[i][3] + 1));
+          moves = (int[][])append(moves,onemove);
+          onemove = nothing;
+        }
+
+
+        //If piece can move 1 down 2 left
+        if(
+          exists(int(allPieces[i][2] - 2),int(allPieces[i][3] - 1))[0] == 0
+          || ((exists(int(allPieces[i][2] - 2),int(allPieces[i][3] - 1))[0] == 1)
+             && (exists(int(allPieces[i][2] - 2),int(allPieces[i][3] - 1))[1] >= 16))
+          )
+          {
+          onemove = append(onemove, int(allPieces[i][2]));
+          onemove = append(onemove, int(allPieces[i][3]));
+          onemove = append(onemove, int(allPieces[i][2] - 2));
+          onemove = append(onemove, int(allPieces[i][3] - 1));
+          moves = (int[][])append(moves,onemove);
+          onemove = nothing;
+        }
+
+        //If piece can move 2 up 1 right
+        if(
+          exists(int(allPieces[i][2] + 1),int(allPieces[i][3] + 2))[0] == 0
+          || ((exists(int(allPieces[i][2] + 1),int(allPieces[i][3] + 2))[0] == 1)
+             && (exists(int(allPieces[i][2] + 1),int(allPieces[i][3] + 2))[1] >= 16))
+          )
+          {
+          onemove = append(onemove, int(allPieces[i][2]));
+          onemove = append(onemove, int(allPieces[i][3]));
+          onemove = append(onemove, int(allPieces[i][2] + 1));
+          onemove = append(onemove, int(allPieces[i][3] + 2));
+          moves = (int[][])append(moves,onemove);
+          onemove = nothing;
+        }
+
+        //If piece can move 2 up 1 left
+        if(
+          exists(int(allPieces[i][2] - 1),int(allPieces[i][3] + 2))[0] == 0
+          || ((exists(int(allPieces[i][2] - 1),int(allPieces[i][3] + 2))[0] == 1)
+             && (exists(int(allPieces[i][2] - 1),int(allPieces[i][3] + 2))[1] >= 16))
+          )
+          {
+          onemove = append(onemove, int(allPieces[i][2]));
+          onemove = append(onemove, int(allPieces[i][3]));
+          onemove = append(onemove, int(allPieces[i][2] - 1));
+          onemove = append(onemove, int(allPieces[i][3] + 2));
+          moves = (int[][])append(moves,onemove);
+          onemove = nothing;
+        }
+
+        //If piece can move 2 down 1 right
+        if(
+          exists(int(allPieces[i][2] + 1),int(allPieces[i][3] - 2))[0] == 0
+          || ((exists(int(allPieces[i][2] + 1),int(allPieces[i][3] - 2))[0] == 1)
+             && (exists(int(allPieces[i][2] + 1),int(allPieces[i][3] - 2))[1] >= 16))
+          )
+          {
+          onemove = append(onemove, int(allPieces[i][2]));
+          onemove = append(onemove, int(allPieces[i][3]));
+          onemove = append(onemove, int(allPieces[i][2] + 1));
+          onemove = append(onemove, int(allPieces[i][3] - 2));
+          moves = (int[][])append(moves,onemove);
+          onemove = nothing;
+        }
+
+        //If piece can move 2 down 1 left
+        if(
+          exists(int(allPieces[i][2] - 1),int(allPieces[i][3] - 2))[0] == 0
+          || ((exists(int(allPieces[i][2] - 1),int(allPieces[i][3] - 2))[0] == 1)
+             && (exists(int(allPieces[i][2] - 1),int(allPieces[i][3] - 2))[1] >= 16))
+          )
+          {
+          onemove = append(onemove, int(allPieces[i][2]));
+          onemove = append(onemove, int(allPieces[i][3]));
+          onemove = append(onemove, int(allPieces[i][2] - 1));
+          onemove = append(onemove, int(allPieces[i][3] - 2));
+          moves = (int[][])append(moves,onemove);
+          onemove = nothing;
+        }
+
+      }
+
+      //If piece is bishop
+      else if(i == 10 || i == 13){
+
+        //If piece can move diagonally from top left to bottom right
+        for(int j = 1; j<=8; j++){
+          if(
+            exists(int(allPieces[i][2] + j),int(allPieces[i][3] - j))[0] == 0
+            || ((exists(int(allPieces[i][2] + j),int(allPieces[i][3] - j))[0] == 1)
+               && (exists(int(allPieces[i][2] + j),int(allPieces[i][3] - j))[1] >= 16))
+            )
+            {
+            onemove = append(onemove, int(allPieces[i][2]));
+            onemove = append(onemove, int(allPieces[i][3]));
+            onemove = append(onemove, int(allPieces[i][2] + j));
+            onemove = append(onemove, int(allPieces[i][3] - j));
+            moves = (int[][])append(moves,onemove);
+            onemove = nothing;
+
+          } else{
+              j = 10;
+              onemove = nothing;
+          }
+        }
+
+        //If piece can move diagonally from bottom right to top left
+        for(int j = -1; j>=-8; j--){
+          if(
+            exists(int(allPieces[i][2] + j),int(allPieces[i][3] - j))[0] == 0
+            || ((exists(int(allPieces[i][2] + j),int(allPieces[i][3] - j))[0] == 1)
+               && (exists(int(allPieces[i][2] + j),int(allPieces[i][3] - j))[1] >= 16))
+            )
+            {
+            onemove = append(onemove, int(allPieces[i][2]));
+            onemove = append(onemove, int(allPieces[i][3]));
+            onemove = append(onemove, int(allPieces[i][2] + j));
+            onemove = append(onemove, int(allPieces[i][3] - j));
+            moves = (int[][])append(moves,onemove);
+            onemove = nothing;
+          } else{
+              j = -10;
+              onemove = nothing;
+          }
+        }
+
+        //If piece can move diagonally from bottom left to top right
+        for(int j = 1; j<=8; j++){
+          if(
+            exists(int(allPieces[i][2] + j),int(allPieces[i][3] + j))[0] == 0
+            || ((exists(int(allPieces[i][2] + j),int(allPieces[i][3] + j))[0] == 1)
+               && (exists(int(allPieces[i][2] + j),int(allPieces[i][3] + j))[1] >= 16))
+            )
+            {
+            onemove = append(onemove, int(allPieces[i][2]));
+            onemove = append(onemove, int(allPieces[i][3]));
+            onemove = append(onemove, int(allPieces[i][2] + j));
+            onemove = append(onemove, int(allPieces[i][3] + j));
+            moves = (int[][])append(moves,onemove);
+            onemove = nothing;
+          } else{
+              j = 10;
+              onemove = nothing;
+          }
+        }
+
+        //If piece can move diagonally from top right to bottom left
+        for(int j = -1; j>=-8; j--){
+          if(
+            exists(int(allPieces[i][2] + j),int(allPieces[i][3] + j))[0] == 0
+            || ((exists(int(allPieces[i][2] + j),int(allPieces[i][3] + j))[0] == 1)
+               && (exists(int(allPieces[i][2] + j),int(allPieces[i][3] + j))[1] >= 16))
+            )
+            {
+            onemove = append(onemove, int(allPieces[i][2]));
+            onemove = append(onemove, int(allPieces[i][3]));
+            onemove = append(onemove, int(allPieces[i][2] + j));
+            onemove = append(onemove, int(allPieces[i][3] + j));
+            moves = (int[][])append(moves,onemove);
+            onemove = nothing;
+          } else{
+              j = -10;
+              onemove = nothing;
+          }
+        }
+
+      }
+
+      //If piece is queen
+      else if(i == 11){
+        //Checks if it can move up;
+        for(int j = 1; j<=8; j++){
+          if(
+            exists(int(allPieces[i][2]),int(allPieces[i][3] + j))[0] == 0
+            || ((exists(int(allPieces[i][2]),int(allPieces[i][3] + j))[0] == 1)
+               && (exists(int(allPieces[i][2]),int(allPieces[i][3] + j))[1] >= 16))
+            )
+            {
+              onemove = append(onemove, int(allPieces[i][2]));
+              onemove = append(onemove, int(allPieces[i][3]));
+              onemove = append(onemove, int(allPieces[i][2]));
+              onemove = append(onemove, int(allPieces[i][3] + j));
+              moves = (int[][])append(moves,onemove);
+              onemove = nothing;
+          } else{
+               j = 10;
+               onemove = nothing;
+          }
+        }
+
+        //Checks if it can move down;
+        for(int j = -1; j>=-8; j--){
+          if(
+            exists(int(allPieces[i][2]),int(allPieces[i][3] + j))[0] == 0
+            || ((exists(int(allPieces[i][2]),int(allPieces[i][3] + j))[0] == 1)
+               && (exists(int(allPieces[i][2]),int(allPieces[i][3] + j))[1] >= 16))
+            )
+            {
+              onemove = append(onemove, int(allPieces[i][2]));
+              onemove = append(onemove, int(allPieces[i][3]));
+              onemove = append(onemove, int(allPieces[i][2]));
+              onemove = append(onemove, int(allPieces[i][3] + j));
+              moves = (int[][])append(moves,onemove);
+              onemove = nothing;
+          } else{
+               j = -10;
+               onemove = nothing;
+          }
+        }
+
+        //Checks if it can move right;
+        for(int j = 1; j<=8; j++){
+          if(
+            exists(int(allPieces[i][2] + j),int(allPieces[i][3] + 0))[0] == 0
+            || ((exists(int(allPieces[i][2] + j),int(allPieces[i][3] + 0))[0] == 1)
+               && (exists(int(allPieces[i][2] + j),int(allPieces[i][3] + 0))[1] >= 16))
+            )
+            {
+              onemove = append(onemove, int(allPieces[i][2]));
+              onemove = append(onemove, int(allPieces[i][3]));
+              onemove = append(onemove, int(allPieces[i][2] + j));
+              onemove = append(onemove, int(allPieces[i][3]));
+              moves = (int[][])append(moves,onemove);
+              onemove = nothing;
+          } else{
+               j = 10;
+               onemove = nothing;
+          }
+        }
+
+        //Checks if it can move left;
+        for(int j = -1; j>=-8; j--){
+          if(
+            exists(int(allPieces[i][2] + j),int(allPieces[i][3] + 0))[0] == 0
+            || ((exists(int(allPieces[i][2] + j),int(allPieces[i][3] + 0))[0] == 1)
+               && (exists(int(allPieces[i][2] + j),int(allPieces[i][3] + 0))[1] >= 16))
+            )
+            {
+              onemove = append(onemove, int(allPieces[i][2]));
+              onemove = append(onemove, int(allPieces[i][3]));
+              onemove = append(onemove, int(allPieces[i][2] + j));
+              onemove = append(onemove, int(allPieces[i][3]));
+              moves = (int[][])append(moves,onemove);
+              onemove = nothing;
+          } else{
+               j = -10;
+               onemove = nothing;
+          }
+        }
+
+        //If piece can move diagonally from top left to bottom right
+        for(int j = 1; j<=8; j++){
+          if(
+            exists(int(allPieces[i][2] + j),int(allPieces[i][3] - j))[0] == 0
+            || ((exists(int(allPieces[i][2] + j),int(allPieces[i][3] - j))[0] == 1)
+               && (exists(int(allPieces[i][2] + j),int(allPieces[i][3] - j))[1] >= 16))
+            )
+            {
+            onemove = append(onemove, int(allPieces[i][2]));
+            onemove = append(onemove, int(allPieces[i][3]));
+            onemove = append(onemove, int(allPieces[i][2] + j));
+            onemove = append(onemove, int(allPieces[i][3] - j));
+            moves = (int[][])append(moves,onemove);
+            onemove = nothing;
+
+          } else{
+              j = 10;
+              onemove = nothing;
+          }
+        }
+
+        //If piece can move diagonally from bottom right to top left
+        for(int j = -1; j>=-8; j--){
+          if(
+            exists(int(allPieces[i][2] + j),int(allPieces[i][3] - j))[0] == 0
+            || ((exists(int(allPieces[i][2] + j),int(allPieces[i][3] - j))[0] == 1)
+               && (exists(int(allPieces[i][2] + j),int(allPieces[i][3] - j))[1] >= 16))
+            )
+            {
+            onemove = append(onemove, int(allPieces[i][2]));
+            onemove = append(onemove, int(allPieces[i][3]));
+            onemove = append(onemove, int(allPieces[i][2] + j));
+            onemove = append(onemove, int(allPieces[i][3] - j));
+            moves = (int[][])append(moves,onemove);
+            onemove = nothing;
+          } else{
+              j = -10;
+              onemove = nothing;
+          }
+        }
+
+        //If piece can move diagonally from bottom left to top right
+        for(int j = 1; j<=8; j++){
+          if(
+            exists(int(allPieces[i][2] + j),int(allPieces[i][3] + j))[0] == 0
+            || ((exists(int(allPieces[i][2] + j),int(allPieces[i][3] + j))[0] == 1)
+               && (exists(int(allPieces[i][2] + j),int(allPieces[i][3] + j))[1] >= 16))
+            )
+            {
+            onemove = append(onemove, int(allPieces[i][2]));
+            onemove = append(onemove, int(allPieces[i][3]));
+            onemove = append(onemove, int(allPieces[i][2] + j));
+            onemove = append(onemove, int(allPieces[i][3] + j));
+            moves = (int[][])append(moves,onemove);
+            onemove = nothing;
+          } else{
+              j = 10;
+              onemove = nothing;
+          }
+        }
+
+        //If piece can move diagonally from top right to bottom left
+        for(int j = -1; j>=-8; j--){
+          if(
+            exists(int(allPieces[i][2] + j),int(allPieces[i][3] + j))[0] == 0
+            || ((exists(int(allPieces[i][2] + j),int(allPieces[i][3] + j))[0] == 1)
+               && (exists(int(allPieces[i][2] + j),int(allPieces[i][3] + j))[1] >= 16))
+            )
+            {
+            onemove = append(onemove, int(allPieces[i][2]));
+            onemove = append(onemove, int(allPieces[i][3]));
+            onemove = append(onemove, int(allPieces[i][2] + j));
+            onemove = append(onemove, int(allPieces[i][3] + j));
+            moves = (int[][])append(moves,onemove);
+            onemove = nothing;
+          } else{
+              j = -10;
+              onemove = nothing;
+          }
+        }
+
+      }
+
+      //If piece is King
+      else if(i == 12){
+        //Checks if it can move up;
+          if(
+            exists(int(allPieces[i][2]),int(allPieces[i][3] + 1))[0] == 0
+            || ((exists(int(allPieces[i][2]),int(allPieces[i][3] + 1))[0] == 1)
+               && (exists(int(allPieces[i][2]),int(allPieces[i][3] + 1))[1] >= 16))
+            )
+            {
+              onemove = append(onemove, int(allPieces[i][2]));
+              onemove = append(onemove, int(allPieces[i][3]));
+              onemove = append(onemove, int(allPieces[i][2]));
+              onemove = append(onemove, int(allPieces[i][3] + 1));
+              moves = (int[][])append(moves,onemove);
+              onemove = nothing;
+          }
+
+        //Checks if it can move down;
+          if(
+            exists(int(allPieces[i][2]),int(allPieces[i][3] - 1))[0] == 0
+            || ((exists(int(allPieces[i][2]),int(allPieces[i][3] - 1))[0] == 1)
+               && (exists(int(allPieces[i][2]),int(allPieces[i][3] - 1))[1] >= 16))
+            )
+            {
+              onemove = append(onemove, int(allPieces[i][2]));
+              onemove = append(onemove, int(allPieces[i][3]));
+              onemove = append(onemove, int(allPieces[i][2]));
+              onemove = append(onemove, int(allPieces[i][3] - 1));
+              moves = (int[][])append(moves,onemove);
+              onemove = nothing;
+          }
+
+        //Checks if it can move right;
+          if(
+            exists(int(allPieces[i][2] + 1),int(allPieces[i][3] + 0))[0] == 0
+            || ((exists(int(allPieces[i][2] + 1),int(allPieces[i][3] + 0))[0] == 1)
+               && (exists(int(allPieces[i][2] + 1),int(allPieces[i][3] + 0))[1] >= 16))
+            )
+            {
+              onemove = append(onemove, int(allPieces[i][2]));
+              onemove = append(onemove, int(allPieces[i][3]));
+              onemove = append(onemove, int(allPieces[i][2] + 1));
+              onemove = append(onemove, int(allPieces[i][3]));
+              moves = (int[][])append(moves,onemove);
+              onemove = nothing;
+          }
+
+        //Checks if it can move left;
+          if(
+            exists(int(allPieces[i][2] - 1),int(allPieces[i][3] + 0))[0] == 0
+            || ((exists(int(allPieces[i][2] - 1),int(allPieces[i][3] + 0))[0] == 1)
+               && (exists(int(allPieces[i][2] - 1),int(allPieces[i][3] + 0))[1] >= 16))
+            )
+            {
+              onemove = append(onemove, int(allPieces[i][2]));
+              onemove = append(onemove, int(allPieces[i][3]));
+              onemove = append(onemove, int(allPieces[i][2] - 1));
+              onemove = append(onemove, int(allPieces[i][3]));
+              moves = (int[][])append(moves,onemove);
+              onemove = nothing;
+          }
+
+        //If piece can move diagonally from top left to bottom right
+          if(
+            exists(int(allPieces[i][2] + 1),int(allPieces[i][3] - 1))[0] == 0
+            || ((exists(int(allPieces[i][2] + 1),int(allPieces[i][3] - 1))[0] == 1)
+               && (exists(int(allPieces[i][2] + 1),int(allPieces[i][3] - 1))[1] >= 16))
+            )
+            {
+            onemove = append(onemove, int(allPieces[i][2]));
+            onemove = append(onemove, int(allPieces[i][3]));
+            onemove = append(onemove, int(allPieces[i][2] + 1));
+            onemove = append(onemove, int(allPieces[i][3] - 1));
             moves = (int[][])append(moves,onemove);
             onemove = nothing;
           }
+
+        //If piece can move diagonally from bottom right to top left
+          if(
+            exists(int(allPieces[i][2] - 1),int(allPieces[i][3] + 1))[0] == 0
+            || ((exists(int(allPieces[i][2] - 1),int(allPieces[i][3] + 1))[0] == 1)
+               && (exists(int(allPieces[i][2] - 1),int(allPieces[i][3] + 1))[1] >= 16))
+            )
+            {
+            onemove = append(onemove, int(allPieces[i][2]));
+            onemove = append(onemove, int(allPieces[i][3]));
+            onemove = append(onemove, int(allPieces[i][2] - 1));
+            onemove = append(onemove, int(allPieces[i][3] + 1));
+            moves = (int[][])append(moves,onemove);
+            onemove = nothing;
+          }
+
+        //If piece can move diagonally from bottom left to top right
+          if(
+            exists(int(allPieces[i][2] + 1),int(allPieces[i][3] + 1))[0] == 0
+            || ((exists(int(allPieces[i][2] + 1),int(allPieces[i][3] + 1))[0] == 1)
+               && (exists(int(allPieces[i][2] + 1),int(allPieces[i][3] + 1))[1] >= 16))
+            )
+            {
+            onemove = append(onemove, int(allPieces[i][2]));
+            onemove = append(onemove, int(allPieces[i][3]));
+            onemove = append(onemove, int(allPieces[i][2] + 1));
+            onemove = append(onemove, int(allPieces[i][3] + 1));
+            moves = (int[][])append(moves,onemove);
+            onemove = nothing;
+          }
+
+        //If piece can move diagonally from top right to bottom left
+          if(
+            exists(int(allPieces[i][2] - 1),int(allPieces[i][3] - 1))[0] == 0
+            || ((exists(int(allPieces[i][2] - 1),int(allPieces[i][3] - 1))[0] == 1)
+               && (exists(int(allPieces[i][2] - 1),int(allPieces[i][3] - 1))[1] >= 16))
+            )
+            {
+            onemove = append(onemove, int(allPieces[i][2]));
+            onemove = append(onemove, int(allPieces[i][3]));
+            onemove = append(onemove, int(allPieces[i][2] - 1));
+            onemove = append(onemove, int(allPieces[i][3] - 1));
+            moves = (int[][])append(moves,onemove);
+            onemove = nothing;
+          }
+
       }
     }
+    }
   }
-  return moves;};
+  return moves;
+}
+
+  /*void whiteCanMove(int a, int deltax, int deltay){
+    if(
+      exists(int(allPieces[i][2] + deltax),int(allPieces[i][3] + deltay))[0] == 0
+      || ((exists(int(allPieces[i][2] + deltax),int(allPieces[i][3] + deltay))[0] == 1)
+         && (exists(int(allPieces[i][2] + deltax),int(allPieces[i][3] + deltay))[1] >= 16))
+      )
+      {
+      onemove[0] = int(allPieces[i][2]);
+      onemove[1] = int(allPieces[i][3]);
+      onemove[2] = int(allPieces[i][2] + deltax);
+      onemove[3] = int(allPieces[i][3] + deltay);
+      moves = (int[][])append(moves,onemove);
+      onemove = nothing;
+    }
+  }*/
+
+  int realmoveLegal(int x1, int y1, int x2, int y2){
+    int[] testMove = {x1,y1,x2,y2};
+    int result = 0;
+    for(int i = 0; i<possibleMoves().length; i++){
+      if(testMove[0] == possibleMoves()[i][0] && testMove[1] == possibleMoves()[i][1] && testMove[2] == possibleMoves()[i][2] && testMove[3] == possibleMoves()[i][3]){
+        result = 1;
+      }
+    }
+    return result;
+  }
