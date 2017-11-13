@@ -1,4 +1,5 @@
-float g,h;
+float g, h;
+
 void settings() {
   size(300, 600);
 }
