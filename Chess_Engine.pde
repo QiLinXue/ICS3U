@@ -153,7 +153,6 @@ void mousePressed(){
         endyco = square()[1];
         if(exists(allPieces,endxco,endyco)[1] < 16 && exists(allPieces,endxco,endyco)[0] == 1 ){
           allPieces[exists(allPieces,endxco,endyco)[1]][0] = 0;
-          //println(exists(allPieces,endxco,endyco));
         }
         allPieces[selectedPieceNumber][2] = endxco;
         allPieces[selectedPieceNumber][3] = endyco;
@@ -216,27 +215,16 @@ void copyPieces(){
 }
 
 void keyPressed(){
-  /*
-  copyPieces();
-    println(possibleMoves(theoryPieces)[4][0],possibleMoves(theoryPieces)[4][1],possibleMoves(theoryPieces)[4][2],possibleMoves(theoryPieces)[4][3],evaluate(theoryPieces));
-    execute(possibleMoves(theoryPieces)[4],theoryPieces);
-    println(evaluate(theoryPieces));
-    copyPieces();
-    println(possibleMoves(theoryPieces)[4][0],possibleMoves(theoryPieces)[4][1],possibleMoves(theoryPieces)[4][2],possibleMoves(theoryPieces)[4][3],evaluate(theoryPieces));
-  */
   float highestEvalScore = -9000;
   int[] highestEvalMove = {8,8,1,3};
   if(turnNumber == 1){ //White to move
     copyPieces();
-    //for(int i = 0; i<20; i++){
     int looplength = possibleMoves(theoryPieces).length;
     for(int i = 0; i< looplength; i++){
         copyPieces();
         int[] theMove = possibleMoves(theoryPieces)[i];
 
         execute(theMove,theoryPieces);
-        //println(theoryPieces[1][2],theoryPieces[1][3]);
-        println(i,theMove[0],theMove[1],theMove[2],theMove[3],evaluate(theoryPieces),highestEvalScore);
 
         if(evaluate(theoryPieces) > highestEvalScore){
           highestEvalScore = evaluate(theoryPieces);
@@ -245,10 +233,8 @@ void keyPressed(){
     }
     execute(highestEvalMove,allPieces);
     copyPieces();
-    println(allPieces[19][0],theoryPieces[19][0]);
   }
   if(turnNumber == 2){
-    println("hello!");
     int movetobeexeuted = floor(random(0,possibleMoves(allPieces).length));
     execute(possibleMoves(allPieces)[movetobeexeuted],allPieces);
   }
@@ -296,15 +282,12 @@ void execute(int[] autoMove, float[][] typeBoard){
     }
     typeBoard[selectedPieceNumber][2] = placeholderx;
     typeBoard[selectedPieceNumber][3] = placeholdery;
-    //println(allPieces[0]);
-    //println(theoryPieces[0]);
 
   }
 
 //Uses the current coordinates from allPieces to generate a 2d array with all the neccessary coordinates to be executed
 int[][] possibleMoves(float[][] typeBoard){
-   //println("possibleMoves");
-   //println(turnNumber);
+
   int[] nothing = {};
   int[][] moves = {};
   int[] onemove = {};
@@ -358,7 +341,6 @@ int[][] possibleMoves(float[][] typeBoard){
             onemove = nothing;
            }
         }
-
 
         //If piece is a rook
         else if(i == 8 || i == 15){
