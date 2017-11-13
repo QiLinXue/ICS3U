@@ -3,10 +3,10 @@ float[][] allPieces = {
 
   //White Pieces
   {1,1,1,2,1},{1,1,2,2,1},{1,1,3,2,1},{1,1,4,2,1},{1,1,5,2,1},{1,1,6,2,1},{1,1,7,2,1},{1,1,8,2,1},
-  {1,1,1,1,5},{1,1,2,1,3},{1,1,3,1,3},{1,1,4,1,9},{1,1,5,1,9000},{1,1,6,1,3},{1,1,7,1,3},{1,1,8,1,5},
+  {1,1,1,1,5},{1,1,2,1,3},{1,1,3,1,3},{1,1,4,1,9},{1,1,5,1,5000},{1,1,6,1,3},{1,1,7,1,3},{1,1,8,1,5},
 
   //Black Pieces
-  {1,-1,1,8,5},{1,-1,2,8,3},{1,-1,3,8,3},{1,-1,4,8,9},{1,-1,5,8,9000},{1,-1,6,8,3},{1,-1,7,8,3},{1,-1,8,8,5},
+  {1,-1,1,8,5},{1,-1,2,8,3},{1,-1,3,8,3},{1,-1,4,8,9},{1,-1,5,8,5000},{1,-1,6,8,3},{1,-1,7,8,3},{1,-1,8,8,5},
   {1,-1,1,7,1},{1,-1,2,7,1},{1,-1,3,7,1},{1,-1,4,7,1},{1,-1,5,7,1},{1,-1,6,7,1},{1,-1,7,7,1},{1,-1,8,7,1},
 
 };
@@ -250,9 +250,9 @@ void copyPieces(){
 
 void keyPressed(){
 
-  float highestEvalScore = -9000;
-  int[] highestEvalMove = {8,8,1,3};
   if(turnNumber == 1){ //White to move
+    float highestEvalScore = -9000;
+    int[] highestEvalMove = {8,8,1,3};
     copyPieces();
     int looplength = possibleMoves(theoryPieces).length;
     for(int i = 0; i< looplength; i++){
@@ -273,9 +273,28 @@ void keyPressed(){
     execute(highestEvalMove,allPieces);
     copyPieces();
   }
-  if(turnNumber == 2){
-    int movetobeexeuted = floor(random(0,possibleMoves(allPieces).length));
-    execute(possibleMoves(allPieces)[movetobeexeuted],allPieces);
+  if(turnNumber == 2){ //Black to move
+    float lowestEvalScore = 9000;
+    int[] lowestEvalMove = {8,8,1,3};
+    copyPieces();
+    int looplength = possibleMoves(theoryPieces).length;
+    for(int i = 0; i< looplength; i++){
+        copyPieces();
+        int[] theMove = possibleMoves(theoryPieces)[i];
+
+        execute(theMove,theoryPieces);
+
+        if(evaluate(theoryPieces) < lowestEvalScore){
+          lowestEvalScore = evaluate(theoryPieces);
+          lowestEvalMove = theMove;
+        }
+        else if((evaluate(theoryPieces) == lowestEvalScore) && random(0,3) > 2){
+          lowestEvalScore = evaluate(theoryPieces);
+          lowestEvalMove = theMove;
+        }
+    }
+    execute(lowestEvalMove,allPieces);
+    copyPieces();
   }
   if(turnNumber == 1){
     turnNumber = 2;
@@ -283,7 +302,7 @@ void keyPressed(){
   else if(turnNumber == 2){
     turnNumber = 1;
   }
-  println(evaluate(allPieces));
+  //println(evaluate(allPieces));
 
 }
 
