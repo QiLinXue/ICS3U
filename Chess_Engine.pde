@@ -6,7 +6,7 @@ float[][] allPieces = {
   {1,1,1,1,5},{1,1,2,1,3},{1,1,3,1,3},{1,1,4,1,9},{1,1,5,1,9000},{1,1,6,1,3},{1,1,7,1,3},{1,1,8,1,5},
 
   //Black Pieces
-  {1,-1,1,8,5},{1,-1,2,8,3},{1,-1,3,8,3},{1,-1,3,3,9},{1,-1,5,8,9000},{1,-1,6,8,3},{1,-1,7,8,3},{1,-1,8,8,5},
+  {1,-1,1,8,5},{1,-1,2,8,3},{1,-1,3,8,3},{1,-1,4,8,9},{1,-1,5,8,9000},{1,-1,6,8,3},{1,-1,7,8,3},{1,-1,8,8,5},
   {1,-1,1,7,1},{1,-1,2,7,1},{1,-1,3,7,1},{1,-1,4,7,1},{1,-1,5,7,1},{1,-1,6,7,1},{1,-1,7,7,1},{1,-1,8,7,1},
 
 };
@@ -66,7 +66,41 @@ float evaluate(float[][] typeBoard){
   else{
     for(int i=0; i<32; i++){
         evaluation = evaluation + typeBoard[i][0]*typeBoard[i][1]*typeBoard[i][4];
+        if((i < 8 || i > 23) && (typeBoard[i][2] == 4 || typeBoard[i][2] == 5) && (typeBoard[i][3] == 4 || typeBoard[i][3] == 5)){
+          evaluation = evaluation + typeBoard[i][0]*typeBoard[i][1]*0.25;
+        }
+        //        9/14/17/22
+
+        if((i == 9 || i == 14 || i == 17 || i == 22) && (typeBoard[i][2] == 1 || typeBoard[i][2] == 8)){
+          evaluation = evaluation + typeBoard[i][0]*typeBoard[i][1]*(-0.1);
+        }
+
+        if(
+          i < 8
+         && ((
+            exists(typeBoard, int(typeBoard[i][2] + 1),int(typeBoard[i][3]) - 1)[0] == 1
+            && exists(typeBoard, int(typeBoard[i][2] + 1),int(typeBoard[i][3] - 1))[1] < 8)
+         || (exists(typeBoard, int(typeBoard[i][2] - 1),int(typeBoard[i][3] - 1))[0] == 1
+            && exists(typeBoard, int(typeBoard[i][2] - 1),int(typeBoard[i][3] - 1))[1] < 8))){
+            evaluation = evaluation + typeBoard[i][0]*typeBoard[i][1]*(0.05);
+
+         }
+
+         if(
+           i > 23
+           && ((
+              exists(typeBoard, int(typeBoard[i][2] + 1),int(typeBoard[i][3]) + 1)[0] == 1
+              && exists(typeBoard, int(typeBoard[i][2] + 1),int(typeBoard[i][3] + 1))[1] > 23)
+           || (exists(typeBoard, int(typeBoard[i][2] - 1),int(typeBoard[i][3] + 1))[0] == 1
+              && exists(typeBoard, int(typeBoard[i][2] - 1),int(typeBoard[i][3] + 1))[1] > 23))){
+              evaluation = evaluation + typeBoard[i][0]*typeBoard[i][1]*(0.05);
+
+           }
+
+
     }
+
+
   }
 
   return evaluation;}
@@ -215,6 +249,7 @@ void copyPieces(){
 }
 
 void keyPressed(){
+
   float highestEvalScore = -9000;
   int[] highestEvalMove = {8,8,1,3};
   if(turnNumber == 1){ //White to move
@@ -227,6 +262,10 @@ void keyPressed(){
         execute(theMove,theoryPieces);
 
         if(evaluate(theoryPieces) > highestEvalScore){
+          highestEvalScore = evaluate(theoryPieces);
+          highestEvalMove = theMove;
+        }
+        else if((evaluate(theoryPieces) == highestEvalScore) && random(0,3) > 2){
           highestEvalScore = evaluate(theoryPieces);
           highestEvalMove = theMove;
         }
@@ -244,6 +283,7 @@ void keyPressed(){
   else if(turnNumber == 2){
     turnNumber = 1;
   }
+  println(evaluate(allPieces));
 
 }
 
