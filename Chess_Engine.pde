@@ -82,7 +82,7 @@ float evaluate(float[][] typeBoard){
             && exists(typeBoard, int(typeBoard[i][2] + 1),int(typeBoard[i][3] - 1))[1] < 8)
          || (exists(typeBoard, int(typeBoard[i][2] - 1),int(typeBoard[i][3] - 1))[0] == 1
             && exists(typeBoard, int(typeBoard[i][2] - 1),int(typeBoard[i][3] - 1))[1] < 8))){
-            evaluation = evaluation + typeBoard[i][0]*typeBoard[i][1]*(0.05);
+            evaluation = evaluation + typeBoard[i][0]*typeBoard[i][1]*(0.1);
 
          }
 
@@ -93,7 +93,7 @@ float evaluate(float[][] typeBoard){
               && exists(typeBoard, int(typeBoard[i][2] + 1),int(typeBoard[i][3] + 1))[1] > 23)
            || (exists(typeBoard, int(typeBoard[i][2] - 1),int(typeBoard[i][3] + 1))[0] == 1
               && exists(typeBoard, int(typeBoard[i][2] - 1),int(typeBoard[i][3] + 1))[1] > 23))){
-              evaluation = evaluation + typeBoard[i][0]*typeBoard[i][1]*(0.05);
+              evaluation = evaluation + typeBoard[i][0]*typeBoard[i][1]*(0.1);
 
            }
 
@@ -242,6 +242,36 @@ float[][] thirdBoard = {
 };
 
 
+int[][] getPossibleMoves_depth2(){
+  int[][] treeDepth2_result = {};
+
+  copyPieces(firstBoard, secondBoard);
+
+  int firstlooplength = possibleMoves(secondBoard).length;
+  println(firstlooplength);
+  for(int i = 0; i < firstlooplength; i++){
+    copyPieces(firstBoard, secondBoard);
+    turnNumber = 1;
+
+    int[] secondMove = possibleMoves(secondBoard)[i];
+    execute(secondMove,secondBoard);
+    copyPieces(secondBoard, thirdBoard);
+    turnNumber = 2;
+
+    int secondlooplength = possibleMoves(thirdBoard).length;
+    println(secondlooplength);
+    for(int j = 0; j < secondlooplength; j++){
+      treeDepth2_result = (int[][])append(treeDepth2_result, possibleMoves(thirdBoard)[j]);
+      copyPieces(secondBoard, thirdBoard);
+    }
+    turnNumber = 1;
+
+  }
+
+  return treeDepth2_result;
+}
+
+
 void copyPieces(float[][] board1, float[][] board2){
   float[] buffer1d = {};
 
@@ -260,85 +290,57 @@ void copyPieces(float[][] board1, float[][] board2){
   }
 }
 
-int[] bestWhiteMove(float[][] board1, float[][]board2){
-  float highestEvalScore = -9000;
-  int[] highestEvalMove = {8,8,1,3};
-  copyPieces(board1, board2);
-  int looplength = possibleMoves(board2).length;
-  for(int i = 0; i< looplength; i++){
-      copyPieces(board1, board2);
-      int[] theMove = possibleMoves(board2)[i];
-
-      execute(theMove,board2);
-      turnNumber = 2;
-      if(bestBlackScore(secondBoard,thirdBoard) > highestEvalScore){
-        highestEvalScore = evaluate(board2);
-        highestEvalMove = theMove;
-      }
-      //else if((evaluate(board2) == highestEvalScore) && random(0,3) > 2){
-        //highestEvalScore = evaluate(board2);
-        //highestEvalMove = theMove;
-      //}
-  }
-  copyPieces(board1, board2);
-  turnNumber = 1;
-  return highestEvalMove;
-}
-
-float bestBlackScore(float[][] board1, float[][]board2){
-  float lowestEvalScore = 9000;
-  int[] lowestEvalMove = {8,8,1,3};
-  copyPieces(board1, board2);
-  int looplength = possibleMoves(board2).length;
-  for(int j = 0; j< looplength; j++){
-      copyPieces(board1, board2);
-      int[] secondMove = possibleMoves(board2)[j];
-
-      execute(secondMove,board2);
-
-      if(evaluate(board2) < lowestEvalScore){
-        lowestEvalScore = evaluate(board2);
-        lowestEvalMove = secondMove;
-      }
-      else if((evaluate(board2) == lowestEvalScore) && random(0,3) > 2){
-        lowestEvalScore = evaluate(board2);
-        lowestEvalMove = secondMove;
-      }
-  }
-  copyPieces(board1, board2);
-  return lowestEvalScore;
-}
-
-int[] bestBlackMove(float[][] board1, float[][]board2){
-  float lowestEvalScore = 9000;
-  int[] lowestEvalMove = {8,8,1,3};
-  copyPieces(board1, board2);
-  int looplength = possibleMoves(board2).length;
-  for(int i = 0; i< looplength; i++){
-      copyPieces(board1, board2);
-      int[] secondMove = possibleMoves(board2)[i];
-
-      execute(secondMove,board2);
-
-      if(evaluate(board2) < lowestEvalScore){
-        lowestEvalScore = evaluate(board2);
-        lowestEvalMove = secondMove;
-      }
-      else if((evaluate(board2) == lowestEvalScore) && random(0,3) > 2){
-        lowestEvalScore = evaluate(board2);
-        lowestEvalMove = secondMove;
-      }
-  }
-  copyPieces(board1, board2);
-  return lowestEvalMove;
-}
-
 void keyPressed(){
   if(turnNumber == 1){
-    execute(bestWhiteMove(firstBoard,secondBoard), firstBoard);
+    println(getPossibleMoves_depth2().length);
+  }
+  //println(allpossiblemoves.length);
+
+  if(turnNumber == 1){ //White to move
+    float highestEvalScore = -9000;
+    int[] highestEvalMove = {8,8,1,3};
+    copyPieces(firstBoard, secondBoard);
+    int looplength = possibleMoves(secondBoard).length;
+    for(int i = 0; i< looplength; i++){
+        copyPieces(firstBoard, secondBoard);
+        int[] theMove = possibleMoves(secondBoard)[i];
+
+        execute(theMove,secondBoard);
+
+        if(evaluate(secondBoard) > highestEvalScore){
+          highestEvalScore = evaluate(secondBoard);
+          highestEvalMove = theMove;
+        }
+        else if((evaluate(secondBoard) == highestEvalScore) && random(0,3) > 2){
+          highestEvalScore = evaluate(secondBoard);
+          highestEvalMove = theMove;
+        }
+    }
+    execute(highestEvalMove,firstBoard);
+    copyPieces(firstBoard, secondBoard);
   }
   if(turnNumber == 2){ //Black to move
-    execute(bestBlackMove(firstBoard,secondBoard), firstBoard);
+    float lowestEvalScore = 9000;
+    int[] lowestEvalMove = {8,8,1,3};
+    copyPieces(firstBoard, secondBoard);
+    int looplength = possibleMoves(secondBoard).length;
+    for(int i = 0; i< looplength; i++){
+        copyPieces(firstBoard, secondBoard);
+        int[] theMove = possibleMoves(secondBoard)[i];
+
+        execute(theMove,secondBoard);
+
+        if(evaluate(secondBoard) < lowestEvalScore){
+          lowestEvalScore = evaluate(secondBoard);
+          lowestEvalMove = theMove;
+        }
+        else if((evaluate(secondBoard) == lowestEvalScore) && random(0,3) > 2){
+          lowestEvalScore = evaluate(secondBoard);
+          lowestEvalMove = theMove;
+        }
+    }
+    execute(lowestEvalMove,firstBoard);
+    copyPieces(firstBoard, secondBoard);
   }
   if(turnNumber == 1){
     turnNumber = 2;
