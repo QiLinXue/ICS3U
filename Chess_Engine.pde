@@ -1,5 +1,5 @@
 //{alive=1/dead=0 , white=1/black=-1 , xLocation, yLocation, pieceValue}
-float[][] allPieces = {
+float[][] firstBoard = {
 
   //White Pieces
   {1,1,1,2,1},{1,1,2,2,1},{1,1,3,2,1},{1,1,4,2,1},{1,1,5,2,1},{1,1,6,2,1},{1,1,7,2,1},{1,1,8,2,1},
@@ -13,7 +13,7 @@ float[][] allPieces = {
 
 
 
-/*float[][] allPieces = {
+/*float[][] firstBoard = {
 
   //White Pieces
   {0,1,1,2,1},{0,1,2,2,1},{0,1,3,2,1},{0,1,4,2,1},{0,1,5,2,1},{0,1,6,2,1},{0,1,7,2,1},{0,1,8,2,1},
@@ -111,7 +111,7 @@ boolean isCheckmate(){
 
 //For the input piece number, it will plot the piece on the graph
 void place(int pieceNum){
-  if(allPieces[pieceNum][0] == 1){
+  if(firstBoard[pieceNum][0] == 1){
     if(pieceNum <= 7 || pieceNum >= 24){
       pieceName = "P";
     } else if(pieceNum == 8 || pieceNum == 15 || pieceNum == 16 || pieceNum == 23){
@@ -128,17 +128,17 @@ void place(int pieceNum){
 
     ellipseMode(CORNER);
 
-    if((allPieces[pieceNum][1]) == 1){
+    if((firstBoard[pieceNum][1]) == 1){
       fill(255);
-      ellipse(width/8*(allPieces[pieceNum][2]-1),height-(allPieces[pieceNum][3]*height/8),width/8,height/8);
+      ellipse(width/8*(firstBoard[pieceNum][2]-1),height-(firstBoard[pieceNum][3]*height/8),width/8,height/8);
       fill(50);
     } else{
       fill(50);
-      ellipse(width/8*(allPieces[pieceNum][2]-1),height-(allPieces[pieceNum][3]*height/8),width/8,height/8);
+      ellipse(width/8*(firstBoard[pieceNum][2]-1),height-(firstBoard[pieceNum][3]*height/8),width/8,height/8);
       fill(255);
     }
     textSize(height/9);
-    text(pieceName,width/8*(allPieces[pieceNum][2]-1)+height/36,height-(allPieces[pieceNum][3]*height/8)+height/8-height/36);
+    text(pieceName,width/8*(firstBoard[pieceNum][2]-1)+height/36,height-(firstBoard[pieceNum][3]*height/8)+height/8-height/36);
     fill(255);
   }}
 
@@ -155,41 +155,41 @@ void mousePressed(){
   }
   else{
   if(turnNumber == 1){ //White to Move
-    if(currentStance == 0 && exists(allPieces,square()[0],square()[1])[0] == 1 && exists(allPieces,square()[0],square()[1])[1] < 16){
+    if(currentStance == 0 && exists(firstBoard,square()[0],square()[1])[0] == 1 && exists(firstBoard,square()[0],square()[1])[1] < 16){
       startxco = square()[0];
       startyco = square()[1];
-      selectedPieceNumber = exists(allPieces,startxco,startyco)[1];
+      selectedPieceNumber = exists(firstBoard,startxco,startyco)[1];
       currentStance = 1;
     }
 
 
 
-    if(realmoveLegal(startxco,startyco,square()[0],square()[1]) == 1 && currentStance == 1 && (exists(allPieces,square()[0],square()[1])[0] == 0 || (exists(allPieces,square()[0],square()[1])[0] == 1 && exists(allPieces,square()[0],square()[1])[1] >= 16))){
+    if(realmoveLegal(startxco,startyco,square()[0],square()[1]) == 1 && currentStance == 1 && (exists(firstBoard,square()[0],square()[1])[0] == 0 || (exists(firstBoard,square()[0],square()[1])[0] == 1 && exists(firstBoard,square()[0],square()[1])[1] >= 16))){
         endxco = square()[0];
         endyco = square()[1];
-        if(exists(allPieces,endxco,endyco)[1] >= 16 && exists(allPieces,endxco,endyco)[0] == 1){
-          allPieces[exists(allPieces,endxco,endyco)[1]][0] = 0;
+        if(exists(firstBoard,endxco,endyco)[1] >= 16 && exists(firstBoard,endxco,endyco)[0] == 1){
+          firstBoard[exists(firstBoard,endxco,endyco)[1]][0] = 0;
         }
-        allPieces[selectedPieceNumber][2] = endxco;
-        allPieces[selectedPieceNumber][3] = endyco;
+        firstBoard[selectedPieceNumber][2] = endxco;
+        firstBoard[selectedPieceNumber][3] = endyco;
         currentStance = 0;
         turnNumber = 2;
     }
   } else if(turnNumber == 2){ //Black to move
-    if(currentStance == 0 && exists(allPieces,square()[0],square()[1])[0] == 1 && exists(allPieces,square()[0],square()[1])[1] >= 16){
+    if(currentStance == 0 && exists(firstBoard,square()[0],square()[1])[0] == 1 && exists(firstBoard,square()[0],square()[1])[1] >= 16){
       startxco = square()[0];
       startyco = square()[1];
-      selectedPieceNumber = exists(allPieces,startxco,startyco)[1];
+      selectedPieceNumber = exists(firstBoard,startxco,startyco)[1];
       currentStance = 1;
     }
-    if(realmoveLegal(startxco,startyco,square()[0],square()[1]) == 1 && currentStance == 1 && (exists(allPieces,square()[0],square()[1])[0] == 0 || (exists(allPieces,square()[0],square()[1])[0] == 1 && exists(allPieces,square()[0],square()[1])[1] < 16))){
+    if(realmoveLegal(startxco,startyco,square()[0],square()[1]) == 1 && currentStance == 1 && (exists(firstBoard,square()[0],square()[1])[0] == 0 || (exists(firstBoard,square()[0],square()[1])[0] == 1 && exists(firstBoard,square()[0],square()[1])[1] < 16))){
         endxco = square()[0];
         endyco = square()[1];
-        if(exists(allPieces,endxco,endyco)[1] < 16 && exists(allPieces,endxco,endyco)[0] == 1 ){
-          allPieces[exists(allPieces,endxco,endyco)[1]][0] = 0;
+        if(exists(firstBoard,endxco,endyco)[1] < 16 && exists(firstBoard,endxco,endyco)[0] == 1 ){
+          firstBoard[exists(firstBoard,endxco,endyco)[1]][0] = 0;
         }
-        allPieces[selectedPieceNumber][2] = endxco;
-        allPieces[selectedPieceNumber][3] = endyco;
+        firstBoard[selectedPieceNumber][2] = endxco;
+        firstBoard[selectedPieceNumber][3] = endyco;
         currentStance = 0;
         turnNumber = 1;
     }
@@ -204,7 +204,7 @@ int[] exists(float[][] typeBoard, int x, int y){
     pieceSelected[0] = -1;
   } else{
     for(int i = 0; i<32; i++){
-      if(allPieces[i][2] == x && typeBoard[i][3] == y && typeBoard[i][0] == 1){
+      if(firstBoard[i][2] == x && typeBoard[i][3] == y && typeBoard[i][0] == 1){
         pieceSelected[0] = 1;
         pieceSelected[1] = i;
       }
@@ -217,7 +217,19 @@ int[] exists(float[][] typeBoard, int x, int y){
 int moveLegal(){
   return 1;}
 
-float[][] theoryPieces = {
+float[][] secondBoard = {
+
+  //White Pieces
+  {1,1,5,5,1},{1,1,2,2,1},{1,1,3,2,1},{1,1,4,2,1},{1,1,5,2,1},{1,1,6,2,1},{1,1,7,2,1},{1,1,8,2,1},
+  {1,1,1,1,5},{1,1,2,1,3},{1,1,3,1,3},{1,1,4,1,9},{1,1,5,1,0},{1,1,6,1,3},{1,1,7,1,3},{1,1,8,1,5},
+
+  //Black Pieces
+  {1,-1,1,8,5},{1,-1,2,8,3},{1,-1,3,8,3},{1,-1,4,8,9},{1,-1,5,8,0},{1,-1,6,8,3},{1,-1,7,8,3},{1,-1,8,8,5},
+  {1,-1,1,7,1},{1,-1,2,7,1},{1,-1,3,7,1},{1,-1,4,7,1},{1,-1,5,7,1},{1,-1,6,7,1},{1,-1,7,7,1},{1,-1,8,7,1},
+
+};
+
+float[][] thirdBoard = {
 
   //White Pieces
   {1,1,5,5,1},{1,1,2,2,1},{1,1,3,2,1},{1,1,4,2,1},{1,1,5,2,1},{1,1,6,2,1},{1,1,7,2,1},{1,1,8,2,1},
@@ -230,19 +242,19 @@ float[][] theoryPieces = {
 };
 
 
-void copyPieces(){
+void copyPieces(float[][] board1, float[][] board2){
   float[] buffer1d = {};
 
-  for(int i = 0; i<allPieces.length; i++){
-    for(int j = 0; j<allPieces[i].length; j++){
-      buffer1d = append(buffer1d, allPieces[i][j]);
+  for(int i = 0; i<board1.length; i++){
+    for(int j = 0; j<board1[i].length; j++){
+      buffer1d = append(buffer1d, board1[i][j]);
     }
   }
 
   int h = 0;
   for(int i = 0;i<32;i++){
-    for(int j = 0; j<allPieces[i].length;j++){
-      theoryPieces[i][j] = buffer1d[h];
+    for(int j = 0; j<board1[i].length;j++){
+      board2[i][j] = buffer1d[h];
       h++;
     }
   }
@@ -253,48 +265,48 @@ void keyPressed(){
   if(turnNumber == 1){ //White to move
     float highestEvalScore = -9000;
     int[] highestEvalMove = {8,8,1,3};
-    copyPieces();
-    int looplength = possibleMoves(theoryPieces).length;
+    copyPieces(firstBoard, secondBoard);
+    int looplength = possibleMoves(secondBoard).length;
     for(int i = 0; i< looplength; i++){
-        copyPieces();
-        int[] theMove = possibleMoves(theoryPieces)[i];
+        copyPieces(firstBoard, secondBoard);
+        int[] theMove = possibleMoves(secondBoard)[i];
 
-        execute(theMove,theoryPieces);
+        execute(theMove,secondBoard);
 
-        if(evaluate(theoryPieces) > highestEvalScore){
-          highestEvalScore = evaluate(theoryPieces);
+        if(evaluate(secondBoard) > highestEvalScore){
+          highestEvalScore = evaluate(secondBoard);
           highestEvalMove = theMove;
         }
-        else if((evaluate(theoryPieces) == highestEvalScore) && random(0,3) > 2){
-          highestEvalScore = evaluate(theoryPieces);
+        else if((evaluate(secondBoard) == highestEvalScore) && random(0,3) > 2){
+          highestEvalScore = evaluate(secondBoard);
           highestEvalMove = theMove;
         }
     }
-    execute(highestEvalMove,allPieces);
-    copyPieces();
+    execute(highestEvalMove,firstBoard);
+    copyPieces(firstBoard, secondBoard);
   }
   if(turnNumber == 2){ //Black to move
     float lowestEvalScore = 9000;
     int[] lowestEvalMove = {8,8,1,3};
-    copyPieces();
-    int looplength = possibleMoves(theoryPieces).length;
+    copyPieces(firstBoard, secondBoard);
+    int looplength = possibleMoves(secondBoard).length;
     for(int i = 0; i< looplength; i++){
-        copyPieces();
-        int[] theMove = possibleMoves(theoryPieces)[i];
+        copyPieces(firstBoard, secondBoard);
+        int[] theMove = possibleMoves(secondBoard)[i];
 
-        execute(theMove,theoryPieces);
+        execute(theMove,secondBoard);
 
-        if(evaluate(theoryPieces) < lowestEvalScore){
-          lowestEvalScore = evaluate(theoryPieces);
+        if(evaluate(secondBoard) < lowestEvalScore){
+          lowestEvalScore = evaluate(secondBoard);
           lowestEvalMove = theMove;
         }
-        else if((evaluate(theoryPieces) == lowestEvalScore) && random(0,3) > 2){
-          lowestEvalScore = evaluate(theoryPieces);
+        else if((evaluate(secondBoard) == lowestEvalScore) && random(0,3) > 2){
+          lowestEvalScore = evaluate(secondBoard);
           lowestEvalMove = theMove;
         }
     }
-    execute(lowestEvalMove,allPieces);
-    copyPieces();
+    execute(lowestEvalMove,firstBoard);
+    copyPieces(firstBoard, secondBoard);
   }
   if(turnNumber == 1){
     turnNumber = 2;
@@ -302,7 +314,7 @@ void keyPressed(){
   else if(turnNumber == 2){
     turnNumber = 1;
   }
-  //println(evaluate(allPieces));
+  //println(evaluate(firstBoard));
 
 }
 
@@ -344,7 +356,7 @@ void execute(int[] autoMove, float[][] typeBoard){
 
   }
 
-//Uses the current coordinates from allPieces to generate a 2d array with all the neccessary coordinates to be executed
+//Uses the current coordinates from firstBoard to generate a 2d array with all the neccessary coordinates to be executed
 int[][] possibleMoves(float[][] typeBoard){
 
   int[] nothing = {};
@@ -1742,8 +1754,8 @@ int[][] possibleMoves(float[][] typeBoard){
 int realmoveLegal(int x1, int y1, int x2, int y2){
     int[] testMove = {x1,y1,x2,y2};
     int result = 0;
-    for(int i = 0; i<possibleMoves(allPieces).length; i++){
-      if(testMove[0] == possibleMoves(allPieces)[i][0] && testMove[1] == possibleMoves(allPieces)[i][1] && testMove[2] == possibleMoves(allPieces)[i][2] && testMove[3] == possibleMoves(allPieces)[i][3]){
+    for(int i = 0; i<possibleMoves(firstBoard).length; i++){
+      if(testMove[0] == possibleMoves(firstBoard)[i][0] && testMove[1] == possibleMoves(firstBoard)[i][1] && testMove[2] == possibleMoves(firstBoard)[i][2] && testMove[3] == possibleMoves(firstBoard)[i][3]){
         result = 1;
       }
     }
