@@ -204,14 +204,15 @@ int[] exists(float[][] typeBoard, int x, int y){
     pieceSelected[0] = -1;
   } else{
     for(int i = 0; i<32; i++){
-      if(firstBoard[i][2] == x && typeBoard[i][3] == y && typeBoard[i][0] == 1){
+      if(typeBoard[i][2] == x && typeBoard[i][3] == y && typeBoard[i][0] == 1){
         pieceSelected[0] = 1;
         pieceSelected[1] = i;
       }
     }
   }
+  return pieceSelected;
+}
 
-  return pieceSelected;}
 
 //Checks if a move is legal based off of the start coordinate and the end Coordinate
 int moveLegal(){
@@ -220,35 +221,42 @@ int moveLegal(){
 float[][] secondBoard = {
 
   //White Pieces
-  {1,1,5,5,1},{1,1,2,2,1},{1,1,3,2,1},{1,1,4,2,1},{1,1,5,2,1},{1,1,6,2,1},{1,1,7,2,1},{1,1,8,2,1},
-  {1,1,1,1,5},{1,1,2,1,3},{1,1,3,1,3},{1,1,4,1,9},{1,1,5,1,0},{1,1,6,1,3},{1,1,7,1,3},{1,1,8,1,5},
+  {1,1,1,2,1},{1,1,2,2,1},{1,1,3,2,1},{1,1,4,2,1},{1,1,5,2,1},{1,1,6,2,1},{1,1,7,2,1},{1,1,8,2,1},
+  {1,1,1,1,5},{1,1,2,1,3},{1,1,3,1,3},{1,1,2,7,9},{1,1,5,1,5000},{1,1,6,1,3},{1,1,7,1,3},{1,1,8,1,5},
 
   //Black Pieces
-  {1,-1,1,8,5},{1,-1,2,8,3},{1,-1,3,8,3},{1,-1,4,8,9},{1,-1,5,8,0},{1,-1,6,8,3},{1,-1,7,8,3},{1,-1,8,8,5},
-  {1,-1,1,7,1},{1,-1,2,7,1},{1,-1,3,7,1},{1,-1,4,7,1},{1,-1,5,7,1},{1,-1,6,7,1},{1,-1,7,7,1},{1,-1,8,7,1},
+  {1,-1,1,8,5},{1,-1,2,8,3},{1,-1,3,8,3},{1,-1,4,8,9},{1,-1,5,8,5000},{1,-1,6,8,3},{1,-1,7,8,3},{1,-1,8,8,5},
+  {1,-1,1,7,1},{0,-1,2,7,1},{1,-1,3,7,1},{1,-1,4,7,1},{1,-1,5,7,1},{1,-1,6,7,1},{1,-1,7,7,1},{1,-1,8,7,1},
 
 };
 
 float[][] thirdBoard = {
 
   //White Pieces
-  {1,1,5,5,1},{1,1,2,2,1},{1,1,3,2,1},{1,1,4,2,1},{1,1,5,2,1},{1,1,6,2,1},{1,1,7,2,1},{1,1,8,2,1},
-  {1,1,1,1,5},{1,1,2,1,3},{1,1,3,1,3},{1,1,4,1,9},{1,1,5,1,0},{1,1,6,1,3},{1,1,7,1,3},{1,1,8,1,5},
+  {1,1,1,2,1},{1,1,2,2,1},{1,1,3,2,1},{1,1,4,2,1},{1,1,5,2,1},{1,1,6,2,1},{1,1,7,2,1},{1,1,8,2,1},
+  {1,1,1,1,5},{1,1,2,1,3},{1,1,3,1,3},{1,1,3,6,9},{1,1,5,1,5000},{1,1,6,1,3},{1,1,7,1,3},{1,1,8,1,5},
 
   //Black Pieces
-  {1,-1,1,8,5},{1,-1,2,8,3},{1,-1,3,8,3},{1,-1,4,8,9},{1,-1,5,8,0},{1,-1,6,8,3},{1,-1,7,8,3},{1,-1,8,8,5},
+  {1,-1,1,8,5},{1,-1,2,8,3},{1,-1,3,8,3},{1,-1,4,8,9},{1,-1,5,8,5000},{1,-1,6,8,3},{1,-1,7,8,3},{1,-1,8,8,5},
   {1,-1,1,7,1},{1,-1,2,7,1},{1,-1,3,7,1},{1,-1,4,7,1},{1,-1,5,7,1},{1,-1,6,7,1},{1,-1,7,7,1},{1,-1,8,7,1},
+
 
 };
 
+//Outputs an array with length 4 (x1, y1, x2, y2, i) where i is the move number for white
 
-int[][] getPossibleMoves_depth2(){
+
+float[][] getPossibleMoves_depth2(){
   int[][] treeDepth2_result = {};
+  int[] treeDepthAndWhiteMoveNumber = {};
+
+  float[][] allEvaluation_AND_MoveNumber = {};
+  float[] oneEvaluation_AND_MoveNumber = {-1,-9000};
 
   copyPieces(firstBoard, secondBoard);
 
   int firstlooplength = possibleMoves(secondBoard).length;
-  println(firstlooplength);
+  //copyPieces(firstlooplength);
   for(int i = 0; i < firstlooplength; i++){
     copyPieces(firstBoard, secondBoard);
     turnNumber = 1;
@@ -259,18 +267,69 @@ int[][] getPossibleMoves_depth2(){
     turnNumber = 2;
 
     int secondlooplength = possibleMoves(thirdBoard).length;
-    println(secondlooplength);
+    //copyPieces(secondlooplength);
+
+
     for(int j = 0; j < secondlooplength; j++){
-      treeDepth2_result = (int[][])append(treeDepth2_result, possibleMoves(thirdBoard)[j]);
+      execute(possibleMoves(thirdBoard)[j],thirdBoard);
+      oneEvaluation_AND_MoveNumber[0] = i;
+      oneEvaluation_AND_MoveNumber[1] = evaluate(thirdBoard);
+      //println(j,evaluate(thirdBoard),oneEvaluation_AND_MoveNumber[0]);
+
+      allEvaluation_AND_MoveNumber = (float[][])append(allEvaluation_AND_MoveNumber, oneEvaluation_AND_MoveNumber);
+
+      //println(allEvaluation_AND_MoveNumber[0][0],allEvaluation_AND_MoveNumber[0][1]);
+      //println(oneEvaluation_AND_MoveNumber);
+      treeDepth2_result = (int[][])append(treeDepth2_result, append(possibleMoves(thirdBoard)[j],i));
       copyPieces(secondBoard, thirdBoard);
     }
     turnNumber = 1;
+  }
+  //println(allEvaluation_AND_MoveNumber[0][0]);
+
+  for(int z = 0; z<400; z++){
+    //println(allEvaluation_AND_MoveNumber[0][0]);
 
   }
 
-  return treeDepth2_result;
+  return allEvaluation_AND_MoveNumber;
 }
 
+/*
+void getBestMove_depth2(){
+  //  int[][] placeholder = {};
+  //  placeholder = (int[][])expand(placeholder,getPossibleMoves_depth2().length);
+  //  copyArray(getPossibleMoves_depth2(),placeholder);
+
+  //Creates an array with all the whiteMoveNumbers from treeDepth2 and their respective highest evaluation
+  float[][]  whiteMoveNumber_AND_evaluation = {};
+  float[] singleMove_AND_evaluation = {-1,-9000};
+  int looplength1 = possibleMoves(firstBoard).length;
+  for(int i = 0; i < looplength1; i++){
+    singleMove_AND_evaluation[0] = i;
+    whiteMoveNumber_AND_evaluation = (float[][])append(whiteMoveNumber_AND_evaluation,singleMove_AND_evaluation);
+  }
+
+
+  int highestEvalScore = -9000;
+  copyPieces(firstBoard,secondBoard);
+  copyPieces(secondBoard,thirdBoard);
+  int looplength2 = getPossibleMoves_depth2().length;
+  for(int i = 0; i < looplength2; i++){
+    copyPieces(firstBoard,secondBoard);
+    execute(possibleMoves(firstBoard)[getPossibleMoves_depth2()[i][4]],secondBoard);
+
+    copyPieces(secondBoard,thirdBoard);
+    execute(getPossibleMoves_depth2()[i],thirdBoard);
+
+    int moveNumberForWhite = getPossibleMoves_depth2()[i][4];
+    if(evaluate(thirdBoard) > whiteMoveNumber_AND_evaluation[moveNumberForWhite][1]){
+        whiteMoveNumber_AND_evaluation[moveNumberForWhite][1] = evaluate(thirdBoard);
+    }
+    println(i);
+
+  }
+}*/
 
 void copyPieces(float[][] board1, float[][] board2){
   float[] buffer1d = {};
@@ -290,65 +349,84 @@ void copyPieces(float[][] board1, float[][] board2){
   }
 }
 
+
+int[] bestBlackMove(float[][] actualBoard, float[][] theoryBoard){
+  float lowestEvalScore = 9000;
+  int[] lowestEvalMove = {8,8,1,3};
+  copyPieces(actualBoard, theoryBoard);
+  int looplength = possibleMoves(theoryBoard).length;
+  for(int i = 0; i< looplength; i++){
+      copyPieces(actualBoard, theoryBoard);
+      int[] theMove = possibleMoves(theoryBoard)[i];
+      execute(theMove,theoryBoard);
+      //println(theMove[0],theMove[1],theMove[2],theMove[3],evaluate(theoryBoard));
+
+      if(evaluate(theoryBoard) < lowestEvalScore){
+        lowestEvalScore = evaluate(theoryBoard);
+        lowestEvalMove = theMove;
+      }
+      else if((evaluate(theoryBoard) == lowestEvalScore) && random(0,4) > 1){
+        lowestEvalScore = evaluate(theoryBoard);
+        lowestEvalMove = theMove;
+
+      }
+      copyPieces(actualBoard, theoryBoard);
+  }
+  copyPieces(actualBoard, theoryBoard);
+
+  return lowestEvalMove;
+
+}
+
+
 void keyPressed(){
+
   if(turnNumber == 1){
-    println(getPossibleMoves_depth2().length);
+    copyPieces(firstBoard,secondBoard);
+    copyPieces(secondBoard,thirdBoard);
+      float highestEvalScore = -9000;
+      int[] highestEvalMove = {8,8,1,5};
+      copyPieces(firstBoard, secondBoard);
+      int looplength = possibleMoves(secondBoard).length;
+      for(int i = 0; i< looplength; i++){
+          turnNumber = 1;
+          copyPieces(firstBoard, secondBoard);
+          int[] secondMove = possibleMoves(secondBoard)[i];
+
+          execute(secondMove,secondBoard);
+          copyPieces(secondBoard,thirdBoard);
+          turnNumber = 2;
+
+          execute(bestBlackMove(secondBoard,thirdBoard),thirdBoard);
+          //println(bestBlackMove(secondBoard,thirdBoard));
+
+          //println(thirdBoard[11]);
+
+          //println(bestBlackMove(secondBoard,thirdBoard));
+          //println(secondMove[0],secondMove[1],secondMove[2],secondMove[3],evaluate(thirdBoard));
+          if(evaluate(thirdBoard) > highestEvalScore){
+            highestEvalScore = evaluate(thirdBoard);
+            highestEvalMove = secondMove;
+          }
+      }
+      turnNumber = 1;
+
+      execute(highestEvalMove,firstBoard);
+      //println(highestEvalMove);
+      copyPieces(firstBoard, secondBoard);
   }
-  //println(allpossiblemoves.length);
 
-  if(turnNumber == 1){ //White to move
-    float highestEvalScore = -9000;
-    int[] highestEvalMove = {8,8,1,3};
-    copyPieces(firstBoard, secondBoard);
-    int looplength = possibleMoves(secondBoard).length;
-    for(int i = 0; i< looplength; i++){
-        copyPieces(firstBoard, secondBoard);
-        int[] theMove = possibleMoves(secondBoard)[i];
-
-        execute(theMove,secondBoard);
-
-        if(evaluate(secondBoard) > highestEvalScore){
-          highestEvalScore = evaluate(secondBoard);
-          highestEvalMove = theMove;
-        }
-        else if((evaluate(secondBoard) == highestEvalScore) && random(0,3) > 2){
-          highestEvalScore = evaluate(secondBoard);
-          highestEvalMove = theMove;
-        }
-    }
-    execute(highestEvalMove,firstBoard);
-    copyPieces(firstBoard, secondBoard);
+  if(turnNumber == 2){
+    execute(bestBlackMove(firstBoard,secondBoard),firstBoard);
   }
-  if(turnNumber == 2){ //Black to move
-    float lowestEvalScore = 9000;
-    int[] lowestEvalMove = {8,8,1,3};
-    copyPieces(firstBoard, secondBoard);
-    int looplength = possibleMoves(secondBoard).length;
-    for(int i = 0; i< looplength; i++){
-        copyPieces(firstBoard, secondBoard);
-        int[] theMove = possibleMoves(secondBoard)[i];
 
-        execute(theMove,secondBoard);
-
-        if(evaluate(secondBoard) < lowestEvalScore){
-          lowestEvalScore = evaluate(secondBoard);
-          lowestEvalMove = theMove;
-        }
-        else if((evaluate(secondBoard) == lowestEvalScore) && random(0,3) > 2){
-          lowestEvalScore = evaluate(secondBoard);
-          lowestEvalMove = theMove;
-        }
-    }
-    execute(lowestEvalMove,firstBoard);
-    copyPieces(firstBoard, secondBoard);
-  }
   if(turnNumber == 1){
     turnNumber = 2;
   }
+
   else if(turnNumber == 2){
     turnNumber = 1;
   }
-  //println(evaluate(firstBoard));
 
 }
 
@@ -371,19 +449,23 @@ void execute(int[] autoMove, float[][] typeBoard){
       //turnNumber = 2;
       if(exists(typeBoard,endx,endy)[1] >= 16){
         typeBoard[exists(typeBoard,endx,endy)[1]][0] = 0;
+        //println("triggered");
+
       }
     }
   } else if(turnNumber == 2){ //Black to move
       selectedPieceNumber = exists(typeBoard,startx,starty)[1];
-      if(exists(typeBoard,startx,starty)[0] == 1 && ((exists(typeBoard,endx,endy)[0] == 0) || (exists(typeBoard,endx,endy)[0] == 1 && (exists(typeBoard,endx,endy)[1] < 16))) && exists(typeBoard,startx,starty)[1] >= 16){
+      //if(exists(typeBoard,startx,starty)[0] == 1 && ((exists(typeBoard,endx,endy)[0] == 0) || (exists(typeBoard,endx,endy)[0] == 1 && (exists(typeBoard,endx,endy)[1] < 16))) && exists(typeBoard,startx,starty)[1] >= 16){
 
         placeholderx = endx;
         placeholdery = endy;
         //turnNumber = 1;
+        //println(endx,endy);
+        //println(exists(secondBoard,endx,endy));
         if(exists(typeBoard,endx,endy)[1] < 16 && exists(typeBoard,endx,endy)[1] > 0){
           typeBoard[exists(typeBoard,endx,endy)[1]][0] = 0;
         }
-      }
+      //}
     }
     typeBoard[selectedPieceNumber][2] = placeholderx;
     typeBoard[selectedPieceNumber][3] = placeholdery;
