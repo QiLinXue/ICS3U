@@ -52,7 +52,7 @@ float[][] thirdBoard = {
   int[] pieceSelected = {0,0}; //Placeholder numbers
   int startxco, startyco, endxco, endyco; //Coordinates of the start and finish when moving a piece
   int selectedPieceNumber; //The number coresponding to each piece (0-31)
-  int turnNumber = 1; //1=white; 2=black;
+  int turnNumber = 2; //1=white; 2=black;
   int currentStance = 0; //0=Select Piece; 1=move piece;
   String pieceName; //stores the piece name (P,R,N,B,Q,K)
 
@@ -116,7 +116,7 @@ float evaluate(float[][] typeBoard){
 
       //If white pawn structure
       if(
-          i < 8
+          i < 8 && i != 1 && i != 6
           && ((
           exists(typeBoard, int(typeBoard[i][2] + 1),int(typeBoard[i][3]) - 1)[0] == 1
           && exists(typeBoard, int(typeBoard[i][2] + 1),int(typeBoard[i][3] - 1))[1] < 8)
@@ -127,7 +127,7 @@ float evaluate(float[][] typeBoard){
 
       //If black pawn structure
       if(
-           i > 23
+           i > 23 /*&& i != 1 && i !=6*/
            && ((
               exists(typeBoard, int(typeBoard[i][2] + 1),int(typeBoard[i][3]) + 1)[0] == 1
               && exists(typeBoard, int(typeBoard[i][2] + 1),int(typeBoard[i][3] + 1))[1] > 23)
@@ -137,8 +137,38 @@ float evaluate(float[][] typeBoard){
       }
 
       //If centralized rooks
-      if(i == 8 || i == 15 | i == 16 | i == 23 && ((typeBoard[i][2] > 2 && typeBoard[i][2] < 6))){
+      if(i == 8 || i == 15 || i == 16 || i == 23 && ((typeBoard[i][2] > 2 && typeBoard[i][2] < 6))){
         evaluation = evaluation + typeBoard[i][0]*typeBoard[i][1]*(0.15);
+      }
+
+      //If rooks are in bad position
+      if(i == 8 || i == 15 || i == 16 || i == 23 &&
+          ((typeBoard[i][2] == 1 && typeBoard[i][3] == 2)
+          ||(typeBoard[i][2] == 8 && typeBoard[i][3] == 2)
+          ||(typeBoard[i][2] == 1 && typeBoard[i][3] == 7)
+          ||(typeBoard[i][2] == 8 && typeBoard[i][3] == 7)
+          )){
+        evaluation = evaluation + typeBoard[i][0]*typeBoard[i][1]*(-0.11);
+      }
+      
+      //If finachetto bishops
+      if(i == 10 || i == 13 || i == 18 || i == 21 &&
+         ((typeBoard[i][2] == 2 && typeBoard[i][3] == 2)
+        ||(typeBoard[i][2] == 7 && typeBoard[i][3] == 2)
+        ||(typeBoard[i][2] == 2 && typeBoard[i][3] == 7)
+        ||(typeBoard[i][2] == 7 && typeBoard[i][3] == 7)
+        )){
+        evaluation = evaluation + typeBoard[i][0]*typeBoard[i][1]*(0.11);
+      }
+
+      //If centralized knights
+      if(i == 9 || i == 12 || i == 17 || i == 22 &&
+        ((typeBoard[i][2] == 3 && typeBoard[i][3] == 3)
+        ||(typeBoard[i][2] == 6 && typeBoard[i][3] == 3)
+        ||(typeBoard[i][2] == 3 && typeBoard[i][3] == 6)
+        ||(typeBoard[i][2] == 6 && typeBoard[i][3] == 6)
+        )){
+        evaluation = evaluation + typeBoard[i][0]*typeBoard[i][1]*(0.11);
       }
 
     }
@@ -188,7 +218,8 @@ void place(int pieceNum){
 //Actual Moving Around
 int[] square(){
   int[] currentsquare = {(floor(mouseX/(width/8))+1),8 - (floor(mouseY/(height/8)))};
-  return currentsquare; //Returns the x and y coordinates (relative to the board) of the current mouse value}
+  return currentsquare; //Returns the x and y coordinates (relative to the board) of the current mouse value
+}
 void mousePressed(){
   if(mouseButton == RIGHT && currentStance == 1){
     currentStance = 0;
@@ -346,6 +377,77 @@ int[] bestWhiteMove_depth2(float[][] actualBoard, float[][] theoryBoard2, float[
     return highestEvalMove;
 }
 
+//Searches for the best white move with best white move with depth1
+int[] bestWhiteMove_depth1(float[][] actualBoard, float[][] theoryBoard){
+  float highestEvalScore = -9000;
+  int[] highestEvalMove = {8,8,1,3};
+  copyPieces(actualBoard, theoryBoard);
+  int looplength = possibleMoves(theoryBoard).length;
+  for(int i = 0; i< looplength; i++){
+      copyPieces(actualBoard, theoryBoard);
+      int[] theMove = possibleMoves(theoryBoard)[i];
+      execute(theMove,theoryBoard);
+
+      if(evaluate(theoryBoard) > highestEvalScore){
+        highestEvalScore = evaluate(theoryBoard);
+        highestEvalMove = theMove;
+      }
+      else if((evaluate(theoryBoard) == highestEvalScore) && random(0,4) > 1){
+        highestEvalScore = evaluate(theoryBoard);
+        highestEvalMove = theMove;
+
+      }
+      copyPieces(actualBoard, theoryBoard);
+  }
+  copyPieces(actualBoard, theoryBoard);
+
+  return highestEvalMove;
+}
+
+//Searches for the best black move with depth2
+int[] bestBlackMove_depth2(float[][] actualBoard, float[][] theoryBoard2, float[][] theoryBoard3){
+    //Setup
+    copyPieces(actualBoard,theoryBoard2);
+    copyPieces(theoryBoard2,theoryBoard3);
+    float lowestEvalScore = 9000;
+    int[] lowestEvalMove = {8,8,1,5};
+    copyPieces(actualBoard, theoryBoard2);
+
+    //Loops through all possible moves for black
+    int looplength = possibleMoves(theoryBoard2).length;
+    for(int i = 0; i< looplength; i++){
+        turnNumber = 2;
+        copyPieces(actualBoard, theoryBoard2);
+
+        //Execute one of the possible moves for white
+        int[] secondMove = possibleMoves(theoryBoard2)[i];
+        execute(secondMove,theoryBoard2);
+
+        //Begin to find best move for black
+        copyPieces(theoryBoard2,theoryBoard3);
+        turnNumber = 1;
+
+        //Execute best black move
+        execute(bestWhiteMove_depth1(theoryBoard2,theoryBoard3),theoryBoard3);
+
+        //Check if theoryboard3's evaluation is higher than the rest assuming black plays perfectly
+        if(evaluate(theoryBoard3) < lowestEvalScore){
+          lowestEvalScore = evaluate(theoryBoard3);
+          lowestEvalMove = secondMove;
+        }
+        else if(evaluate(theoryBoard3) == lowestEvalScore && random(0,4) > 1){
+          lowestEvalScore = evaluate(theoryBoard3);
+          lowestEvalMove = secondMove;
+        }
+    } //Loop ends
+
+    turnNumber = 2;
+    copyPieces(actualBoard, theoryBoard2);
+    return lowestEvalMove;
+}
+
+
+
 //Computer automove
 void keyPressed(){
 
@@ -354,7 +456,9 @@ void keyPressed(){
   }
 
   if(turnNumber == 2){
-    execute(bestBlackMove_depth1(firstBoard,secondBoard),firstBoard);
+    //execute(bestBlackMove_depth1(firstBoard,secondBoard),firstBoard);
+    execute(bestBlackMove_depth2(firstBoard,secondBoard,thirdBoard),firstBoard);
+
   }
 
   if(turnNumber == 1){
