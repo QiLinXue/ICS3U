@@ -52,7 +52,7 @@ float[][] thirdBoard = {
   int[] pieceSelected = {0,0}; //Placeholder numbers
   int startxco, startyco, endxco, endyco; //Coordinates of the start and finish when moving a piece
   int selectedPieceNumber; //The number coresponding to each piece (0-31)
-  int turnNumber = 2; //1=white; 2=black;
+  int turnNumber = 1; //1=white; 2=black;
   int currentStance = 0; //0=Select Piece; 1=move piece;
   String pieceName; //stores the piece name (P,R,N,B,Q,K)
 
@@ -150,7 +150,7 @@ float evaluate(float[][] typeBoard){
           )){
         evaluation = evaluation + typeBoard[i][0]*typeBoard[i][1]*(-0.11);
       }
-      
+
       //If finachetto bishops
       if(i == 10 || i == 13 || i == 18 || i == 21 &&
          ((typeBoard[i][2] == 2 && typeBoard[i][3] == 2)
@@ -172,7 +172,6 @@ float evaluate(float[][] typeBoard){
       }
 
     }
-
 
   }
 
@@ -233,8 +232,6 @@ void mousePressed(){
       currentStance = 1;
     }
 
-
-
     if(realmoveLegal(startxco,startyco,square()[0],square()[1]) == 1 && currentStance == 1 && (exists(firstBoard,square()[0],square()[1])[0] == 0 || (exists(firstBoard,square()[0],square()[1])[0] == 1 && exists(firstBoard,square()[0],square()[1])[1] >= 16))){
         endxco = square()[0];
         endyco = square()[1];
@@ -243,10 +240,20 @@ void mousePressed(){
         }
         firstBoard[selectedPieceNumber][2] = endxco;
         firstBoard[selectedPieceNumber][3] = endyco;
+
+        //Check if it can castle
+        if(selectedPieceNumber == 12 && startxco == 5 && startyco == 1 && endxco == 7 && endyco == 1){
+          firstBoard[15][2] = 6;
+        }
+        else if(selectedPieceNumber == 12 && startxco == 5 && startyco == 1 && endxco == 3 && endyco == 1){
+          firstBoard[8][2] = 4;
+        }
+
         currentStance = 0;
         turnNumber = 2;
     }
-  } else if(turnNumber == 2){ //Black to move
+  }
+  else if(turnNumber == 2){ //Black to move
     if(currentStance == 0 && exists(firstBoard,square()[0],square()[1])[0] == 1 && exists(firstBoard,square()[0],square()[1])[1] >= 16){
       startxco = square()[0];
       startyco = square()[1];
@@ -261,6 +268,16 @@ void mousePressed(){
         }
         firstBoard[selectedPieceNumber][2] = endxco;
         firstBoard[selectedPieceNumber][3] = endyco;
+
+        //If Can Castle
+        if(selectedPieceNumber == 20 && startxco == 5 && startyco == 8 && endxco == 7 && endyco == 8){
+          firstBoard[23][2] = 6;
+        }
+        else if(selectedPieceNumber == 20 && startxco == 5 && startyco == 8 && endxco == 3 && endyco == 8){
+          firstBoard[16][2] = 4;
+        }
+
+        //Switch players
         currentStance = 0;
         turnNumber = 1;
     }
@@ -489,7 +506,12 @@ void execute(int[] autoMove, float[][] typeBoard){
       if(exists(typeBoard,endx,endy)[1] >= 16){
         typeBoard[exists(typeBoard,endx,endy)[1]][0] = 0;
         //println("triggered");
-
+      }
+      else if(selectedPieceNumber == 12 && startx == 5 && starty == 1 && endx == 7 && endy == 1){
+        typeBoard[15][2] = 6;
+      }
+      else if(selectedPieceNumber == 12 && startx == 5 && starty == 1 && endx == 3 && endy == 1){
+        typeBoard[8][2] = 4;
       }
     }
   } else if(turnNumber == 2){ //Black to move
@@ -498,11 +520,14 @@ void execute(int[] autoMove, float[][] typeBoard){
 
         placeholderx = endx;
         placeholdery = endy;
-        //turnNumber = 1;
-        //println(endx,endy);
-        //println(exists(secondBoard,endx,endy));
         if(exists(typeBoard,endx,endy)[1] < 16 && exists(typeBoard,endx,endy)[1] > 0){
           typeBoard[exists(typeBoard,endx,endy)[1]][0] = 0;
+        }
+        else if(selectedPieceNumber == 20 && startx == 5 && starty == 8 && endx == 7 && endy == 8){
+          typeBoard[23][2] = 6;
+        }
+        else if(selectedPieceNumber == 16 && startx == 5 && starty == 8 && endx == 3 && endy == 8){
+          typeBoard[23][2] = 3;
         }
       //}
     }
@@ -661,7 +686,6 @@ int[][] possibleMoves(float[][] typeBoard){
                   onemove = nothing;
              }
            }
-
         }
 
         //If piece is knight
@@ -787,7 +811,6 @@ int[][] possibleMoves(float[][] typeBoard){
             moves = (int[][])append(moves,onemove);
             onemove = nothing;
           }
-
         }
 
         //If piece is bishop
@@ -889,7 +912,6 @@ int[][] possibleMoves(float[][] typeBoard){
                 onemove = nothing;
             }
           }
-
         }
 
         //If piece is queen
@@ -1082,7 +1104,6 @@ int[][] possibleMoves(float[][] typeBoard){
                 onemove = nothing;
             }
           }
-
         }
 
         //If piece is King
@@ -1206,6 +1227,36 @@ int[][] possibleMoves(float[][] typeBoard){
               moves = (int[][])append(moves,onemove);
               onemove = nothing;
             }
+
+          //If piece can castle kingside
+          if(
+             exists(typeBoard,int(typeBoard[i][2] + 1),int(typeBoard[i][3]))[0] == 0
+          && exists(typeBoard,int(typeBoard[i][2] + 2),int(typeBoard[i][3]))[0] == 0
+          && exists(typeBoard,int(typeBoard[i][2] + 3),int(typeBoard[i][3]))[1] == 15
+            ){
+            onemove = append(onemove, int(typeBoard[i][2]));
+            onemove = append(onemove, int(typeBoard[i][3]));
+            onemove = append(onemove, int(typeBoard[i][2] + 2));
+            onemove = append(onemove, int(typeBoard[i][3]));
+            moves = (int[][])append(moves,onemove);
+            onemove = nothing;
+          }
+
+          //If piece can castle Queenside
+          if(
+             exists(typeBoard,int(typeBoard[i][2] - 1),int(typeBoard[i][3]))[0] == 0
+          && exists(typeBoard,int(typeBoard[i][2] - 2),int(typeBoard[i][3]))[0] == 0
+          && exists(typeBoard,int(typeBoard[i][2] - 3),int(typeBoard[i][3]))[0] == 0
+          && exists(typeBoard,int(typeBoard[i][2] - 4),int(typeBoard[i][3]))[1] == 8
+            ){
+            onemove = append(onemove, int(typeBoard[i][2]));
+            onemove = append(onemove, int(typeBoard[i][3]));
+            onemove = append(onemove, int(typeBoard[i][2] - 2));
+            onemove = append(onemove, int(typeBoard[i][3]));
+            moves = (int[][])append(moves,onemove);
+            onemove = nothing;
+          }
+
 
         }
       }
@@ -1897,6 +1948,35 @@ int[][] possibleMoves(float[][] typeBoard){
               onemove = append(onemove, int(typeBoard[i][3]));
               onemove = append(onemove, int(typeBoard[i][2] - 1));
               onemove = append(onemove, int(typeBoard[i][3] - 1));
+              moves = (int[][])append(moves,onemove);
+              onemove = nothing;
+            }
+
+          //If piece can castle kingside
+            if(
+               exists(typeBoard,int(typeBoard[i][2] + 1),int(typeBoard[i][3]))[0] == 0
+            && exists(typeBoard,int(typeBoard[i][2] + 2),int(typeBoard[i][3]))[0] == 0
+            && exists(typeBoard,int(typeBoard[i][2] + 3),int(typeBoard[i][3]))[1] == 23
+              ){
+              onemove = append(onemove, int(typeBoard[i][2]));
+              onemove = append(onemove, int(typeBoard[i][3]));
+              onemove = append(onemove, int(typeBoard[i][2] + 2));
+              onemove = append(onemove, int(typeBoard[i][3]));
+              moves = (int[][])append(moves,onemove);
+              onemove = nothing;
+            }
+
+          //If piece can castle Queenside
+            if(
+               exists(typeBoard,int(typeBoard[i][2] - 1),int(typeBoard[i][3]))[0] == 0
+            && exists(typeBoard,int(typeBoard[i][2] - 2),int(typeBoard[i][3]))[0] == 0
+            && exists(typeBoard,int(typeBoard[i][2] - 3),int(typeBoard[i][3]))[0] == 0
+            && exists(typeBoard,int(typeBoard[i][2] - 4),int(typeBoard[i][3]))[1] == 16
+              ){
+              onemove = append(onemove, int(typeBoard[i][2]));
+              onemove = append(onemove, int(typeBoard[i][3]));
+              onemove = append(onemove, int(typeBoard[i][2] - 2));
+              onemove = append(onemove, int(typeBoard[i][3]));
               moves = (int[][])append(moves,onemove);
               onemove = nothing;
             }
