@@ -12,6 +12,17 @@ float[][] firstBoard = {
   {1,-1,1,7,1},{1,-1,2,7,1},{1,-1,3,7,1},{1,-1,4,7,1},{1,-1,5,7,1},{1,-1,6,7,1},{1,-1,7,7,1},{1,-1,8,7,1},
 };
 
+float[][] resetBoard = {
+
+  //White Pieces
+  {1,1,1,2,1},{1,1,2,2,1},{1,1,3,2,1},{1,1,4,2,1},{1,1,5,2,1},{1,1,6,2,1},{1,1,7,2,1},{1,1,8,2,1},
+  {1,1,1,1,5},{1,1,2,1,3},{1,1,3,1,3},{1,1,4,1,9},{1,1,5,1,5000},{1,1,6,1,3},{1,1,7,1,3},{1,1,8,1,5},
+
+  //Black Pieces
+  {1,-1,1,8,5},{1,-1,2,8,3},{1,-1,3,8,3},{1,-1,4,8,9},{1,-1,5,8,5000},{1,-1,6,8,3},{1,-1,7,8,3},{1,-1,8,8,5},
+  {1,-1,1,7,1},{1,-1,2,7,1},{1,-1,3,7,1},{1,-1,4,7,1},{1,-1,5,7,1},{1,-1,6,7,1},{1,-1,7,7,1},{1,-1,8,7,1},
+};
+
 /*float[][] firstBoard = {
 
   //White Pieces
@@ -74,17 +85,18 @@ void draw(){
         if(colorcounteri % 2 == 0){
           fill(255);
         } else{
-          fill(160,82,45);
+          fill(135,206,250);
         }
       } else{
         if(colorcounteri % 2 == 0){
-          fill(160,82,45);
+          fill(135,206,250);
         } else{
           fill(255);
         }
       }
+      noStroke();
       rect(i,j,width/8,height/8);
-
+      stroke(0);
     }
   }
 
@@ -122,7 +134,7 @@ float evaluate(float[][] typeBoard){
           && exists(typeBoard, int(typeBoard[i][2] + 1),int(typeBoard[i][3] - 1))[1] < 8)
           || (exists(typeBoard, int(typeBoard[i][2] - 1),int(typeBoard[i][3] - 1))[0] == 1
             && exists(typeBoard, int(typeBoard[i][2] - 1),int(typeBoard[i][3] - 1))[1] < 8))){
-              evaluation = evaluation + typeBoard[i][0]*typeBoard[i][1]*(0.1);
+              evaluation = evaluation + typeBoard[i][0]*typeBoard[i][1]*(0.05);
       }
 
       //If black pawn structure
@@ -133,7 +145,7 @@ float evaluate(float[][] typeBoard){
               && exists(typeBoard, int(typeBoard[i][2] + 1),int(typeBoard[i][3] + 1))[1] > 23)
            || (exists(typeBoard, int(typeBoard[i][2] - 1),int(typeBoard[i][3] + 1))[0] == 1
               && exists(typeBoard, int(typeBoard[i][2] - 1),int(typeBoard[i][3] + 1))[1] > 23))){
-              evaluation = evaluation + typeBoard[i][0]*typeBoard[i][1]*(0.1);
+              evaluation = evaluation + typeBoard[i][0]*typeBoard[i][1]*(0.05);
       }
 
       //If centralized rooks
@@ -158,7 +170,7 @@ float evaluate(float[][] typeBoard){
         ||(typeBoard[i][2] == 2 && typeBoard[i][3] == 7)
         ||(typeBoard[i][2] == 7 && typeBoard[i][3] == 7)
         )){
-        evaluation = evaluation + typeBoard[i][0]*typeBoard[i][1]*(0.11);
+        evaluation = evaluation + typeBoard[i][0]*typeBoard[i][1]*(0.16);
       }
 
       //If centralized knights
@@ -168,7 +180,7 @@ float evaluate(float[][] typeBoard){
         ||(typeBoard[i][2] == 3 && typeBoard[i][3] == 6)
         ||(typeBoard[i][2] == 6 && typeBoard[i][3] == 6)
         )){
-        evaluation = evaluation + typeBoard[i][0]*typeBoard[i][1]*(0.11);
+        evaluation = evaluation + typeBoard[i][0]*typeBoard[i][1]*(0.16);
       }
 
     }
@@ -339,7 +351,7 @@ int[] bestBlackMove_depth1(float[][] actualBoard, float[][] theoryBoard){
         lowestEvalScore = evaluate(theoryBoard);
         lowestEvalMove = theMove;
       }
-      else if((evaluate(theoryBoard) == lowestEvalScore) && random(0,4) > 1){
+      else if(abs(evaluate(theoryBoard)-lowestEvalScore) < 0.05 && random(0,4) > 1){
         lowestEvalScore = evaluate(theoryBoard);
         lowestEvalMove = theMove;
 
@@ -383,7 +395,7 @@ int[] bestWhiteMove_depth2(float[][] actualBoard, float[][] theoryBoard2, float[
           highestEvalScore = evaluate(theoryBoard3);
           highestEvalMove = secondMove;
         }
-        else if(evaluate(theoryBoard3) == highestEvalScore && random(0,4) > 1){
+        else if(abs(evaluate(theoryBoard3)-highestEvalScore) < 0.05 && random(0,4) > 1){
           highestEvalScore = evaluate(theoryBoard3);
           highestEvalMove = secondMove;
         }
@@ -409,7 +421,7 @@ int[] bestWhiteMove_depth1(float[][] actualBoard, float[][] theoryBoard){
         highestEvalScore = evaluate(theoryBoard);
         highestEvalMove = theMove;
       }
-      else if((evaluate(theoryBoard) == highestEvalScore) && random(0,4) > 1){
+      else if(abs(evaluate(theoryBoard)-highestEvalScore) < 0.05 && random(0,4) > 1){
         highestEvalScore = evaluate(theoryBoard);
         highestEvalMove = theMove;
 
@@ -452,7 +464,7 @@ int[] bestBlackMove_depth2(float[][] actualBoard, float[][] theoryBoard2, float[
           lowestEvalScore = evaluate(theoryBoard3);
           lowestEvalMove = secondMove;
         }
-        else if(evaluate(theoryBoard3) == lowestEvalScore && random(0,4) > 1){
+        else if(abs(evaluate(theoryBoard3)-lowestEvalScore) < 0.05 && random(0,4) > 1){
           lowestEvalScore = evaluate(theoryBoard3);
           lowestEvalMove = secondMove;
         }
@@ -467,24 +479,30 @@ int[] bestBlackMove_depth2(float[][] actualBoard, float[][] theoryBoard2, float[
 
 //Computer automove
 void keyPressed(){
+  if(key == 'h'){
+    if(turnNumber == 1){
+      execute(bestWhiteMove_depth2(firstBoard,secondBoard,thirdBoard),firstBoard);
+    }
 
-  if(turnNumber == 1){
-    execute(bestWhiteMove_depth2(firstBoard,secondBoard,thirdBoard),firstBoard);
+    if(turnNumber == 2){
+      //execute(bestBlackMove_depth1(firstBoard,secondBoard),firstBoard);
+      execute(bestBlackMove_depth2(firstBoard,secondBoard,thirdBoard),firstBoard);
+
+    }
+
+    if(turnNumber == 1){
+      turnNumber = 2;
+    }
+
+    else if(turnNumber == 2){
+      turnNumber = 1;
+    }
   }
-
-  if(turnNumber == 2){
-    //execute(bestBlackMove_depth1(firstBoard,secondBoard),firstBoard);
-    execute(bestBlackMove_depth2(firstBoard,secondBoard,thirdBoard),firstBoard);
-
-  }
-
-  if(turnNumber == 1){
-    turnNumber = 2;
-  }
-
-  else if(turnNumber == 2){
+  if(key == 'r'){
     turnNumber = 1;
+    copyPieces(resetBoard,firstBoard);
   }
+
 }
 
 //Executes a move given its 2 coordinates
@@ -721,17 +739,17 @@ int[][] possibleMoves(float[][] typeBoard){
             onemove = nothing;
           }
 
-          //If piece can move 1 up 2 right
+          //If piece can move 1 down 2 right
           if(
-            exists(typeBoard,int(typeBoard[i][2] + 2),int(typeBoard[i][3] + 1))[0] == 0
-            || ((exists(typeBoard,int(typeBoard[i][2] + 2),int(typeBoard[i][3] + 1))[0] == 1)
-               && (exists(typeBoard,int(typeBoard[i][2] + 2),int(typeBoard[i][3] + 1))[1] >= 16))
+            exists(typeBoard,int(typeBoard[i][2] + 2),int(typeBoard[i][3] - 1))[0] == 0
+            || ((exists(typeBoard,int(typeBoard[i][2] + 2),int(typeBoard[i][3] - 1))[0] == 1)
+               && (exists(typeBoard,int(typeBoard[i][2] + 2),int(typeBoard[i][3] - 1))[1] >= 16))
             )
             {
             onemove = append(onemove, int(typeBoard[i][2]));
             onemove = append(onemove, int(typeBoard[i][3]));
             onemove = append(onemove, int(typeBoard[i][2] + 2));
-            onemove = append(onemove, int(typeBoard[i][3] + 1));
+            onemove = append(onemove, int(typeBoard[i][3] - 1));
             moves = (int[][])append(moves,onemove);
             onemove = nothing;
           }
@@ -1444,15 +1462,15 @@ int[][] possibleMoves(float[][] typeBoard){
 
           //If piece can move 1 up 2 right
           if(
-            exists(typeBoard,int(typeBoard[i][2] + 2),int(typeBoard[i][3] + 1))[0] == 0
-            || ((exists(typeBoard,int(typeBoard[i][2] + 2),int(typeBoard[i][3] + 1))[0] == 1)
-               && (exists(typeBoard,int(typeBoard[i][2] + 2),int(typeBoard[i][3] + 1))[1] < 16))
+            exists(typeBoard,int(typeBoard[i][2] + 2),int(typeBoard[i][3] - 1))[0] == 0
+            || ((exists(typeBoard,int(typeBoard[i][2] + 2),int(typeBoard[i][3] - 1))[0] == 1)
+               && (exists(typeBoard,int(typeBoard[i][2] + 2),int(typeBoard[i][3] - 1))[1] < 16))
             )
             {
             onemove = append(onemove, int(typeBoard[i][2]));
             onemove = append(onemove, int(typeBoard[i][3]));
             onemove = append(onemove, int(typeBoard[i][2] + 2));
-            onemove = append(onemove, int(typeBoard[i][3] + 1));
+            onemove = append(onemove, int(typeBoard[i][3] - 1));
             moves = (int[][])append(moves,onemove);
             onemove = nothing;
           }
