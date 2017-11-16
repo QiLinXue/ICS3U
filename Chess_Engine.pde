@@ -22,16 +22,16 @@ float[][] resetBoard = {
   {1,-1,1,8,5},{1,-1,2,8,3},{1,-1,3,8,3},{1,-1,4,8,9},{1,-1,5,8,5000},{1,-1,6,8,3},{1,-1,7,8,3},{1,-1,8,8,5},
   {1,-1,1,7,1},{1,-1,2,7,1},{1,-1,3,7,1},{1,-1,4,7,1},{1,-1,5,7,1},{1,-1,6,7,1},{1,-1,7,7,1},{1,-1,8,7,1},
 };
-
-/*float[][] firstBoard = {
+/*
+float[][] firstBoard = {
 
   //White Pieces
-  {0,1,1,2,1},{0,1,2,2,1},{0,1,3,2,1},{0,1,4,2,1},{0,1,5,2,1},{0,1,6,2,1},{0,1,7,2,1},{0,1,8,2,1},
-  {0,1,1,1,5},{0,1,2,1,3},{1,1,4,4,3},{0,1,4,1,9},{0,1,5,1,0},{0,1,6,1,3},{0,1,7,1,3},{0,1,8,1,5},
+  {0,1,1,2,1},{0,1,2,2,1},{0,1,3,2,1},{0,1,4,2,1},{0,1,5,5,1},{0,1,6,2,1},{0,1,7,2,1},{0,1,8,2,1},
+  {1,1,3,5,5},{0,1,2,1,3},{0,1,4,4,3},{0,1,4,1,9},{0,1,5,1,0},{0,1,6,1,3},{0,1,7,1,3},{1,1,4,5,5},
 
   //Black Pieces
-  {0,-1,1,8,5},{0,-1,2,8,3},{0,-1,3,8,3},{0,-1,4,8,9},{0,-1,5,8,0},{0,-1,6,8,3},{0,-1,7,8,3},{0,-1,8,8,5},
-  {0,-1,1,7,1},{0,-1,2,7,1},{0,-1,3,7,1},{0,-1,4,7,1},{0,-1,5,7,1},{0,-1,6,7,1},{0,-1,7,7,1},{0,-1,8,7,1},
+  {0,-1,1,8,5},{0,-1,2,8,3},{0,-1,3,8,3},{0,-1,4,8,9},{0,-1,5,8,0},{0,-1,6,8,3},{0,-1,7,8,3},{1,-1,6,5,5},
+  {0,-1,1,7,1},{0,-1,2,7,1},{0,-1,3,7,1},{0,-1,4,7,1},{1,-1,5,5,1},{0,-1,6,7,1},{0,-1,7,7,1},{0,-1,8,7,1},
 
 };*/
 
@@ -49,6 +49,18 @@ float[][] secondBoard = {
 
 //Second theory board
 float[][] thirdBoard = {
+
+  //White Pieces
+  {1,1,1,2,1},{1,1,2,2,1},{1,1,3,2,1},{1,1,4,2,1},{1,1,5,2,1},{1,1,6,2,1},{1,1,7,2,1},{1,1,8,2,1},
+  {1,1,1,1,5},{1,1,2,1,3},{1,1,3,1,3},{1,1,3,6,9},{1,1,5,1,5000},{1,1,6,1,3},{1,1,7,1,3},{1,1,8,1,5},
+
+  //Black Pieces
+  {1,-1,1,8,5},{1,-1,2,8,3},{1,-1,3,8,3},{1,-1,4,8,9},{1,-1,5,8,5000},{1,-1,6,8,3},{1,-1,7,8,3},{1,-1,8,8,5},
+  {1,-1,1,7,1},{1,-1,2,7,1},{1,-1,3,7,1},{1,-1,4,7,1},{1,-1,5,7,1},{1,-1,6,7,1},{1,-1,7,7,1},{1,-1,8,7,1},
+};
+
+//Third theory board
+float[][] fourthBoard = {
 
   //White Pieces
   {1,1,1,2,1},{1,1,2,2,1},{1,1,3,2,1},{1,1,4,2,1},{1,1,5,2,1},{1,1,6,2,1},{1,1,7,2,1},{1,1,8,2,1},
@@ -103,7 +115,36 @@ void draw(){
   //Places all the pieces onto the board
   for(int i=0;i<32;i++){
     place(i);
-  }}
+  }
+
+  //Checkmate Message
+  if(evaluate(firstBoard) > 4000){
+    fill(178, 255, 102);
+    rect(75,75,1050,750);
+    textSize(100);
+    fill(0);
+    text("You Won",400,400);
+    textSize(48);
+    text("I guess the computer felt sorry for your life",100,500);
+
+    textSize(60);
+    text("Click 'r' to try again",340,700);
+  }
+
+  else if(evaluate(firstBoard) < -4000){
+    fill(255,102,102);
+    rect(75,75,1050,750);
+    textSize(100);
+    fill(0);
+    text("You Lost",400,400);
+    textSize(48);
+    text("DYK 100% of people who lose are losers",130,500);
+
+    textSize(60);
+    text("Click 'r' to try again",340,700);
+  }
+
+}
 
 //Creates the board evaluation
 float evaluate(float[][] typeBoard){
@@ -335,6 +376,15 @@ void copyPieces(float[][] board1, float[][] board2){
   }
 }
 
+
+
+//AI STARTS HERE
+
+
+
+
+
+
 //Searches for the best black move with depth1
 int[] bestBlackMove_depth1(float[][] actualBoard, float[][] theoryBoard){
   float lowestEvalScore = 9000;
@@ -361,6 +411,79 @@ int[] bestBlackMove_depth1(float[][] actualBoard, float[][] theoryBoard){
   copyPieces(actualBoard, theoryBoard);
 
   return lowestEvalMove;
+}
+
+//Searches for the best black move with depth2
+int[] bestBlackMove_depth2(float[][] actualBoard, float[][] theoryBoard2, float[][] theoryBoard3){
+    //Setup
+    copyPieces(actualBoard,theoryBoard2);
+    copyPieces(theoryBoard2,theoryBoard3);
+    float lowestEvalScore = 9000;
+    int[] lowestEvalMove = {8,8,1,5};
+    copyPieces(actualBoard, theoryBoard2);
+
+    //Loops through all possible moves for black
+    int looplength = possibleMoves(theoryBoard2).length;
+    for(int i = 0; i< looplength; i++){
+        turnNumber = 2;
+        copyPieces(actualBoard, theoryBoard2);
+
+        //Execute one of the possible moves for white
+        int[] secondMove = possibleMoves(theoryBoard2)[i];
+        execute(secondMove,theoryBoard2);
+
+        //Begin to find best move for black
+        copyPieces(theoryBoard2,theoryBoard3);
+        turnNumber = 1;
+
+        //Execute best black move
+        execute(bestWhiteMove_depth1(theoryBoard2,theoryBoard3),theoryBoard3);
+
+
+        //Check if theoryboard3's evaluation is higher than the rest assuming black plays perfectly
+        if(evaluate(theoryBoard3) < lowestEvalScore){
+          lowestEvalScore = evaluate(theoryBoard3);
+          lowestEvalMove = secondMove;
+        }
+        //else if(abs(evaluate(theoryBoard3)-lowestEvalScore) < 0.05 && random(0,4) > 1){
+          //lowestEvalScore = evaluate(theoryBoard3);
+          //lowestEvalMove = secondMove;
+        //}
+
+        //copyPieces(actualBoard, theoryBoard2);
+        //copyPieces(theoryBoard2, theoryBoard3);
+    } //Loop ends
+
+    turnNumber = 2;
+    //copyPieces(actualBoard, theoryBoard2);
+    //copyPieces(theoryBoard2, theoryBoard3);
+    return lowestEvalMove;
+}
+
+//Searches for the best white move with best white move with depth1
+int[] bestWhiteMove_depth1(float[][] actualBoard, float[][] theoryBoard){
+  float highestEvalScore = -9000;
+  int[] highestEvalMove = {8,8,1,3};
+  copyPieces(actualBoard, theoryBoard);
+  int looplength = possibleMoves(theoryBoard).length;
+  for(int i = 0; i< looplength; i++){
+      copyPieces(actualBoard, theoryBoard);
+      int[] theMove = possibleMoves(theoryBoard)[i];
+      execute(theMove,theoryBoard);
+
+      if(evaluate(theoryBoard) > highestEvalScore){
+        highestEvalScore = evaluate(theoryBoard);
+        highestEvalMove = theMove;
+      }
+      else if(abs(evaluate(theoryBoard)-highestEvalScore) < 0.05 && random(0,4) > 1){
+        highestEvalScore = evaluate(theoryBoard);
+        highestEvalMove = theMove;
+
+      }
+  }
+  //copyPieces(actualBoard, theoryBoard);
+
+  return highestEvalMove;
 }
 
 //Searches for the best white move with depth2
@@ -406,82 +529,77 @@ int[] bestWhiteMove_depth2(float[][] actualBoard, float[][] theoryBoard2, float[
     return highestEvalMove;
 }
 
-//Searches for the best white move with best white move with depth1
-int[] bestWhiteMove_depth1(float[][] actualBoard, float[][] theoryBoard){
-  float highestEvalScore = -9000;
-  int[] highestEvalMove = {8,8,1,3};
-  copyPieces(actualBoard, theoryBoard);
-  int looplength = possibleMoves(theoryBoard).length;
-  for(int i = 0; i< looplength; i++){
-      copyPieces(actualBoard, theoryBoard);
-      int[] theMove = possibleMoves(theoryBoard)[i];
-      execute(theMove,theoryBoard);
+//Searches for the best white move with depth3
+int[] bestWhiteMove_depth3(float[][] actualBoard, float[][] theoryBoard2, float[][] theoryBoard3, float[][] theoryBoard4){
 
-      if(evaluate(theoryBoard) > highestEvalScore){
-        highestEvalScore = evaluate(theoryBoard);
-        highestEvalMove = theMove;
-      }
-      else if(abs(evaluate(theoryBoard)-highestEvalScore) < 0.05 && random(0,4) > 1){
-        highestEvalScore = evaluate(theoryBoard);
-        highestEvalMove = theMove;
-
-      }
-      copyPieces(actualBoard, theoryBoard);
-  }
-  copyPieces(actualBoard, theoryBoard);
-
-  return highestEvalMove;
-}
-
-//Searches for the best black move with depth2
-int[] bestBlackMove_depth2(float[][] actualBoard, float[][] theoryBoard2, float[][] theoryBoard3){
     //Setup
     copyPieces(actualBoard,theoryBoard2);
     copyPieces(theoryBoard2,theoryBoard3);
-    float lowestEvalScore = 9000;
-    int[] lowestEvalMove = {8,8,1,5};
-    copyPieces(actualBoard, theoryBoard2);
+    copyPieces(theoryBoard3,theoryBoard4);
 
-    //Loops through all possible moves for black
+    float highestEvalScore = -9000;
+    int[] highestEvalMove = {8,8,1,5};
+
+    //Loops through all possible moves for white
     int looplength = possibleMoves(theoryBoard2).length;
     for(int i = 0; i< looplength; i++){
-        turnNumber = 2;
+        turnNumber = 1;
         copyPieces(actualBoard, theoryBoard2);
 
         //Execute one of the possible moves for white
         int[] secondMove = possibleMoves(theoryBoard2)[i];
+        //int[] secondMove = {4,5,5,5};
         execute(secondMove,theoryBoard2);
 
         //Begin to find best move for black
         copyPieces(theoryBoard2,theoryBoard3);
-        turnNumber = 1;
+        copyPieces(theoryBoard3,theoryBoard4);
+        turnNumber = 2;
 
         //Execute best black move
-        execute(bestWhiteMove_depth1(theoryBoard2,theoryBoard3),theoryBoard3);
 
+        execute(bestBlackMove_depth2(theoryBoard2,theoryBoard3,theoryBoard4),theoryBoard3);
+        /*println(i,"second",secondMove[0],
+          secondMove[1],
+          secondMove[2],
+          secondMove[3],"third",bestBlackMove_depth2(theoryBoard2,theoryBoard3,theoryBoard4)[0],
+        bestBlackMove_depth2(theoryBoard2,theoryBoard3,theoryBoard4)[1],
+        bestBlackMove_depth2(theoryBoard2,theoryBoard3,theoryBoard4)[2],
+        bestBlackMove_depth2(theoryBoard2,theoryBoard3,theoryBoard4)[3],theoryBoard4[20][0],
+        evaluate(theoryBoard4));
+        for(int j = 0; j<32; j++){
+          println(j,theoryBoard4[j][0],theoryBoard4[j][2],theoryBoard4[j][3],theoryBoard3[j][0],theoryBoard3[j][2],theoryBoard3[j][3]);
+        }*/
         //Check if theoryboard3's evaluation is higher than the rest assuming black plays perfectly
-        if(evaluate(theoryBoard3) < lowestEvalScore){
-          lowestEvalScore = evaluate(theoryBoard3);
-          lowestEvalMove = secondMove;
+        if(evaluate(theoryBoard3) > highestEvalScore){
+          highestEvalScore = evaluate(theoryBoard3);
+          highestEvalMove = secondMove;
         }
-        else if(abs(evaluate(theoryBoard3)-lowestEvalScore) < 0.05 && random(0,4) > 1){
-          lowestEvalScore = evaluate(theoryBoard3);
-          lowestEvalMove = secondMove;
-        }
+        //else if(abs(evaluate(theoryBoard4)-highestEvalScore) < 0.05 && random(0,4) > 1){
+          //highestEvalScore = evaluate(theoryBoard4);
+          //highestEvalMove = secondMove;
+        //}
+        turnNumber = 1;
     } //Loop ends
 
-    turnNumber = 2;
-    copyPieces(actualBoard, theoryBoard2);
-    return lowestEvalMove;
+    return highestEvalMove;
 }
+
 
 
 
 //Computer automove
 void keyPressed(){
-  if(key == 'h'){
+  if(key == 'y'){
+    if(turnNumber == 1){
+      execute(bestWhiteMove_depth3(firstBoard,secondBoard,thirdBoard,fourthBoard),firstBoard);
+      turnNumber = 2;
+    }
+  }
+  if(keyCode == ENTER){
     if(turnNumber == 1){
       execute(bestWhiteMove_depth2(firstBoard,secondBoard,thirdBoard),firstBoard);
+      //execute(bestWhiteMove_depth3(firstBoard,secondBoard,thirdBoard,fourthBoard),firstBoard);
     }
 
     if(turnNumber == 2){
@@ -534,7 +652,7 @@ void execute(int[] autoMove, float[][] typeBoard){
     }
   } else if(turnNumber == 2){ //Black to move
       selectedPieceNumber = exists(typeBoard,startx,starty)[1];
-      //if(exists(typeBoard,startx,starty)[0] == 1 && ((exists(typeBoard,endx,endy)[0] == 0) || (exists(typeBoard,endx,endy)[0] == 1 && (exists(typeBoard,endx,endy)[1] < 16))) && exists(typeBoard,startx,starty)[1] >= 16){
+      if(exists(typeBoard,startx,starty)[0] == 1 && ((exists(typeBoard,endx,endy)[0] == 0) || (exists(typeBoard,endx,endy)[0] == 1 && (exists(typeBoard,endx,endy)[1] < 16))) && exists(typeBoard,startx,starty)[1] >= 16){
 
         placeholderx = endx;
         placeholdery = endy;
@@ -547,7 +665,7 @@ void execute(int[] autoMove, float[][] typeBoard){
         else if(selectedPieceNumber == 16 && startx == 5 && starty == 8 && endx == 3 && endy == 8){
           typeBoard[23][2] = 3;
         }
-      //}
+      }
     }
     typeBoard[selectedPieceNumber][2] = placeholderx;
     typeBoard[selectedPieceNumber][3] = placeholdery;
