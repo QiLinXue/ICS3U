@@ -78,11 +78,18 @@ float[][] fourthBoard = {
   int turnNumber = 1; //1=white; 2=black;
   int currentStance = 0; //0=Select Piece; 1=move piece;
   String pieceName; //stores the piece name (P,R,N,B,Q,K)
+  int isMouseDown = 0;
 
 //Setup
-void setup(){}
+
+
+
+void setup(){
+
+}
 void settings(){
-  size(1200,1200);}
+  size(1200,1200);
+}
 
 //Draws all the pieces for each frame
 void draw(){
@@ -110,6 +117,11 @@ void draw(){
       rect(i,j,width/8,height/8);
       stroke(0);
     }
+  }
+
+  if(isMouseDown == 1){
+    fill(0);
+    rect(downx,downy,width/8,height/8);
   }
 
   //Places all the pieces onto the board
@@ -267,14 +279,19 @@ void place(int pieceNum){
     fill(255);
   }}
 
+int downx, downy;
 //Actual Moving Around
 int[] square(){
   int[] currentsquare = {(floor(mouseX/(width/8))+1),8 - (floor(mouseY/(height/8)))};
   return currentsquare; //Returns the x and y coordinates (relative to the board) of the current mouse value
 }
+
 void mousePressed(){
   if(mouseButton == RIGHT && currentStance == 1){
     currentStance = 0;
+    isMouseDown = 0;
+    downx = 10000;
+    downy = 10000;
   }
   else{
   if(turnNumber == 1){ //White to Move
@@ -283,6 +300,9 @@ void mousePressed(){
       startyco = square()[1];
       selectedPieceNumber = exists(firstBoard,startxco,startyco)[1];
       currentStance = 1;
+      isMouseDown = 1;
+      downx = (floor(mouseX/(width/8)))*width/8;
+      downy = ((floor(mouseY/(height/8))))*width/8;
     }
 
     if(realmoveLegal(startxco,startyco,square()[0],square()[1]) == 1 && currentStance == 1 && (exists(firstBoard,square()[0],square()[1])[0] == 0 || (exists(firstBoard,square()[0],square()[1])[0] == 1 && exists(firstBoard,square()[0],square()[1])[1] >= 16))){
@@ -304,6 +324,10 @@ void mousePressed(){
 
         currentStance = 0;
         turnNumber = 2;
+
+        isMouseDown = 0;
+        downx = 10000;
+        downy = 10000;
     }
   }
   else if(turnNumber == 2){ //Black to move
@@ -312,6 +336,9 @@ void mousePressed(){
       startyco = square()[1];
       selectedPieceNumber = exists(firstBoard,startxco,startyco)[1];
       currentStance = 1;
+      isMouseDown = 1;
+      downx = (floor(mouseX/(width/8)))*width/8;
+      downy = ((floor(mouseY/(height/8))))*width/8;
     }
     if(realmoveLegal(startxco,startyco,square()[0],square()[1]) == 1 && currentStance == 1 && (exists(firstBoard,square()[0],square()[1])[0] == 0 || (exists(firstBoard,square()[0],square()[1])[0] == 1 && exists(firstBoard,square()[0],square()[1])[1] < 16))){
         endxco = square()[0];
@@ -333,6 +360,10 @@ void mousePressed(){
         //Switch players
         currentStance = 0;
         turnNumber = 1;
+
+        isMouseDown = 0;
+        downx = 10000;
+        downy = 10000;
     }
 
   }}}
