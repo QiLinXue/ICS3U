@@ -1,5 +1,8 @@
-//{alive=1/dead=0 , white=1/black=-1 , xLocation, yLocation, pieceValue}
+String[] winnerMessage = {"I guess the computer felt sorry for you","I hope you feel accomplished beating a bunch of 1s and 0s","Time to write your cheque, mate"};
+String[] loserMessage = {"The purpose of chess is to win not lose","100% of people who lose are losers","This means you just got PAWN'D"};
 
+
+//{alive=1/dead=0 , white=1/black=-1 , xLocation, yLocation, pieceValue}
 //Actual Board
 float[][] firstBoard = {
 
@@ -88,17 +91,18 @@ void setup(){
 
 }
 void settings(){
-  size(1200,1200);
+  size(1500,1500);
 }
 
 //Draws all the pieces for each frame
 void draw(){
   int colorcounteri = 1;
   int colorcounterj = 1;
+
   //Creates the 8x8 gridlines
-  for(int i=0;i<width;i+=width/8){
+  for(int i=0;i<(width-300);i+=(width-300)/8){
     colorcounteri++;
-    for(int j=0;j<height;j+=height/8){
+    for(int j=0;j<((height-300));j+=(height-300)/8){
       colorcounterj++;
       if(colorcounterj % 2 == 0){
         if(colorcounteri % 2 == 0){
@@ -114,20 +118,37 @@ void draw(){
         }
       }
       noStroke();
-      rect(i,j,width/8,height/8);
+      rect(i,j,(width-300)/8,(height-300)/8);
       stroke(0);
     }
   }
 
   if(isMouseDown == 1){
     fill(0);
-    rect(downx,downy,width/8,height/8);
+    rect(downx,downy,1200/8,(height-300)/8);
   }
 
   //Places all the pieces onto the board
   for(int i=0;i<32;i++){
     place(i);
   }
+
+  //Evaluation bar
+  if(evaluate(firstBoard) > 4000){
+    fill(255);
+    rect(1200,0,30,1200);
+  }
+
+  else if(evaluate(firstBoard) > 4000){
+    fill(0);
+    rect(1200,0,30,1200);
+  } else{
+    rect(1200,0,30,600+(evaluate(firstBoard) * 30));
+    fill(0);
+    rect(1200,600+(evaluate(firstBoard) * 30),30,600-(evaluate(firstBoard) * 30));
+  }
+
+
 
   //Checkmate Message
   if(evaluate(firstBoard) > 4000){
@@ -181,7 +202,7 @@ float evaluate(float[][] typeBoard){
 
       //If white pawn structure
       if(
-          i < 8 && i != 1 && i != 6
+          i < 8 && i != 1 && i != 8
           && ((
           exists(typeBoard, int(typeBoard[i][2] + 1),int(typeBoard[i][3]) - 1)[0] == 1
           && exists(typeBoard, int(typeBoard[i][2] + 1),int(typeBoard[i][3] - 1))[1] < 8)
@@ -192,7 +213,7 @@ float evaluate(float[][] typeBoard){
 
       //If black pawn structure
       if(
-           i > 23 /*&& i != 1 && i !=6*/
+           i > 23 && i != 24 && i !=31
            && ((
               exists(typeBoard, int(typeBoard[i][2] + 1),int(typeBoard[i][3]) + 1)[0] == 1
               && exists(typeBoard, int(typeBoard[i][2] + 1),int(typeBoard[i][3] + 1))[1] > 23)
@@ -202,18 +223,17 @@ float evaluate(float[][] typeBoard){
       }
 
       //If centralized rooks
-      if(i == 8 || i == 15 || i == 16 || i == 23 && ((typeBoard[i][2] > 2 && typeBoard[i][2] < 6))){
+      if((i == 8 || i == 15 || i == 16 || i == 23) && ((typeBoard[i][2] > 2 && typeBoard[i][2] < 6))){
         evaluation = evaluation + typeBoard[i][0]*typeBoard[i][1]*(0.15);
       }
 
       //If rooks are in bad position
-      if(i == 8 || i == 15 || i == 16 || i == 23 &&
-          ((typeBoard[i][2] == 1 && typeBoard[i][3] == 2)
-          ||(typeBoard[i][2] == 8 && typeBoard[i][3] == 2)
-          ||(typeBoard[i][2] == 1 && typeBoard[i][3] == 7)
-          ||(typeBoard[i][2] == 8 && typeBoard[i][3] == 7)
-          )){
-        evaluation = evaluation + typeBoard[i][0]*typeBoard[i][1]*(-0.11);
+      boolean rookup1 = ((typeBoard[i][2] == 1 && typeBoard[i][3] == 2) ||(typeBoard[i][2] == 8 && typeBoard[i][3] == 2) ||(typeBoard[i][2] == 1 && typeBoard[i][3] == 7) ||(typeBoard[i][2] == 8 && typeBoard[i][3] == 7));
+      boolean rookleftright1 = ((typeBoard[i][2] == 7) || (typeBoard[i][2] == 2));
+
+      if((i == 8 || i == 15 || i == 16 || i == 23) &&
+          (rookup1 || rookleftright1)){
+            evaluation = evaluation + typeBoard[i][0]*typeBoard[i][1]*(-0.1);
       }
 
       //If finachetto bishops
@@ -235,6 +255,12 @@ float evaluate(float[][] typeBoard){
         )){
         evaluation = evaluation + typeBoard[i][0]*typeBoard[i][1]*(0.16);
       }
+
+      //If castled
+      if((i == 12 || i == 20) && ((typeBoard[i][2] == 7) || (typeBoard[i][2] == 3)) && ((typeBoard[i][3] == 1) || (typeBoard[i][3] == 8))){
+        evaluation = evaluation + typeBoard[i][0]*typeBoard[i][1]*(0.5);
+      }
+
 
     }
 
@@ -267,22 +293,22 @@ void place(int pieceNum){
 
     if((firstBoard[pieceNum][1]) == 1){
       fill(255);
-      ellipse(width/8*(firstBoard[pieceNum][2]-1),height-(firstBoard[pieceNum][3]*height/8),width/8,height/8);
+      ellipse(1200/8*(firstBoard[pieceNum][2]-1),(height-300)-(firstBoard[pieceNum][3]*(height-300)/8),1200/8,(height-300)/8);
       fill(50);
     } else{
       fill(50);
-      ellipse(width/8*(firstBoard[pieceNum][2]-1),height-(firstBoard[pieceNum][3]*height/8),width/8,height/8);
+      ellipse(1200/8*(firstBoard[pieceNum][2]-1),(height-300)-(firstBoard[pieceNum][3]*(height-300)/8),1200/8,(height-300)/8);
       fill(255);
     }
-    textSize(height/9);
-    text(pieceName,width/8*(firstBoard[pieceNum][2]-1)+height/36,height-(firstBoard[pieceNum][3]*height/8)+height/8-height/36);
+    textSize((height-300)/9);
+    text(pieceName,1200/8*(firstBoard[pieceNum][2]-1)+(height-300)/36,(height-300)-(firstBoard[pieceNum][3]*(height-300)/8)+(height-300)/8-(height-300)/36);
     fill(255);
   }}
 
 int downx, downy;
 //Actual Moving Around
 int[] square(){
-  int[] currentsquare = {(floor(mouseX/(width/8))+1),8 - (floor(mouseY/(height/8)))};
+  int[] currentsquare = {(floor(mouseX/(1200/8))+1),8 - (floor(mouseY/((height-300)/8)))};
   return currentsquare; //Returns the x and y coordinates (relative to the board) of the current mouse value
 }
 
@@ -301,8 +327,8 @@ void mousePressed(){
       selectedPieceNumber = exists(firstBoard,startxco,startyco)[1];
       currentStance = 1;
       isMouseDown = 1;
-      downx = (floor(mouseX/(width/8)))*width/8;
-      downy = ((floor(mouseY/(height/8))))*width/8;
+      downx = (floor(mouseX/(1200/8)))*1200/8;
+      downy = ((floor(mouseY/((height-300)/8))))*1200/8;
     }
 
     if(realmoveLegal(startxco,startyco,square()[0],square()[1]) == 1 && currentStance == 1 && (exists(firstBoard,square()[0],square()[1])[0] == 0 || (exists(firstBoard,square()[0],square()[1])[0] == 1 && exists(firstBoard,square()[0],square()[1])[1] >= 16))){
@@ -337,8 +363,8 @@ void mousePressed(){
       selectedPieceNumber = exists(firstBoard,startxco,startyco)[1];
       currentStance = 1;
       isMouseDown = 1;
-      downx = (floor(mouseX/(width/8)))*width/8;
-      downy = ((floor(mouseY/(height/8))))*width/8;
+      downx = (floor(mouseX/(1200/8)))*1200/8;
+      downy = ((floor(mouseY/((height-300)/8))))*1200/8;
     }
     if(realmoveLegal(startxco,startyco,square()[0],square()[1]) == 1 && currentStance == 1 && (exists(firstBoard,square()[0],square()[1])[0] == 0 || (exists(firstBoard,square()[0],square()[1])[0] == 1 && exists(firstBoard,square()[0],square()[1])[1] < 16))){
         endxco = square()[0];
@@ -433,6 +459,7 @@ int[] bestBlackMove_depth1(float[][] actualBoard, float[][] theoryBoard){
         lowestEvalMove = theMove;
       }
       else if(abs(evaluate(theoryBoard)-lowestEvalScore) < 0.05 && random(0,4) > 1){
+
         lowestEvalScore = evaluate(theoryBoard);
         lowestEvalMove = theMove;
 
@@ -470,24 +497,23 @@ int[] bestBlackMove_depth2(float[][] actualBoard, float[][] theoryBoard2, float[
         //Execute best black move
         execute(bestWhiteMove_depth1(theoryBoard2,theoryBoard3),theoryBoard3);
 
-
         //Check if theoryboard3's evaluation is higher than the rest assuming black plays perfectly
         if(evaluate(theoryBoard3) < lowestEvalScore){
           lowestEvalScore = evaluate(theoryBoard3);
           lowestEvalMove = secondMove;
         }
-        //else if(abs(evaluate(theoryBoard3)-lowestEvalScore) < 0.05 && random(0,4) > 1){
-          //lowestEvalScore = evaluate(theoryBoard3);
-          //lowestEvalMove = secondMove;
-        //}
+        else if(abs(evaluate(theoryBoard3)-lowestEvalScore) < 0.05 && random(0,4) > 1){
+          lowestEvalScore = evaluate(theoryBoard3);
+          lowestEvalMove = secondMove;
+        }
 
-        //copyPieces(actualBoard, theoryBoard2);
-        //copyPieces(theoryBoard2, theoryBoard3);
+        copyPieces(actualBoard, theoryBoard2);
+        copyPieces(theoryBoard2, theoryBoard3);
     } //Loop ends
 
     turnNumber = 2;
-    //copyPieces(actualBoard, theoryBoard2);
-    //copyPieces(theoryBoard2, theoryBoard3);
+    copyPieces(actualBoard, theoryBoard2);
+    copyPieces(theoryBoard2, theoryBoard3);
     return lowestEvalMove;
 }
 
@@ -509,11 +535,11 @@ int[] bestWhiteMove_depth1(float[][] actualBoard, float[][] theoryBoard){
       else if(abs(evaluate(theoryBoard)-highestEvalScore) < 0.05 && random(0,4) > 1){
         highestEvalScore = evaluate(theoryBoard);
         highestEvalMove = theMove;
-
       }
+      copyPieces(actualBoard, theoryBoard);
   }
-  //copyPieces(actualBoard, theoryBoard);
 
+  copyPieces(actualBoard, theoryBoard);
   return highestEvalMove;
 }
 
@@ -553,10 +579,13 @@ int[] bestWhiteMove_depth2(float[][] actualBoard, float[][] theoryBoard2, float[
           highestEvalScore = evaluate(theoryBoard3);
           highestEvalMove = secondMove;
         }
+        copyPieces(actualBoard,theoryBoard2);
+        copyPieces(theoryBoard2,theoryBoard3);
     } //Loop ends
 
     turnNumber = 1;
-    copyPieces(actualBoard, theoryBoard2);
+    copyPieces(actualBoard,theoryBoard2);
+    copyPieces(theoryBoard2,theoryBoard3);
     return highestEvalMove;
 }
 
