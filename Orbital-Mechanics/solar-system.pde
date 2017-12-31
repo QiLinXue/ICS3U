@@ -4,7 +4,7 @@ void setup(){
 }
 
 void settings(){
-  size(1500,1500);
+  size(1500,1500,P3D);
 }
 
 int timeticker = 0;
@@ -23,15 +23,18 @@ float angle(float[] object){
 
 void plotPlanet(float[] object){
   pushMatrix();
-  translate(width/2,height/2);
+  //translate(width/2,height/2);
   rotate(object[4]);
 
-  ellipse(
+  /*ellipse(
     cos(radians(angle(object)))*(object[2]/orbitRadiusScaler),
     sin(radians(angle(object)))*(object[3]/orbitRadiusScaler),
     object[0]/planetSizeScaler,
     object[0]/planetSizeScaler
-  );
+  );*/
+  translate(cos(radians(angle(object)))*(object[2]/orbitRadiusScaler),
+  sin(radians(angle(object)))*(object[3]/orbitRadiusScaler));
+  sphere(object[0]/planetSizeScaler);
   popMatrix();
 }
 
@@ -40,7 +43,7 @@ void plotOrbit(float[] object){
   ellipseMode(CENTER);
 
   pushMatrix();
-  translate(width/2,height/2);
+  //translate(width/2,height/2);
   rotate(object[4]);
 
   noFill();
@@ -74,24 +77,62 @@ void draw(){
 }
 
 void solarSystem(){
+  sphereDetail(10);
+  //pointLight(213,182,10, width/2, height/2, 0);
+
   //Orbit Lines (descending order)
   fill(0);
   stroke(255);
   noFill();
+  pushMatrix();
+  translate(width/2,height/2);
+  if(mousePressed){
+    if(noClick){
+      noClick = false;
+      savedPositions[0] = mouseX;
+      savedPositions[1] = -mouseY;
+      rotateY(savedPositions[2]+radians((mouseX-savedPositions[0])/5.4));
+      rotateX(savedPositions[3]+radians((-mouseY-savedPositions[1])/5.4));
+
+    } else{
+      rotateY(savedPositions[2]+radians((mouseX-savedPositions[0])/5.4));
+      rotateX(savedPositions[3]+radians((-mouseY-savedPositions[1])/5.4));
+
+    }
+  } else{
+    rotateY(savedPositions[2]);
+    rotateX(savedPositions[3]);
+  }
   plotOrbit(planet1); //Earth
   plotOrbit(planet2); //Mars
 
 
   //Star
-  fill(254,246,91);
-  ellipse(width/2,height/2,star[0]/10000,star[0]/10000); //Sun
+  fill(213,182,10);
+  //ellipse(0,0,star[0]/10000,star[0]/10000); //Sun
+  sphere(star[0]/10000);
 
   //Planets
   fill(255);
   plotPlanet(planet1); //Earth
   plotPlanet(planet2); //Mars
+  popMatrix();
+
 }
 
-void keyPressed(){
 
+
+
+
+
+
+
+
+boolean noClick = true;
+float[] savedPositions = {0,0,0,0};
+void mouseReleased(){
+  savedPositions[2] = savedPositions[2]+radians((mouseX-savedPositions[0])/5.4);
+  savedPositions[3] = savedPositions[3]+radians((-mouseY-savedPositions[1])/5.4);
+
+  noClick = true;
 }
