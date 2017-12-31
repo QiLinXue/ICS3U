@@ -1,8 +1,20 @@
+planet planet1;
+planet planet2;
+CenterBody sun;
+
 void setup(){
   background(30);
-  frameRate(100);}
+  frameRate(100);
+
+  sun = new CenterBody(695700,1.989E30,213,182,10);
+  planet1 = new planet(6371,5.972E24,1.471E11,1.521E11,102.9,7.155,sun.mass);
+  planet2 = new planet(3390,6.39E23,2.066E11,2.492E11,336,5.65,sun.mass);
+}
+
 void settings(){
   size(1500,1500,P3D);}
+
+
 
 //Settings to adjust the dimension of the planets
 int timeticker = 0;
@@ -13,72 +25,6 @@ int planetSizeScaler = 400;
 //The Actual Planets
 //float[] object = {plaet radius (km), mass (kg),periapsis (m), apoapsis (m), longitude of peripasis,orbital inclination}
 float[] center1 = {695700,1.989E30};
-float[] satellite1 = {6371,5.972E24,1.471E11,1.521E11,102.9,7.155}; //Earth
-float[] satellite2 = {3390,6.39E23,2.066E11,2.492E11,336,5.65}; //Mars
-
-//Gives an accurate depiction of how the angle is changing with respect to time of an astronomical body
-float angle(float[] object,float[] center){
-
-  return
-          (timewarp* //Speeds everything up
-             (timeticker/ //Equation below gives the period, this gives the percentage of the period completed so it can be transformed into an angle
-
-               //Kepler's Third Law (p^2=2*PI*sqrt(a^3/GM))
-               (2*PI*
-                 sqrt(
-                       (pow((object[2]+object[3])/2,3) //Gives the semi-major axis
-                       /
-                       (6.674e-11*center[1])) //Gives the Standard Gravitational Parameter of the System
-                     )
-               )
-
-             )
-           ) % 360; //Transforms a percentage into an angle
-}
-
-
-//Plots a satellite on the UI
-void plotSatellite(float[] object,float[] center){
-  fill(255,20,147); //pinkish color
-
-  pushMatrix(); //Begin transformation
-  rotateZ(radians(object[4])); //Matches its longitude of periapsis
-  rotateX(radians(object[5])); //Matches its orbital inclination
-
-  //Transforms the planet according to the current angle and its orbital properties
-  translate(
-             cos(radians(angle(object,center)))* //x-component of satellite with respect to center body
-             (object[2]/orbitRadiusScaler) //length magnitude of sateliite with respect to center body
-             ,
-             sin(radians(angle(object,center)))* //y-component of satellite with respect to center body
-             (object[3]/orbitRadiusScaler) //Length magnitude of satellite with respect to center body
-           );
-  //stroke(0); //Gives the stroke color of the sphere details
-  sphere(object[0]/planetSizeScaler); //Actual satellite itself
-  popMatrix(); //Ends transformation
-}
-
-//Plots the orbit lines on the UI
-void plotOrbit(float[] object){
-
-  stroke(255); //color of the orbit line
-  noFill(); //ensures the ellipse is transparent
-
-  pushMatrix(); //Begin transformation
-  rotateZ(radians(object[4])); //Matches its longitude of periapsis
-  rotateX(radians(object[5])); //Matches its orbital inclination
-  //The actual orbit
-  ellipse(
-    0,
-    0, //Note that there is a transformation under solarSystem() that ensures the center is at 0,0 for convenient rotations
-    (object[2]/orbitRadiusScaler)*2, //magnitude of length of periapsis *2
-    (object[3]/orbitRadiusScaler)*2  //magnitude of length of apoapsis *2
-  );
-
-  popMatrix(); //End transformation
-}
-
-
 
 //0=homescreen, 1=solarSystem, 2=planetSystem
 int mode = 1;
@@ -108,8 +54,8 @@ void solarSystem(){
   enableRotation();
 
   //Planet Orbit Lines
-  plotOrbit(satellite1); //Earth
-  plotOrbit(satellite2); //Mars
+  planet1.plotOrbit(); //Earth
+  planet2.plotOrbit(); //Mars
 
   //Plane of Reference
   fill(100);
@@ -119,12 +65,11 @@ void solarSystem(){
   strokeWeight(1);
 
   //Star
-  fill(213,182,10);
-  sphere(center1[0]/10000);
+  sun.plotBody();
 
   //Planets
-  plotSatellite(satellite1,center1); //Earth
-  plotSatellite(satellite2,center1); //Mars
+  planet1.plotplanet();
+  planet2.plotplanet();
 
   popMatrix(); //End Transformation. Anything put beyond this line will not be affected by rotation
 }
@@ -189,4 +134,8 @@ void mouseWheel(MouseEvent event) {
       zoom = zoom - (isScroll/20);
     }
   }
+}
+
+void keyPressed(){
+  planet2.displayFacts();
 }
