@@ -44,6 +44,8 @@ class planet{
     float altitude(){
       //Using an adaptation of Kepler's Equation
       //r^3=(GM*T^2)/4pi^2
+      //The bottom only works for circular orbits
+      /*
       return (
         pow(
           (((6.674e-11*centerMass)  //Standard Gravitational Parameter
@@ -53,7 +55,21 @@ class planet{
           (4*pow(PI,2))) //4pi^2
           ,
          0.3333) //Cube Rooted
-      );
+      );*/
+
+      //Using trigonometry with polar coordinates
+      // To prove this, first start with the cartesian equation of ellipse
+      // x^2/a^2 + y^2/b^2 = 1
+      // x^2 * b^2 + y^2 * a^2 = a^2 & b^2
+      // Replace x = r cos(θ) and y = r sin(θ) to move it into the polar coordinates
+      // r = ab/sqrt(a^2 * sin^2(θ) + b^2 * cos^2(θ))
+      return(
+          (periapsis*apoapsis)
+          /
+          sqrt(
+            pow(apoapsis,2)*pow(cos(radians(angle())),2)+pow(periapsis,2)*pow(sin(radians(angle())),2)
+          )
+        );
     }
 
     float angularvelocity(){
