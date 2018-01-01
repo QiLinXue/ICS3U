@@ -16,14 +16,14 @@ void setup(){
   sun = new Star(695700,1.989E30,213,182,10);
 
   //plamet radius (km), mass (kg),periapsis (m), apoapsis (m), longitude of peripasis,orbital inclination
-  Mercury = new Planet(2440,0.33011E24,4.6E10,6.982E10,77.46,7,sun.mass,1);
-  Venus = new Planet(6052,4.8675E24,1.0748E11,1.0894E11,131.533,3.3947,sun.mass,1);
-  Earth = new Planet(6357,5.972E24,1.471E11,1.521E11,102.9,0,sun.mass,1);
-  Mars = new Planet(3390,6.39E23,2.066E11,2.492E11,336,1.85,sun.mass,1);
-  Jupiter = new Planet(69911,1.898E27,7.4052E11,8.1662E11,14.75,1.304,sun.mass,8);
-  Saturn = new Planet(60268,5.6834E26,1.35255E12,1.5145E12,92.43194,2.48446,sun.mass,10);
-  Uranus = new Planet(25559,8.6813E25,2.7413E12,3.00362E12,170.96,0.76986,sun.mass,15);
-  Neptune = new Planet(24764,1.02413E26,4.44445E12,4.54567E12,44.9713,1.76917,sun.mass,20);
+  Mercury = new Planet(2440,0.33011E24,4.6E10,6.982E10,77.46,7,sun.mass);
+  Venus = new Planet(6052,4.8675E24,1.0748E11,1.0894E11,131.533,3.3947,sun.mass);
+  Earth = new Planet(6357,5.972E24,1.471E11,1.521E11,102.9,0,sun.mass);
+  Mars = new Planet(3390,6.39E23,2.066E11,2.492E11,336,1.85,sun.mass);
+  Jupiter = new Planet(69911,1.898E27,7.4052E11,8.1662E11,14.75,1.304,sun.mass);
+  Saturn = new Planet(60268,5.6834E26,1.35255E12,1.5145E12,92.43194,2.48446,sun.mass);
+  Uranus = new Planet(25559,8.6813E25,2.7413E12,3.00362E12,170.96,0.76986,sun.mass);
+  Neptune = new Planet(24764,1.02413E26,4.44445E12,4.54567E12,44.9713,1.76917,sun.mass);
 }
 
 void settings(){
@@ -149,9 +149,11 @@ void mouseWheel(MouseEvent event) {
     if(zoom>0){
       zoom = zoom - (isScroll/20);
     }
+    //println(zoom);
   }
 }
 
 void keyPressed(){
   //Mars.displayFacts();
+  //println(Earth.semiMinor(),Earth.semiMajor());
 }
