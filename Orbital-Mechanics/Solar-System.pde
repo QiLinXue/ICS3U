@@ -6,6 +6,7 @@ Planet Jupiter;
 Planet Saturn;
 Planet Uranus;
 Planet Neptune;
+Planet Halley;
 
 Star sun;
 
@@ -24,6 +25,7 @@ void setup(){
   Saturn = new Planet(60268,5.6834E26,1.35255E12,1.5145E12,92.43194,2.48446,sun.mass);
   Uranus = new Planet(25559,8.6813E25,2.7413E12,3.00362E12,170.96,0.76986,sun.mass);
   Neptune = new Planet(24764,1.02413E26,4.44445E12,4.54567E12,44.9713,1.76917,sun.mass);
+  Halley = new Planet(6,2.2E14,8.766E10,5.2481925E12,111.33,1,sun.mass);
 }
 
 void settings(){
@@ -52,6 +54,9 @@ void draw(){
     case 1: solarSystem(); break;
     //case 2: planetsystem(); break;
   }
+  fill(255);
+  //ellipse(width/2,height/2,200,500);
+  //ellipse(width/2,height/2,500,200);
 
 }
 
@@ -74,6 +79,7 @@ void solarSystem(){
   Saturn.plotOrbit();
   Uranus.plotOrbit();
   Neptune.plotOrbit();
+  Halley.plotOrbit();
 
   //Star
   sun.plotBody();
@@ -93,6 +99,7 @@ void solarSystem(){
   Saturn.plotPlanet();
   Uranus.plotPlanet();
   Neptune.plotPlanet();
+  Halley.plotPlanet();
 
   popMatrix(); //End Transformation. Anything put beyond this line will not be affected by rotation
 }
@@ -154,6 +161,6 @@ void mouseWheel(MouseEvent event) {
 }
 
 void keyPressed(){
-  //Mars.displayFacts();
-  //println(Earth.semiMinor(),Earth.semiMajor());
+  Halley.displayFacts();
+  //println(Halley.semiMinor(),Halley.semiMajor());
 }
