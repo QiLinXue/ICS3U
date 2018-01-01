@@ -22,13 +22,26 @@ class Planet{
     strokeWeight = tempStrokeWeight;
   }
 
+  //Vital Planetary Facts
+  float semiMajor(){
+    return (apoapsis+periapsis)/2;
+  }
+
+  float eccentricity(){
+    return (apoapsis-periapsis)/(apoapsis+periapsis);
+  }
+
+  float semiMinor(){
+    return (semiMajor()*sqrt(1-pow(eccentricity(),2)));
+  }
+
   float period(){
     return
 
       //Kepler's Third Law
       (2*PI*
         sqrt(
-              (pow((apoapsis+periapsis)/2,3) //Gives the semi-major axis
+              (pow(semiMajor(),3) //Gives the semi-major axis
               /
               (6.674e-11*centerMass)) //Gives the Standard Gravitational Parameter of the System
             )
@@ -84,12 +97,13 @@ class Planet{
         (
           (2/altitude()) // 2/r
           -
-          (1/((apoapsis+periapsis)/2)) // 1/a
+          (1/(semiMajor())) // 1/a
         )
       )
       );
   }
 
+  //Plotting Things Out
   void plotPlanet(){
     fill(153,50,204); //pinkish color
 
@@ -99,14 +113,15 @@ class Planet{
 
     //Transforms the planet according to the current angle and its orbital properties
     translate(
-               cos(radians(angle())-radians(periapsisLongitude))* //x-component of planet with respect to center body
-               (periapsis/orbitRadiusScaler) //length magnitude of sateliite with respect to center body
+               cos(radians(angle())-radians(periapsisLongitude))* //x-angle of planet with respect to center body
+               ((semiMinor())/orbitRadiusScaler) //length magnitude of sateliite with respect to center body
                + (cos(radians(periapsisLongitude))*(apoapsis-periapsis))/orbitRadiusScaler //Adjustment from foci
                ,
-               sin(radians(angle())-radians(periapsisLongitude))* //y-component of planet with respect to center body
-               (apoapsis/orbitRadiusScaler) //Length magnitude of planet with respect to center body
+               sin(radians(angle())-radians(periapsisLongitude))* //y-angle of planet with respect to center body
+               ((semiMajor())/orbitRadiusScaler) //Length magnitude of planet with respect to center body
                + (sin(radians(periapsisLongitude))*(apoapsis-periapsis))/orbitRadiusScaler //Adjustment from foci
              );
+
     //stroke(0); //Gives the stroke color of the sphere details
     sphere(objectRadius/planetSizeScaler); //Actual planet itself
     popMatrix(); //Ends transformation
@@ -115,23 +130,26 @@ class Planet{
   void plotOrbit(){
     stroke(255); //color of the orbit line
     noFill(); //ensures the ellipse is transparent
-    strokeWeight(strokeWeight);
-    
+    strokeWeight(100*exp((3*zoom)-1.5)+0.25); //calculated with a table of values at www.desmos.com/calculator/fz1zzieuwa
+
     pushMatrix(); //Begin transformation
+
     rotateZ(radians(periapsisLongitude)); //Matches its longitude of periapsis
     rotateX(radians(inclination)); //Matches its orbital inclination
+
     //The actual orbit
     ellipse(
-      (cos(radians(periapsisLongitude))*(apoapsis-periapsis))/orbitRadiusScaler,
-      (sin(radians(periapsisLongitude))*(apoapsis-periapsis))/orbitRadiusScaler, //Note that there is a transformation under solarSystem() that ensures the center is at 0,0 for convenient rotations
-      (periapsis/orbitRadiusScaler)*2, //magnitude of length of periapsis *2
-      (apoapsis/orbitRadiusScaler)*2  //magnitude of length of apoapsis *2
-    );
+              (cos(radians(periapsisLongitude))*(apoapsis-periapsis))/orbitRadiusScaler,
+              (sin(radians(periapsisLongitude))*(apoapsis-periapsis))/orbitRadiusScaler,
+              (semiMajor()*2)/orbitRadiusScaler,
+              (semiMinor()*2)/orbitRadiusScaler
+           );
 
     popMatrix(); //End transformation
     strokeWeight(1);
   }
 
+  //Debugging
   void displayFacts(){
     println(angle(),altitude());
   }
