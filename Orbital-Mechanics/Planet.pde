@@ -6,12 +6,11 @@ class Planet{
   float periapsisLongitude; //degrees
   float inclination; //degrees
   float centerMass; // kg
-  float strokeWeight;
 
   PVector orbit; // (angle, magnitude of length from star)
 
 
-  Planet(float tempobjectRadius, float tempMass, float tempPeriapsis, float tempApoapsis, float tempPeriapsisLongitude, float tempInclination, float tempCenterMass, float tempStrokeWeight){
+  Planet(float tempobjectRadius, float tempMass, float tempPeriapsis, float tempApoapsis, float tempPeriapsisLongitude, float tempInclination, float tempCenterMass){
     objectRadius = tempobjectRadius;
     mass = tempMass;
     periapsis = tempPeriapsis;
@@ -19,16 +18,15 @@ class Planet{
     periapsisLongitude = tempPeriapsisLongitude;
     inclination = tempInclination;
     centerMass = tempCenterMass;
-    strokeWeight = tempStrokeWeight;
   }
 
   //Vital Planetary Facts
-  float semiMajor(){
-    return (apoapsis+periapsis)/2;
-  }
-
   float eccentricity(){
     return (apoapsis-periapsis)/(apoapsis+periapsis);
+  }
+
+  float semiMajor(){
+    return (apoapsis+periapsis)/2;
   }
 
   float semiMinor(){
