@@ -7,6 +7,7 @@ Planet Saturn;
 Planet Uranus;
 Planet Neptune;
 Planet Halley;
+Moon Moon;
 
 Star sun;
 
@@ -26,6 +27,7 @@ void setup(){
   Uranus = new Planet(25559,8.6813E25,2.7413E12,3.00362E12,170.96,0.76986,sun.mass);
   Neptune = new Planet(24764,1.02413E26,4.44445E12,4.54567E12,44.9713,1.76917,sun.mass);
   Halley = new Planet(6,2.2E14,8.766E10,5.2481925E12,111.33,1,sun.mass);
+  Moon = new Moon(1737,7.348e22,3.633E8,4.055E8,318.15,5.1,Earth.mass,Earth.periapsis,Earth.apoapsis,Earth.periapsisLongitude,Earth.inclination,sun.mass);
 }
 
 void settings(){
@@ -36,7 +38,7 @@ void settings(){
 //Settings to adjust the dimension of the planets
 int timeticker = 0;
 int orbitRadiusScaler = 600000000;
-int planetSizeScaler = 400;
+int planetSizeScaler = 600;
 
 
 //0=homescreen, 1=solarSystem, 2=planetSystem
@@ -79,6 +81,7 @@ void solarSystem(){
   Uranus.plotOrbit();
   Neptune.plotOrbit();
   Halley.plotOrbit();
+  Moon.plotOrbit();
 
   //Star
   sun.plotBody();
@@ -101,6 +104,7 @@ void solarSystem(){
   Halley.plotPlanet();
 
   popMatrix(); //End Transformation. Anything put beyond this line will not be affected by rotation
+
 }
 
 
@@ -168,4 +172,7 @@ void keyPressed(){
   Uranus.changeTimeWarp();
   Neptune.changeTimeWarp();
   Halley.changeTimeWarp();
+
+  Moon.changeTimeWarp();
+
 }
