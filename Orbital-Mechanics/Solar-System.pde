@@ -35,7 +35,6 @@ void settings(){
 
 //Settings to adjust the dimension of the planets
 int timeticker = 0;
-int timewarp = 10000000;
 int orbitRadiusScaler = 600000000;
 int planetSizeScaler = 400;
 
@@ -159,8 +158,14 @@ void mouseWheel(MouseEvent event) {
     //println(zoom);
   }
 }
-
 void keyPressed(){
-  Halley.displayFacts();
-  //println(Halley.semiMinor(),Halley.semiMajor());
+  Mercury.changeTimeWarp();
+  Venus.changeTimeWarp();
+  Earth.changeTimeWarp();
+  Mars.changeTimeWarp();
+  Jupiter.changeTimeWarp();
+  Saturn.changeTimeWarp();
+  Uranus.changeTimeWarp();
+  Neptune.changeTimeWarp();
+  Halley.changeTimeWarp();
 }
