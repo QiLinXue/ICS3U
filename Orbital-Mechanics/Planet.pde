@@ -48,8 +48,9 @@ class Planet{
 
   float angle(){
     return
-            (timewarp* //Speeds everything up
-               ((timeticker/period())) // percentage of the period completed so it can be transformed into an angle
+            ((timewarp * //Speeds everything up
+               (timeticker/period()) // percentage of the period completed so it can be transformed into an angle
+               - differenceAngle)
                % 360
             ); //Transforms a percentage into an angle
   }
@@ -133,7 +134,10 @@ class Planet{
              );
 
     //stroke(0); //Gives the stroke color of the sphere details
+    noStroke();
+    sphereDetail(20);
     sphere(objectRadius/planetSizeScaler); //Actual planet itself
+    stroke(1);
     popMatrix(); //Ends transformation
   }
 
@@ -167,6 +171,28 @@ class Planet{
   void displayFacts(){
     println(angle(),altitude(angle()));
     //line(0,0,(cos(radians(180+periapsisLongitude))*periapsis)/orbitRadiusScaler,(sin(radians(180+periapsisLongitude))*periapsis)/orbitRadiusScaler);
+  }
+
+
+  //Time Warp
+  float differenceAngle = 0;
+  float savedAngle;
+  float timewarp = 100000;
+
+  void changeTimeWarp(){
+    //println("works");
+    savedAngle = angle();
+
+    if(key == '.'){
+      timewarp = timewarp * 1.2;
+    }
+    if(key == ','){
+      timewarp = timewarp / 1.2;
+    }
+
+    differenceAngle = differenceAngle + angle() - savedAngle;
+
 
   }
+
 }
