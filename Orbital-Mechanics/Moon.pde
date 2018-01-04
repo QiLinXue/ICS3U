@@ -115,6 +115,8 @@ float moonOrbitRadiusScaler = 600000000;
                + (sin(radians(planetPeriapsisLongitude))*((planetAP-planetPE)/2))/orbitRadiusScaler //Adjustment from foci
              );
 
+    rotateZ(radians(periapsisLongitude)); //Matches its longitude of periapsis
+    rotateX(radians(inclination)); //Matches its orbital inclination
     translate(    (cos(radians(periapsisLongitude))*((apoapsis-periapsis)/2))/orbitRadiusScaler,
                   (sin(radians(periapsisLongitude))*((apoapsis-periapsis)/2))/orbitRadiusScaler);
 
