@@ -116,7 +116,6 @@ class Planet{
 
   //Plotting Things Out
   void plotPlanet(){
-    fill(153,50,204); //pinkish color
 
     pushMatrix(); //Begin transformation
     rotateZ(radians(periapsisLongitude)); //Matches its longitude of periapsis
@@ -136,7 +135,12 @@ class Planet{
     //stroke(0); //Gives the stroke color of the sphere details
     noStroke();
     sphereDetail(20);
-    sphere(objectRadius/planetSizeScaler); //Actual planet itself
+    fill(153,50,204); //pinkish color
+    if(key=='s'){
+      sphere(objectRadius/orbitRadiusScaler);
+    } else{
+      sphere(objectRadius/planetSizeScaler); //Actual planet itself
+    }
     stroke(1);
     popMatrix(); //Ends transformation
   }
