@@ -15,6 +15,10 @@ class Star{
 
   void plotBody(){
     fill(objectColorR,objectColorG,objectColorB);
-    sphere(objectRadius/15000);
+    if(key=='s'){
+      sphere(objectRadius/orbitRadiusScaler);
+    } else{
+      sphere(objectRadius/15000); //Actual planet itself
+    }
   }
 }
