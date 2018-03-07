@@ -1,7 +1,6 @@
 String[] winnerMessage = {"I guess the computer felt sorry for you","I hope you feel accomplished beating a bunch of 1s and 0s","Time to write your cheque, mate"};
 String[] loserMessage = {"The purpose of chess is to win not lose","100% of people who lose are losers","This means you just got PAWN'D"};
 
-
 //{alive=1/dead=0 , white=1/black=-1 , xLocation, yLocation, pieceValue}
 //Actual Board
 float[][] firstBoard = {
@@ -16,6 +15,17 @@ float[][] firstBoard = {
 };
 
 float[][] resetBoard = {
+
+  //White Pieces
+  {1,1,1,2,1},{1,1,2,2,1},{1,1,3,2,1},{1,1,4,2,1},{1,1,5,2,1},{1,1,6,2,1},{1,1,7,2,1},{1,1,8,2,1},
+  {1,1,1,1,5},{1,1,2,1,3},{1,1,3,1,3},{1,1,4,1,9},{1,1,5,1,5000},{1,1,6,1,3},{1,1,7,1,3},{1,1,8,1,5},
+
+  //Black Pieces
+  {1,-1,1,8,5},{1,-1,2,8,3},{1,-1,3,8,3},{1,-1,4,8,9},{1,-1,5,8,5000},{1,-1,6,8,3},{1,-1,7,8,3},{1,-1,8,8,5},
+  {1,-1,1,7,1},{1,-1,2,7,1},{1,-1,3,7,1},{1,-1,4,7,1},{1,-1,5,7,1},{1,-1,6,7,1},{1,-1,7,7,1},{1,-1,8,7,1},
+};
+
+float[][] backupBoard = {
 
   //White Pieces
   {1,1,1,2,1},{1,1,2,2,1},{1,1,3,2,1},{1,1,4,2,1},{1,1,5,2,1},{1,1,6,2,1},{1,1,7,2,1},{1,1,8,2,1},
@@ -122,6 +132,12 @@ void draw(){
       stroke(0);
     }
   }
+
+  //Creates the buttons
+  rect(0,1200,300,300);
+  textSize(50);
+  fill(0);
+  text("SETTINGS",50,1370);
 
   if(isMouseDown == 1){
     fill(0);
@@ -332,6 +348,7 @@ void mousePressed(){
     }
 
     if(realmoveLegal(startxco,startyco,square()[0],square()[1]) == 1 && currentStance == 1 && (exists(firstBoard,square()[0],square()[1])[0] == 0 || (exists(firstBoard,square()[0],square()[1])[0] == 1 && exists(firstBoard,square()[0],square()[1])[1] >= 16))){
+        copyPieces(firstBoard,backupBoard);
         endxco = square()[0];
         endyco = square()[1];
         if(exists(firstBoard,endxco,endyco)[1] >= 16 && exists(firstBoard,endxco,endyco)[0] == 1){
@@ -367,6 +384,7 @@ void mousePressed(){
       downy = ((floor(mouseY/((height-300)/8))))*1200/8;
     }
     if(realmoveLegal(startxco,startyco,square()[0],square()[1]) == 1 && currentStance == 1 && (exists(firstBoard,square()[0],square()[1])[0] == 0 || (exists(firstBoard,square()[0],square()[1])[0] == 1 && exists(firstBoard,square()[0],square()[1])[1] < 16))){
+        copyPieces(firstBoard,backupBoard);
         endxco = square()[0];
         endyco = square()[1];
         if(exists(firstBoard,endxco,endyco)[1] < 16 && exists(firstBoard,endxco,endyco)[0] == 1 ){
@@ -447,7 +465,7 @@ int[] bestBlackMove_depth1(float[][] actualBoard, float[][] theoryBoard){
   float lowestEvalScore = 9000;
   int[] lowestEvalMove = {8,8,1,3};
   copyPieces(actualBoard, theoryBoard);
-  int looplength = possibleMoves(theoryBoard).length;
+  int looplength = possibleMoves(actualBoard).length;
   for(int i = 0; i< looplength; i++){
       copyPieces(actualBoard, theoryBoard);
       int[] theMove = possibleMoves(theoryBoard)[i];
@@ -481,7 +499,7 @@ int[] bestBlackMove_depth2(float[][] actualBoard, float[][] theoryBoard2, float[
     copyPieces(actualBoard, theoryBoard2);
 
     //Loops through all possible moves for black
-    int looplength = possibleMoves(theoryBoard2).length;
+    int looplength = possibleMoves(actualBoard).length;
     for(int i = 0; i< looplength; i++){
         turnNumber = 2;
         copyPieces(actualBoard, theoryBoard2);
@@ -522,7 +540,7 @@ int[] bestWhiteMove_depth1(float[][] actualBoard, float[][] theoryBoard){
   float highestEvalScore = -9000;
   int[] highestEvalMove = {8,8,1,3};
   copyPieces(actualBoard, theoryBoard);
-  int looplength = possibleMoves(theoryBoard).length;
+  int looplength = possibleMoves(actualBoard).length;
   for(int i = 0; i< looplength; i++){
       copyPieces(actualBoard, theoryBoard);
       int[] theMove = possibleMoves(theoryBoard)[i];
@@ -554,7 +572,7 @@ int[] bestWhiteMove_depth2(float[][] actualBoard, float[][] theoryBoard2, float[
     copyPieces(actualBoard, theoryBoard2);
 
     //Loops through all possible moves for white
-    int looplength = possibleMoves(theoryBoard2).length;
+    int looplength = possibleMoves(actualBoard).length;
     for(int i = 0; i< looplength; i++){
         turnNumber = 1;
         copyPieces(actualBoard, theoryBoard2);
@@ -601,7 +619,7 @@ int[] bestWhiteMove_depth3(float[][] actualBoard, float[][] theoryBoard2, float[
     int[] highestEvalMove = {8,8,1,5};
 
     //Loops through all possible moves for white
-    int looplength = possibleMoves(theoryBoard2).length;
+    int looplength = possibleMoves(actualBoard).length;
     for(int i = 0; i< looplength; i++){
         turnNumber = 1;
         copyPieces(actualBoard, theoryBoard2);
@@ -619,26 +637,19 @@ int[] bestWhiteMove_depth3(float[][] actualBoard, float[][] theoryBoard2, float[
         //Execute best black move
 
         execute(bestBlackMove_depth2(theoryBoard2,theoryBoard3,theoryBoard4),theoryBoard3);
-        /*println(i,"second",secondMove[0],
-          secondMove[1],
-          secondMove[2],
-          secondMove[3],"third",bestBlackMove_depth2(theoryBoard2,theoryBoard3,theoryBoard4)[0],
+      /*  println(bestBlackMove_depth2(theoryBoard2,theoryBoard3,theoryBoard4)[0],
         bestBlackMove_depth2(theoryBoard2,theoryBoard3,theoryBoard4)[1],
         bestBlackMove_depth2(theoryBoard2,theoryBoard3,theoryBoard4)[2],
-        bestBlackMove_depth2(theoryBoard2,theoryBoard3,theoryBoard4)[3],theoryBoard4[20][0],
-        evaluate(theoryBoard4));
-        for(int j = 0; j<32; j++){
-          println(j,theoryBoard4[j][0],theoryBoard4[j][2],theoryBoard4[j][3],theoryBoard3[j][0],theoryBoard3[j][2],theoryBoard3[j][3]);
-        }*/
+        bestBlackMove_depth2(theoryBoard2,theoryBoard3,theoryBoard4)[3],evaluate(theoryBoard3));*/
         //Check if theoryboard3's evaluation is higher than the rest assuming black plays perfectly
         if(evaluate(theoryBoard3) > highestEvalScore){
           highestEvalScore = evaluate(theoryBoard3);
           highestEvalMove = secondMove;
         }
-        //else if(abs(evaluate(theoryBoard4)-highestEvalScore) < 0.05 && random(0,4) > 1){
-          //highestEvalScore = evaluate(theoryBoard4);
-          //highestEvalMove = secondMove;
-        //}
+        else if(abs(evaluate(theoryBoard3)-highestEvalScore) < 0.05 && random(0,4) > 1){
+          highestEvalScore = evaluate(theoryBoard3);
+          highestEvalMove = secondMove;
+        }
         turnNumber = 1;
     } //Loop ends
 
@@ -681,10 +692,23 @@ void keyPressed(){
     copyPieces(resetBoard,firstBoard);
   }
 
+  if(backupBoard != firstBoard){
+    if(key == 'l' && turnNumber == 1){
+      copyPieces(backupBoard,firstBoard);
+      turnNumber = 2;
+    }
+    else if(key == 'l' && turnNumber == 2){
+      copyPieces(backupBoard,firstBoard);
+      turnNumber = 1;
+    }
+  }
+
+
 }
 
 //Executes a move given its 2 coordinates
 void execute(int[] autoMove, float[][] typeBoard){
+  copyPieces(firstBoard,backupBoard);
   int startx = autoMove[0];
   int starty = autoMove[1];
   int endx = autoMove[2];
