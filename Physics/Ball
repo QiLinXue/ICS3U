@@ -1,0 +1,41 @@
+class Ball {
+
+  float mass;
+  float radius;
+  float x, y;
+  float[] v = {0, 0};
+  float[] permV = {0, 0};
+
+  float permX, permY;
+
+  Ball(float tempX, float tempY, float tempMass, float tempRadius) {
+    mass = tempMass;
+    radius = tempRadius;
+    x = tempX;
+    y = tempY;
+    permX = tempX;
+    permY = tempY;
+  }
+
+
+  void createObject() {
+    ellipse(x, y, radius, radius);
+
+    if (ObjectTouchingRectangle(950)) {
+      v[1]+=(gravity/frameRate);
+      y+=v[1];
+      x+=v[0];
+    }
+  }  
+
+  boolean ObjectTouchingRectangle(int y1) {
+    return y+(radius/2) > y1;
+  }
+
+  void reset() {
+    x = permX;
+    y = permY;
+    v[0] = permV[0];
+    v[1] = permV[1];
+  }
+}
