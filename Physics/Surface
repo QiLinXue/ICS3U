@@ -1,0 +1,19 @@
+class Surface {
+  int position[] = {0, 0, 0, 0};
+  Surface(int X1, int Y1, int X2, int Y2) {
+    position[0] = X1;
+    position[1] = Y1;
+    position[2] = X2;
+    position[3] = Y2;
+  }
+  
+  void createObject(){
+    rectMode(CORNERS);
+    rect(position[0],position[1],position[2],position[3]);
+    rectMode(CORNER);
+  }
+  
+  float surfaceOverX(float x1){
+    return position[1];
+  }
+}
