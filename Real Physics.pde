@@ -82,7 +82,7 @@ void keyPressed() {
           newObjectLocation[i+1] = Integer.parseInt(tempCoordinate.split(" ")[1]);
         } else //If object is not a triangle
         {
-          String tempCoordinate = JOptionPane.showInputDialog("Please enter x" + Integer.toString(1+i+1) + ", y" + Integer.toString(1+i+1) + " (seperated by a space)", Float.toString(random(0,1000)) + " " + Float.toString(random(0,1000)));
+          String tempCoordinate = JOptionPane.showInputDialog("Please enter x" + Integer.toString(1+i+1) + ", y" + Integer.toString(1+i+1) + " (seperated by a space)", Integer.toString(floor(random(0,1000))) + " " + Integer.toString(floor(random(0,1000))));
           newObjectLocation[i] = Integer.parseInt(tempCoordinate.split(" ")[0]);
           newObjectLocation[i+1] = Integer.parseInt(tempCoordinate.split(" ")[1]);        }
       }
