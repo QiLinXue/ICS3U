@@ -1,3 +1,5 @@
+int[][] inclinedPlaneCoordinates = {{150,100},{150,994},{500,994}};
+
 void simulationScreenInitialize() {
   Fisica.init(this);
 
@@ -8,12 +10,10 @@ void simulationScreenInitialize() {
   //world.setGrabbable(false);
 
   inclinedPlane = new FPoly();
-  inclinedPlane.vertex(150, 100);
-  inclinedPlane.vertex(150, 994);
-  inclinedPlane.vertex(400, 994);
-
-  hello();
-
+    
+  inclinedPlane.vertex(inclinedPlaneCoordinates[0][0], inclinedPlaneCoordinates[0][1]);
+  inclinedPlane.vertex(inclinedPlaneCoordinates[1][0], inclinedPlaneCoordinates[1][1]);
+  inclinedPlane.vertex(inclinedPlaneCoordinates[2][0], inclinedPlaneCoordinates[2][1]);
   inclinedPlane.setDensity(10000);
   inclinedPlane.setFill(207, 92, 54);
   inclinedPlane.setFriction(5);
@@ -37,7 +37,7 @@ void simulationScreenInitialize() {
   box.setFill(119, 125, 167);
   box.setGrabbable(true);
   box.setDensity(0.1);
-  box.setRotation(angle_IP(150, 100, 150, 994, 400, 994));
+  box.setRotation(angle_IP());
   box.setFriction(1);
   box.setRotatable(false);
 
