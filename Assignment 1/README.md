@@ -6,8 +6,8 @@ An all in one physics program where once can gain an intuitive understanding of 
 * All fonts/files used are already installed in the data folder
 
 ## Flowchart
-![Diagram](https://github.com/QiLinXue/PhysicsAcademy/blob/master/flowchart/PhysicsAcademyFlowchart.png)
-[Edit](https://www.draw.io/#HQiLinXue%2FPhysicsAcademy%2Fmaster%2Fflowchart%2FPhysicsAcademyFlowchart.png "Click me to edit the flowchart")
+![Diagram](https://github.com/QiLinXue/ICS3U/blob/master/Assignment%201/flowchart/PhysicsAcademy-Flowchart.png)
+[Edit](https://www.draw.io/#HQiLinXue%2FICS3U%2Fmaster%2FAssignment%201%2Fflowchart%2FPhysicsAcademy-Flowchart.png "Click me to edit the flowchart")
 
 ## Files
 This is a relatively large processing project in terms of components. The global variable screenMode determines the screen the user currently sees. The main file "PhysicsAcademy.pde" acts as a hub where it combines all the major commands. At a glance, it should be easy telling the purpose.
