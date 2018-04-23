@@ -1,9 +1,11 @@
 # PhysicsAcademy (WIP)
 An all in one physics program where once can gain an intuitive understanding of physical concepts through various simulations.
 
-## Dependencies
-* [Fisica Physics Library](http://www.ricardmarxer.com/fisica/) Physics Library (Simplified Wrapper for Box2D)
-* All fonts/files used are already installed in the data folder
+## How to Install
+First, install the [Fisica Physics Library](http://www.ricardmarxer.com/fisica/) which is a simplified physics wrapper for Box2D. The program will not run without it. The default user is EXPERIMENTAL, which I used to test many of the features.
+
+I created a complementary user with a default setup. The username is Seidel and the password is ICS3U. You can also register to create a new user.
+
 
 ## Flowchart
 This is a very basic outline used to guide the programming process. Each color represents a different screen, and it is always possible to switch between consecutive screen modes at any point in the program. Similar colors represent similar programs.

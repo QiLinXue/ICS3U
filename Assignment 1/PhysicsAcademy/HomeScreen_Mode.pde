@@ -55,7 +55,7 @@ void homeScreenModeMousePressed(){
     if(mouseX>306 && mouseX < 426 && mouseY > 30  && mouseY < 66) register();
 }
 
-String activeUser = "EXPERIMENTAL"; //This is the default
+String activeUser = "EXPERIMENTAL"; //This is the default test user.
 String inputtedUser = ""; //This is the user inputted user.
 String newUser = "";
 String inputtedPassword = ""; //This is the user inputted password.
