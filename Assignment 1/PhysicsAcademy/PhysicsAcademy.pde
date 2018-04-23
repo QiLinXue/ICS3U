@@ -2,7 +2,6 @@ import fisica.*;
 
 //Sandbox Objects
 FWorld world;
-FPoly inclinedPlane;
 FBox box;
 
 void setup() {
