@@ -6,6 +6,8 @@ An all in one physics program where once can gain an intuitive understanding of 
 * All fonts/files used are already installed in the data folder
 
 ## Flowchart
+This is a very basic outline used to guide the programming process. Each color represents a different screen, and it is always possible to switch between consecutive screen modes at any point in the program. Similar colors represent similar programs.
+
 ![Diagram](https://github.com/QiLinXue/ICS3U/blob/master/Assignment%201/flowchart/PhysicsAcademy-Flowchart.png)
 [Edit](https://www.draw.io/#HQiLinXue%2FICS3U%2Fmaster%2FAssignment%201%2Fflowchart%2FPhysicsAcademy-Flowchart.png "Click me to edit the flowchart")
 
