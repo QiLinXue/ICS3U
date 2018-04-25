@@ -10,13 +10,17 @@ void pixelArtSetup(){
     raw = loadStrings("e.txt");
     euler = String.join(",",raw);
 
-    circles = 1000000;
+    circles = 100;
     size = width/sqrt(circles);
+
+    background(0);
 
 }
 
 void pixelArt(){
-    drawOverlapPixels(euler,pi,false,true,false);
+    connectingLines(euler);
+    connectingLines(pi);
+
     save("default.png");
 }
 
@@ -37,7 +41,7 @@ void drawPixels(String longNumber){
 
 void connectingLines(String longNumber){
     int char00, char10, char01, char11;
-    background(0);
+    //background(0);
     colorMode(HSB,9,9,9);
     for(int y=0;y<height/size;y++){ //Use height/size-1 if circles>900000
         for(int x=0;x<width/size;x++){
