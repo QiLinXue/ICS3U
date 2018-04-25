@@ -10,7 +10,7 @@ void pixelArtSetup(){
     raw = loadStrings("e.txt");
     euler = String.join(",",raw);
 
-    circles = 100;
+    circles = 1000000;
     size = width/sqrt(circles);
 
     background(0);
@@ -18,8 +18,7 @@ void pixelArtSetup(){
 }
 
 void pixelArt(){
-    connectingLines(euler);
-    connectingLines(pi);
+    drawInequality(pi,euler);
 
     save("default.png");
 }
@@ -37,6 +36,26 @@ void drawPixels(String longNumber){
 
         }
     }
+}
+
+void drawInequality(String longNumber1, String longNumber2){
+    int counter = 0;
+    int charPixel1, charPixel2;
+    noStroke();
+    colorMode(HSB,9,1,1);
+    for(int y=0;y<height/size;y++){
+        for(int x=0;x<width/size;x++){
+            charPixel1 = Character.getNumericValue(longNumber1.charAt(y*(width/floor(size))+x));
+            charPixel2 = Character.getNumericValue(longNumber2.charAt(y*(width/floor(size))+x));
+            if(charPixel1>charPixel2){
+                counter++;
+                fill(charPixel1,1,1);
+                rect(x*size,y*size,size,size);
+            }
+
+        }
+    }
+    println(counter);
 }
 
 void connectingLines(String longNumber){
@@ -64,7 +83,7 @@ void connectingLines(String longNumber){
 }
 
 void drawOverlapPixels(String longNumber1, String longNumber2, boolean enableDull, boolean reverse, boolean mono){
-
+    int sameCount = 0;
     int charPixel1, charPixel2;
     colorMode(RGB,1,1,1);
     background(1);
@@ -76,6 +95,7 @@ void drawOverlapPixels(String longNumber1, String longNumber2, boolean enableDul
             charPixel2 = Character.getNumericValue(longNumber2.charAt(y*(width/floor(size))+x));
 
             if(charPixel1 == charPixel2){
+                sameCount++;
                 if(!mono){
                     if(!reverse) fill(charPixel1,1,1);
                     else fill(0,0,0);
@@ -114,4 +134,5 @@ void drawOverlapPixels(String longNumber1, String longNumber2, boolean enableDul
 
         }
     }
+    println(sameCount);
 }
