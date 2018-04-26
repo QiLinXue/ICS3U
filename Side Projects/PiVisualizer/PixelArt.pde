@@ -13,7 +13,8 @@ void pixelArtSetup(){
 void pixelArt(){
     //drawInequality(pi,euler);
     //drawOverlapPixels(pi,euler,false,true,false);
-    simpleMultipleOverlap(sqrt2,pi,euler);
+    //simpleMultipleOverlap(sqrt2,pi,euler);
+    drawAveragePixels3(pi);
     save("default.png");
     noLoop();
 }
@@ -47,6 +48,29 @@ void simpleMultipleOverlap(String longNumber1, String longNumber2, String longNu
             if(charPixel1 == charPixel2 && charPixel1 == charPixel3){
                 digits[charPixel1]++;
                 fill(charPixel1,1,1);
+            }
+            rect(x*size,y*size,size,size);
+
+        }
+    }
+    println(digits);
+}
+
+void drawAveragePixels3(String longNumber){
+    int charPixel,charPixelBEFORE,charPixelAFTER,charPixelAverage;
+    int[] digits = new int[10];
+    noStroke();
+    colorMode(HSB,9,1,1);
+    for(int y=0;y<height/size;y++){
+        for(int x=0;x<width/size;x++){
+            if(y==0&&x==0) fill(2,1,1);
+            else{
+                charPixel = Character.getNumericValue(longNumber.charAt(y*(width/floor(size))+x));
+                charPixelBEFORE = Character.getNumericValue(longNumber.charAt(y*(width/floor(size))+x-1));
+                charPixelAFTER = Character.getNumericValue(longNumber.charAt(y*(width/floor(size))+x+1));
+                charPixelAverage = floor((charPixel+charPixelBEFORE+charPixelAFTER)/3);
+                fill(charPixelAverage,1,1);
+                digits[charPixelAverage]++;
             }
             rect(x*size,y*size,size,size);
 
@@ -152,4 +176,9 @@ void drawOverlapPixels(String longNumber1, String longNumber2, boolean enableDul
         }
     }
     println(sameCount);
+}
+
+void keyPressed(){
+    circles = floor(pow(sqrt(circles)+1,2));
+    size = width/sqrt(circles);
 }

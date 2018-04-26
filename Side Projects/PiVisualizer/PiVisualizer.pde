@@ -1,6 +1,6 @@
 void settings(){
-    //size(1000,1000);
-    fullScreen();
+    size(1000,1000);
+    //fullScreen();
 }
 void setup(){
     String[] raw = loadStrings("pi.txt");
