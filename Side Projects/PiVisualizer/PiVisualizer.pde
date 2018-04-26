@@ -3,13 +3,21 @@ void settings(){
     //fullScreen();
 }
 void setup(){
+    String[] raw = loadStrings("pi.txt");
+    pi = raw[0];
+
+    raw = loadStrings("e.txt");
+    euler = String.join(",",raw);
+
     pixelArtSetup();
+    nodeConnectionSetup();
 }
 int visualizerMode = 1;
 
 void draw(){
-    switch(visualizerMode){
-        case 1: pixelArt(); break;
-    }
-    pixelArt();
+    // switch(visualizerMode){
+    //     case 1: pixelArt(); break;
+    // }
+    // pixelArt();
+    nodeConnection();
 }

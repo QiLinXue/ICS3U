@@ -4,22 +4,15 @@ int circles;
 float size;
 
 void pixelArtSetup(){
-    String[] raw = loadStrings("pi.txt");
-    pi = raw[0];
-
-    raw = loadStrings("e.txt");
-    euler = String.join(",",raw);
-
     circles = 1000000;
     size = width/sqrt(circles);
-
     background(0);
 
 }
 
 void pixelArt(){
     //drawInequality(pi,euler);
-    drawOverlapPixels(pi,euler,false,false,false);
+    drawOverlapPixels(pi,euler,false,true,false);
     save("default.png");
     noLoop();
 }
