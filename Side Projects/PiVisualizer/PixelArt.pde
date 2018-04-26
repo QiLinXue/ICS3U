@@ -18,9 +18,10 @@ void pixelArtSetup(){
 }
 
 void pixelArt(){
-    drawInequality(pi,euler);
-
+    //drawInequality(pi,euler);
+    drawOverlapPixels(pi,euler,false,false,false);
     save("default.png");
+    noLoop();
 }
 
 void drawPixels(String longNumber){
