@@ -1,6 +1,6 @@
 void settings(){
-    size(1000,1000);
-    //fullScreen();
+    //size(1000,1000);
+    fullScreen();
 }
 void setup(){
     String[] raw = loadStrings("pi.txt");
@@ -9,15 +9,16 @@ void setup(){
     raw = loadStrings("e.txt");
     euler = String.join(",",raw);
 
+    raw = loadStrings("sqrt2.txt");
+    sqrt2 = String.join(",",raw);
+
     pixelArtSetup();
     nodeConnectionSetup();
 }
 int visualizerMode = 1;
 
 void draw(){
-    // switch(visualizerMode){
-    //     case 1: pixelArt(); break;
-    // }
-    // pixelArt();
-    nodeConnection();
+    switch(visualizerMode){
+         case 1: pixelArt(); break;
+    }
 }

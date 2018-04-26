@@ -2,7 +2,7 @@ String pi;
 String euler;
 int circles;
 float size;
-
+String sqrt2;
 void pixelArtSetup(){
     circles = 1000000;
     size = width/sqrt(circles);
@@ -12,7 +12,8 @@ void pixelArtSetup(){
 
 void pixelArt(){
     //drawInequality(pi,euler);
-    drawOverlapPixels(pi,euler,false,true,false);
+    //drawOverlapPixels(pi,euler,false,true,false);
+    simpleMultipleOverlap(sqrt2,pi,euler);
     save("default.png");
     noLoop();
 }
@@ -30,6 +31,28 @@ void drawPixels(String longNumber){
 
         }
     }
+}
+
+void simpleMultipleOverlap(String longNumber1, String longNumber2, String longNumber3){
+    int counter = 0;
+    int[] digits = new int[10];
+    int charPixel1, charPixel2, charPixel3;
+    noStroke();
+    colorMode(HSB,9,1,1);
+    for(int y=0;y<height/size;y++){
+        for(int x=0;x<width/size;x++){
+            charPixel1 = Character.getNumericValue(longNumber1.charAt(y*(width/floor(size))+x));
+            charPixel2 = Character.getNumericValue(longNumber2.charAt(y*(width/floor(size))+x));
+            charPixel3 = Character.getNumericValue(longNumber3.charAt(y*(width/floor(size))+x));
+            if(charPixel1 == charPixel2 && charPixel1 == charPixel3){
+                digits[charPixel1]++;
+                fill(charPixel1,1,1);
+            }
+            rect(x*size,y*size,size,size);
+
+        }
+    }
+    println(digits);
 }
 
 void drawInequality(String longNumber1, String longNumber2){
