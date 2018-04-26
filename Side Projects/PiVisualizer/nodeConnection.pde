@@ -3,8 +3,10 @@ void nodeConnectionSetup(){
     ellipseMode(CENTER);
     strokeWeight(2);
     stroke(255);
+    num = pi;
+
 }
-String num = "314159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230";
+String num;
 void nodeConnection(){
     background(0);
     for(int i=0;i<10;i++){
@@ -17,7 +19,7 @@ void nodeConnection(){
 
     }
 
-    for(int i=0;i<num.length()-1;i++){
+    for(int i=0;i<10;i++){
         line(nodeLocations[Character.getNumericValue(num.charAt(i))][0],
              nodeLocations[Character.getNumericValue(num.charAt(i))][1],
              nodeLocations[Character.getNumericValue(num.charAt(i+1))][0],
