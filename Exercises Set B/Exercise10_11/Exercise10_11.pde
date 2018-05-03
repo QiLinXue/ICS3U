@@ -1,111 +1,29 @@
-void settings() {
-    size(300, 300);
-}
-
-//Data
-int capitalLettersCount = 0;
-int vowelCount = 0;
-int letterCount = 0;
-int words = 1;
-int punctuationCount = 0;
+//Takes 200 ms to run entire program. Takes 100 ms to run analysis (not including extracting from txt file)
+int capitalLettersCount, vowelCount, letterCount, words, punctuationCount, mostFrequentLetterFrequency, hFreq;
 int[] frequency = new int[26];
-int mostFrequentLetterFrequency = 0;
-String sentence;
-char c;
-
 void setup() {
-    long startTime = System.nanoTime(); //Start Time
-
-    String[] transcript = loadStrings("bible.txt");
-    String sentence = String.join(",",transcript);
-
-    //Length
+    String sentence = String.join(",",loadStrings("bible.txt"));
     letterCount = sentence.length();
-
-    //General Loop
     for(int i=0;i<letterCount;i++){
-        c = sentence.charAt(i);
-        iterateUpperCase(c);
-        iterateVowels(c);
-        iterateWords(c);
-        iteratePunctuations(c);
-        iterateSequence(c);
+        char c = sentence.charAt(i); if(Character.isUpperCase(c)) capitalLettersCount++;
+if(c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u' ||
+           c == 'A' || c == 'E' || c == 'I' || c == 'O' || c == 'U') vowelCount++;
+        else if(c == ' ') words++;
+        else if(c == '\'' || c == ':' || c == ';' || c == ',' || c == '.' || c == '!' || c == '?') punctuationCount++;
+        if(Character.isLetter(c)) frequency[((c > 90) ? c-97 : c-65)]++;
     }
-    printStats();
-
-    long endTime = System.nanoTime();
-    long totalTime = endTime - startTime;
-    println("total time in ms: " + totalTime/1000000);
-}
-
-void draw() {
-  noLoop(); //draw doesn't need to happen for this exercise
-}
-
-void iterateUpperCase(char character){
-    if(Character.isUpperCase(character)) capitalLettersCount++;
-}
-
-void iterateVowels(char character){
-    if(character == 'a' || character == 'e' || character == 'i' || character == 'o' || character == 'u' ||
-       character == 'A' || character == 'E' || character == 'I' || character == 'O' || character == 'U') vowelCount++;
-}
-
-void iterateWords(char character){
-    if(character == ' ') words++;
-}
-
-void iteratePunctuations(char character){
-    if(character == '\'' || character == ':' || character == ';' || character == ',' || character == '.' || character == '!' || character == '?') punctuationCount++;
-}
-
-void iterateSequence(char character){
-    if(Character.isLetter(character)){
-        frequency[positionOfLetter(character)]++;
+    for(int i=0;i<26;i++){
+        if(frequency[i] > mostFrequentLetterFrequency){
+            mostFrequentLetterFrequency = frequency[i];
+            hFreq = i;
+        }
     }
-}
-
-void printStats(){
-    println("Most frequent letter: " + mostFrequentLetter(frequency) + " : " + mostFrequentLetterFrequency);
+    println("Most frequent letter: " + (char)(hFreq+65) + " : " + mostFrequentLetterFrequency);
     println("# Capital Letters: " + capitalLettersCount);
     println("# Vowels: " + vowelCount);
-    println("# Words: " + words);
+    println("# Words: " + (words+1));
     println("# Letters: " + letterCount);
     println("# Punctuations: " + punctuationCount);
 }
-
-int positionOfLetter(char c){
-    String index1 = "abcdefghijklmnopqrstuvwxyz";
-    String index2 = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    int position = 0;
-    for(int i=0; i<26; i++){
-        if(index1.charAt(i) == c){
-            position = i;
-            break;
-        } else if(index2.charAt(i) == c){
-            position = i;
-            break;
-        }
-    }
-    return position;
-}
-
-char mostFrequentLetter(int[] letterFrequency){
-    String index = "abcdefghijklmnopqrstuvwxyz";
-
-    int highestFrequency = 0;
-    int highestFrequencyIndex = 0;
-
-    //Find highest index
-    for(int i=0;i<26;i++){
-        if(letterFrequency[i] > highestFrequency){
-            highestFrequency = letterFrequency[i];
-            highestFrequencyIndex = i;
-        }
-    }
-
-    //Return letter associated with index
-    char highestCharacter = index.charAt(highestFrequencyIndex);
-    mostFrequentLetterFrequency = highestFrequency;
-    return highestCharacter;
-}
+void settings() {}
+void draw() {noLoop();}
