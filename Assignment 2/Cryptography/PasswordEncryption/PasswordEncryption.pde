@@ -1,13 +1,10 @@
-void settings() {}
-void draw() {}
-
 import java.math.*;
 import java.util.*;
 import java.io.UnsupportedEncodingException;
 import javax.xml.bind.DatatypeConverter;
 
 void setup() {
-  long starttime = System.nanoTime();
+  long starttime = System.nanoTime(); //Gets Start Time
 
   //-----------------------------------------------
   //Different for each user salt created with UUID.randomUUID().toString()
@@ -15,8 +12,9 @@ void setup() {
   String salt1 = "21c47c8d-6c5c-489f-9330-0983741d34ef276dccbd-a640-4b77-a1b1-f1774acaa8b6";
   String salt2 = "b87da283-cb19-4bec-a4d6-cd87c3d96c557f587949-b76a-4899-9a45-6b0603c219c8";
 
+  //Print
   println(encryptedPassword(password,salt1,salt2));
-  println((System.nanoTime()-starttime)/1000000);
+  println("This program took " + (System.nanoTime()-starttime)/1000000 + " ms to run");
 }
 
 BigInteger encryptedPassword(String pwInput, String salt1, String salt2){
