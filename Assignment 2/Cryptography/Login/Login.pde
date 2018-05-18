@@ -6,5 +6,8 @@ String currentUser = "";
 Table userDatabase;
 void setup(){
     userDatabase = loadTable("users.csv", "header"); //Initialize name table
-    println(inputPW.equals(userDatabase.getString(userDatabase.findRowIndex(inputUsername,"Username"),"Password")));
+    if(inputPW.equals(userDatabase.getString(userDatabase.findRowIndex(inputUsername,"Username"),"Password"))){
+        currentUser = inputUsername;
+    }
+    else println("error");
 }
