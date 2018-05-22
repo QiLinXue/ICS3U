@@ -5,8 +5,6 @@ void showLoginScreen(){
     image(loginScreenImage,width/2,height);
     inputBox(342,202,606,234,0,0,1,userLoginInputs); //Login-Email
     inputBox(342,280,606,311,0,0,2,userLoginInputs); //Login-Email
-
-  println(userLoginInputs[1]);
 }
 
 void keyLoginScreen(){
