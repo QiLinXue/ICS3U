@@ -1,6 +1,6 @@
 void setup(){
     homeScreenImage = loadImage("GitHubFullScreen.png");
-    println(52 % 53);
+    loginScreenImage = loadImage("GitHubLoginScreen.png");
 }
 
 void settings(){
@@ -8,9 +8,13 @@ void settings(){
 }
 
 int hsShift = 0;
-
+int screenMode = 1;
 void draw(){
-    showHomeScreen();
+    //text("asfd",200,200,600,200);
+    switch(screenMode){
+      case 0: showHomeScreen(); break;
+      case 1: showLoginScreen(); break;
+    }
 }
 
 void mousePressed(){
@@ -20,8 +24,16 @@ void mousePressed(){
   //     if(keyPressed & keyCode == UP && hsShift < -1) hsShift+=height/100;
   //     if(Character.isDigit(key) || Character.isLetter(key)) username+=key;
   // }
+  println(mouseX,mouseY,hsShift);
 }
 
 void keyPressed(){
   //username
+  switch(screenMode){
+      case 0: keyRegisterScreen(); break;
+      case 1: keyLoginScreen(); break;
+  }
+  if(key == ' '){
+    screenMode = (screenMode + 1) % 2;
+  }
 }
