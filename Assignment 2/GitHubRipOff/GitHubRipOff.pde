@@ -33,7 +33,5 @@ void keyPressed(){
       case 0: keyRegisterScreen(); break;
       case 1: keyLoginScreen(); break;
   }
-  if(key == ' '){
-    screenMode = (screenMode + 1) % 2;
-  }
+  if(key == ' ') switchScreen((screenMode + 1) % 2);
 }
