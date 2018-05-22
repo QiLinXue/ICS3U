@@ -18,8 +18,8 @@ void showHomeScreen(){
         if(keyPressed & keyCode == DOWN) hsShift-=height/100;
         if(keyPressed & keyCode == UP && hsShift < -1) hsShift+=height/100;
         if(Character.isDigit(key) || Character.isLetter(key)) username+=key;
-
     }
+
 }
 
 void mouseHomeScreen(){

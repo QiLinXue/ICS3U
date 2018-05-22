@@ -1,29 +1,15 @@
-String inputUsername = "bob";
-String inputPW = "abc";
-
-String currentUser = "";
-
-Table userDatabase;
-void setup(){
-    userDatabase = loadTable("users.csv", "header"); //Initialize name table
-
-}
-
-void login(String username, String password){
-    if(password.equals(userDatabase.getString(userDatabase.findRowIndex(username,"Username"),"Password"))){
-        currentUser = username;
-    }
-    else println("error");
-}
-
 void settings(){
     size(1000,1000);
 }
 
+void setup(){}
+
 void draw(){
     inputBox(200,300,900,400,200,1);
     inputBox(200,600,900,700,100,2);
+
 }
+
 
 void inputBox(int x1, int y1, int x2, int y2, int originalShift, int localMode){
     int inputWidth = x2-x1;
@@ -47,9 +33,5 @@ void keyPressed(){
     if(key != CODED && keyCode != BACKSPACE) userInputs[activeMode]+=key;
     else if(keyCode == BACKSPACE && userInputs[activeMode].length()>0)
         userInputs[activeMode] = userInputs[activeMode].substring(0, userInputs[activeMode].length() - 1);
-    if(key == ENTER){
-        login(userInputs[1],userInputs[2]);
-        println(userInputs[1],userInputs[2]);
-    }
-
+    if(key == ENTER) login();
 }
