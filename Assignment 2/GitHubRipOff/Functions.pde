@@ -1,5 +1,11 @@
+import java.math.*;
+import java.util.*;
+import java.io.UnsupportedEncodingException;
+import javax.xml.bind.DatatypeConverter;
+
 String activeUser = "";
 Boolean[] activePermissions = {true,true,false};
+
 void getPermissions(String user){
 
 }
@@ -40,8 +46,11 @@ boolean buttonPressed(int x1, int y1, int x2, int y2, int originalShift, int scr
 }
 
 void login(String username, String password){
+    String salt1 = userDatabase.getString(userDatabase.findRowIndex(username,"Username"),"Salt1");
+    String salt2 = userDatabase.getString(userDatabase.findRowIndex(username,"Username"),"Salt2");
+    String encryption = "" + encryptedPassword(password,salt1,salt2);
     try{
-      if(password.equals(userDatabase.getString(userDatabase.findRowIndex(username,"Username"),"Password"))){
+      if(encryption.equals(userDatabase.getString(userDatabase.findRowIndex(username,"Username"),"Password"))){
           activeUser = username;
           switchScreen(2);
       }
@@ -63,12 +72,20 @@ void register(String username, String email, String password){
       println("hiiii");
       userDatabase.addRow();
       userDatabase.setString(userDatabase.lastRowIndex(), "Username", username);
-      userDatabase.setString(userDatabase.lastRowIndex(), "Password", password);
+      userDatabase.setString(userDatabase.lastRowIndex(), "Email", email);
+      String salt1 = UUID.randomUUID().toString()+UUID.randomUUID().toString();
+      String salt2 = UUID.randomUUID().toString()+UUID.randomUUID().toString();
+      userDatabase.setString(userDatabase.lastRowIndex(), "Salt1", salt1);
+      userDatabase.setString(userDatabase.lastRowIndex(), "Salt2", salt2);
+
+      String encryption = "" + encryptedPassword(password,salt1,salt2);
+      userDatabase.setString(userDatabase.lastRowIndex(), "Password", encryption);
       saveTable(userDatabase, "data/users.csv");
-      
+
       switchScreen(2);
 
     }
+
 }
 
 void scollScreen(){
@@ -77,4 +94,29 @@ void scollScreen(){
         if(keyPressed & keyCode == DOWN) sShift-=height/rate;
         if(keyPressed & keyCode == UP && sShift < -1) sShift+=height/rate;
     }
+}
+
+BigInteger encryptedPassword(String pwInput, String salt1, String salt2){
+    //-----------------------------------------------
+    //Different for each user
+    String saltCombination1 = pwInput+salt1;
+    String saltCombination2 = salt2+pwInput;
+
+    //-----------------------------------------------
+    //Uses a simple encryption by converting it to base 10
+    String saltEncryption1 = "";
+    String saltEncryption2 = "";
+    int salt1length = saltCombination1.length();
+    int salt2length = saltCombination2.length();
+    for(int i=0;i<salt1length;i++) saltEncryption1+=Integer.toString((int)saltCombination1.charAt(i));
+    for(int i=0;i<salt2length;i++) saltEncryption2+=Integer.toString((int)saltCombination2.charAt(i));
+
+    //-----------------------------------------------
+    //Find nearest larger prime
+    BigInteger prime1 = new BigInteger(saltEncryption1,10).nextProbablePrime();
+    BigInteger prime2 = new BigInteger(saltEncryption2,10).nextProbablePrime();
+
+    //-----------------------------------------------
+    //Finds product of primes
+    return prime1.multiply(prime2);
 }

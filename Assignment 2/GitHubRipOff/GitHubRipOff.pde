@@ -2,7 +2,7 @@ Table userDatabase;
 void setup(){
     userDatabase = loadTable("users.csv", "header"); //Initialize name table
 
-  
+
     homeScreenImage = loadImage("GitHubFullScreen.png");
     loginScreenImage = loadImage("GitHubLoginScreen.png");
     wikiScreenImage = loadImage("GitHubWikiScreen.png");
@@ -14,7 +14,7 @@ void settings(){
 }
 
 int sShift = 0;
-int screenMode = 2;
+int screenMode = 1;
 void draw(){
     //text("asfd",200,200,600,200);
     switch(screenMode){
