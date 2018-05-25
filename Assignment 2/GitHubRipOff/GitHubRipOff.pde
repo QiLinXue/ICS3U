@@ -7,6 +7,8 @@ void setup(){
     loginScreenImage = loadImage("GitHubLoginScreen.png");
     wikiScreenImage = loadImage("GitHubWikiScreen.png");
     assignmentAImage = loadImage("GitHubExercisesA.png");
+
+    exercisesASetup();
 }
 
 void settings(){
@@ -14,7 +16,7 @@ void settings(){
 }
 
 int sShift = 0;
-int screenMode = 1;
+int screenMode = 0;
 void draw(){
     //text("asfd",200,200,600,200);
     switch(screenMode){
@@ -26,7 +28,7 @@ void draw(){
 }
 
 void mousePressed(){
-  println(mouseX,mouseY);
+  println(mouseX,mouseY,sShift);
    switch(screenMode){
       case 0: mouseHome(); break;
       case 1: mouseLogin(); break;

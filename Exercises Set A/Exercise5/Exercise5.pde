@@ -12,6 +12,8 @@ void setup(){
 }
 
 void draw(){
+  colorMode(HSB, 500,99,99);
+  stroke(0,0,50);
   fill(y+x,99,99);
 
   y+=7;
@@ -22,4 +24,5 @@ void draw(){
     y=0;
     x-=5;
   }
+  colorMode(RGB,255,255,255);
 }

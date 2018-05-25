@@ -37,7 +37,7 @@ void draw() {
 
   stroke(215,250,128); //yellow
   strokeWeight(26);
-  arc(183,235,465,00,radians(-73),radians(54));
+  arc(183,235,465,500,radians(-73),radians(54));
 
   stroke(128,250,128); //green
   strokeWeight(13);

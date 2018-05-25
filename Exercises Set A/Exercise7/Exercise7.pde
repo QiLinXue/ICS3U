@@ -24,4 +24,6 @@ void draw() {
       ellipse(x, y, 20, 20);
     }
   }
+
+  colorMode(RGB, 255, 255, 255);
 }
