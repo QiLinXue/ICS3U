@@ -7,8 +7,11 @@ void setup(){
     loginScreenImage = loadImage("GitHubLoginScreen.png");
     wikiScreenImage = loadImage("GitHubWikiScreen.png");
     assignmentAImage = loadImage("GitHubExercisesA.png");
+    assignmentBImage = loadImage("GitHubExercisesB.png");
 
     exercisesASetup();
+    exercisesBSetup();
+
 }
 
 void settings(){
@@ -16,7 +19,7 @@ void settings(){
 }
 
 int sShift = 0;
-int screenMode = 0;
+int screenMode = 4;
 void draw(){
     //text("asfd",200,200,600,200);
     switch(screenMode){
@@ -24,6 +27,7 @@ void draw(){
       case 1: showLoginScreen(); break;
       case 2: showWikiScreen(); break;
       case 3: showExercisesA(); break;
+      case 4: showExercisesB(); break;
     }
 }
 
@@ -33,6 +37,7 @@ void mousePressed(){
       case 0: mouseHome(); break;
       case 1: mouseLogin(); break;
       case 2: mouseWiki(); break;
+      case 4: mouseExerciseB(); break;
   }
 }
 

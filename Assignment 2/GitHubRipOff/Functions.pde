@@ -36,11 +36,20 @@ void inputBox(int x1, int y1, int x2, int y2, int originalShift, int screenShift
   }
 }
 
-boolean buttonPressed(int x1, int y1, int x2, int y2, int originalShift, int screenShift) {
+boolean buttonPressed(int x1, int y1, int x2, int y2, int originalShift, int screenShift, boolean showButton) {
+  if(showButton){
+      int w = x2-x1;
+      int h = y2-y1;
+      fill(0,0,255);
+      rect(x1,y1+originalShift+screenShift,w,h);
+  }
+
   if (mouseX>x1 && mouseX<x2 && mouseY>y1+originalShift+sShift && mouseY<y2+originalShift+sShift) {
     return true;
   } else return false;
 }
+
+
 
 void login(String username, String password) {
   try {

@@ -17,7 +17,7 @@ void keyLogin(){
 String[] userLoginInputs  = {"","",""}; //NULL - USERNAME/EMAIL - PASSWORD
 
 void mouseLogin(){
-    if(buttonPressed(342,332,606,365,0,0) && !userLoginInputs[1].equals("") && !userLoginInputs[2].equals("")){
+    if(buttonPressed(342,332,606,365,0,0,false) && !userLoginInputs[1].equals("") && !userLoginInputs[2].equals("")){
       login(userLoginInputs[1],userLoginInputs[2]);
     }
 }
