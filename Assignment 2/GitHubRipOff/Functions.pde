@@ -17,6 +17,9 @@ void switchScreen(int newScreenMode) {
   userLoginInputs[2]="";
   screenMode = newScreenMode;
   sShift = 0;
+  
+  if(newScreenMode == 3) exercisesASetup();
+  if(newScreenMode == 4) exercisesBSetup();
 }
 
 void inputBox(int x1, int y1, int x2, int y2, int originalShift, int screenShift, int localMode, String[] inputArray) {
@@ -40,8 +43,13 @@ boolean buttonPressed(int x1, int y1, int x2, int y2, int originalShift, int scr
   if(showButton){
       int w = x2-x1;
       int h = y2-y1;
-      fill(0,0,255);
+      fill(0,100,100);
       rect(x1,y1+originalShift+screenShift,w,h);
+      fill(255);
+      
+      textSize(10);
+      textAlign(CENTER,CENTER);
+      text("Click Me",x1,y1+originalShift+screenShift,w,h);
   }
 
   if (mouseX>x1 && mouseX<x2 && mouseY>y1+originalShift+sShift && mouseY<y2+originalShift+sShift) {
