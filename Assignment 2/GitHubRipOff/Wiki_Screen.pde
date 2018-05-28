@@ -9,5 +9,6 @@ void showWikiScreen(){
 
 void mouseWiki(){
   if(buttonPressed(246,473,305,489,0,sShift,false)) switchScreen(3);
-  if(buttonPressed(246,483,305,497,0,sShift,false)) println("B");
+  else if(buttonPressed(246,483,305,497,0,sShift,false)) switchScreen(4);
+  else println("Please click 'Exercises (Set A)' or 'Exercises (Set B)' to proceed.");
 }
