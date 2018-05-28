@@ -119,6 +119,9 @@ arc(x1+w/4.11764706,y1+h/3.44827586+shift+sShift,w/1.47679325,h/1.4,radians(-97)
 
 class Exercise3{
     int[][] circleLocations = {};
+    Exercise3(){
+      int[][] circleLocations = {};
+    }
     void show(float x1, float y1, float x2, float y2, float shift){
         float w = x2-x1;
         float h = y2-y1;
