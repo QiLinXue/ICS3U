@@ -23,5 +23,8 @@ void showExercisesA(){
   exercise7(232,107,394,428,2805);
   scollScreen();
 
+}
 
+void keyExerciseA(){
+  if(key == BACKSPACE) switchScreen(2);
 }
