@@ -14,11 +14,11 @@ void showHomeScreen() {
   inputBox(280, 313, 484, 346, 1800, sShift, 2, userRegisterInputs); //Email
   inputBox(509, 313, 712, 346, 1800, sShift, 3, userRegisterInputs); //Password
 
-
   scollScreen();
 }
 
 void mouseHome() {
+  if(buttonPressed(595,377,840,410,0,sShift,false)) actuallyRegister();
 }
 
 
@@ -28,13 +28,13 @@ void keyRegister() {
   if (keyCode == BACKSPACE && userRegisterInputs[activeMode].length()>0)
     userRegisterInputs[activeMode] = userRegisterInputs[activeMode].substring(0, userRegisterInputs[activeMode].length() - 1);
     
-  if (key == ENTER) {
-    
+  if (key == ENTER) actuallyRegister();
+  
+}
+
+void actuallyRegister(){
     if (registerSubmitRequirements()) register(userRegisterInputs[1], userRegisterInputs[2], userRegisterInputs[3]);
     else println("please ensure all fields have satisfied their requirements");
-    
-  }
-  
 }
 
 int activeMode = 0;
