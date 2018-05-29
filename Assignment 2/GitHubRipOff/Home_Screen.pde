@@ -15,21 +15,30 @@ void showHomeScreen() {
   inputBox(509, 313, 712, 346, 1800, sShift, 3, userRegisterInputs); //Password
 
   scollScreen();
+
+  //Show buttons
+  buttonPressed(595,377,840,410,0,sShift,false);
+  buttonPressed(760,16,801,40,0,sShift,false);
+  buttonPressed(815,16,859,40,0,sShift,false);
+  buttonPressed(737,205,945,243,1904,sShift,false);
 }
 
 void mouseHome() {
   if(buttonPressed(595,377,840,410,0,sShift,false)) actuallyRegister();
+  if(buttonPressed(760,16,801,40,0,sShift,false)) switchScreen(1);
+  if(buttonPressed(815,16,859,40,0,sShift,false)) switchScreen(10);
+  if(buttonPressed(737,205,945,243,1904,sShift,false)) actuallyRegister();
 }
 
 
 void keyRegister() {
   if (key != CODED && keyCode != BACKSPACE && keyCode != ENTER && keyCode != CONTROL && (key != '@' || activeMode != 1)) userRegisterInputs[activeMode]+=key;
-  
+
   if (keyCode == BACKSPACE && userRegisterInputs[activeMode].length()>0)
     userRegisterInputs[activeMode] = userRegisterInputs[activeMode].substring(0, userRegisterInputs[activeMode].length() - 1);
-    
+
   if (key == ENTER) actuallyRegister();
-  
+
 }
 
 void actuallyRegister(){
@@ -44,10 +53,8 @@ boolean registerSubmitRequirements() {
   boolean notEmpty = !userRegisterInputs[1].equals("") && !userRegisterInputs[2].equals("") && !userRegisterInputs[3].equals("");
   boolean overSevenCharacters = userRegisterInputs[3].length()>6;
   boolean containsDigit = userRegisterInputs[3].matches(".*[0-9].*");
-  boolean containsLetter = userRegisterInputs[3].matches(".*[A-Z].*");
-  
-  println(notEmpty, overSevenCharacters, containsDigit, containsLetter);
-  
+  boolean containsLetter = userRegisterInputs[3].matches(".*[A-Z].*") || userRegisterInputs[3].matches(".*[a-z].*");
+
   return notEmpty && overSevenCharacters && containsDigit && containsLetter;
-  
+
 }

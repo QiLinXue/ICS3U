@@ -23,8 +23,14 @@ void showExercisesA(){
   exercise7(232,107,394,428,2805);
   scollScreen();
 
+  buttonPressed(311,38,338,51,0,sShift,false);
+
 }
 
 void keyExerciseA(){
   if(key == BACKSPACE) switchScreen(2);
+}
+
+void mouseExerciseA(){
+    if(buttonPressed(311,38,338,51,0,sShift,false)) switchScreen(2);
 }

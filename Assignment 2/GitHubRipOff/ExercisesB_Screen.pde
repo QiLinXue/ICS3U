@@ -22,12 +22,14 @@ void showExercisesB(){
   buttonPressed(375,182,434,201,1853,sShift,true);
   scollScreen();
 
+  buttonPressed(248,53,283,72,0,sShift,false);
 }
 
 void mouseExerciseB(){
   if(buttonPressed(387,183,434,203,816,sShift,true)) exercise10("Hi I'm an idiot!");
   if(buttonPressed(399,211,459,233,1309,sShift,true)) exercise11.analyzeSameString("Hi! This is another example...");
   if(buttonPressed(375,182,434,201,1853,sShift,true)) exercise12.analyzePoetries();
+  if(buttonPressed(248,53,283,72,0,sShift,false)) switchScreen(2);
 }
 
 void keyExerciseB(){

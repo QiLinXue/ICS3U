@@ -17,7 +17,7 @@ void switchScreen(int newScreenMode) {
   userLoginInputs[2]="";
   screenMode = newScreenMode;
   sShift = 0;
-  
+
   if(newScreenMode == 3) exercisesASetup();
   if(newScreenMode == 4) exercisesBSetup();
 }
@@ -40,13 +40,13 @@ void inputBox(int x1, int y1, int x2, int y2, int originalShift, int screenShift
 }
 
 boolean buttonPressed(int x1, int y1, int x2, int y2, int originalShift, int screenShift, boolean showButton) {
-  if(showButton){
+  if(showButton || showAllButtons){
       int w = x2-x1;
       int h = y2-y1;
       fill(0,100,100);
       rect(x1,y1+originalShift+screenShift,w,h);
       fill(255);
-      
+
       textSize(10);
       textAlign(CENTER,CENTER);
       text("Click Me",x1,y1+originalShift+screenShift,w,h);
@@ -66,6 +66,7 @@ void login(String username, String password) {
     String encryption = "" + encryptedPassword(password, salt1, salt2);
     if (encryption.equals(userDatabase.getString(userDatabase.findRowIndex(username, "Username"), "Password"))) {
       activeUser = username;
+      println("Welcome " + activeUser);
       switchScreen(2);
     } else println("password is incorrect");
   }
@@ -76,7 +77,7 @@ void login(String username, String password) {
       String encryption = "" + encryptedPassword(password, salt1, salt2);
       if (encryption.equals(userDatabase.getString(userDatabase.findRowIndex(username, "Email"), "Password"))) {
         activeUser = userDatabase.getString(userDatabase.findRowIndex(username, "Email"), "Username");
-        println(activeUser);
+        println("Welcome " + activeUser);
         switchScreen(2);
       } else println("password is incorrect");
     }
@@ -88,25 +89,33 @@ void login(String username, String password) {
 
 void register(String username, String email, String password) {
   try {
-    if (password.equals(userDatabase.getString(userDatabase.findRowIndex(username, "Username"), "Password"))) {
-      login(username, password);
-    } else println("username already exists");
+      String salt1 = userDatabase.getString(userDatabase.findRowIndex(username, "Username"), "Salt1");
+      String salt2 = userDatabase.getString(userDatabase.findRowIndex(username, "Username"), "Salt2");
+      String encryption = "" + encryptedPassword(password, salt1, salt2);
+      if (encryption.equals(userDatabase.getString(userDatabase.findRowIndex(username, "Username"), "Password"))) {
+        activeUser = username;
+        println("Welcome " + activeUser);
+        switchScreen(2);
+      } else println("username already exists");
   }
   catch(ArrayIndexOutOfBoundsException e) {
-    println("hiiii");
-    userDatabase.addRow();
-    userDatabase.setString(userDatabase.lastRowIndex(), "Username", username);
-    userDatabase.setString(userDatabase.lastRowIndex(), "Email", email);
-    String salt1 = UUID.randomUUID().toString()+UUID.randomUUID().toString();
-    String salt2 = UUID.randomUUID().toString()+UUID.randomUUID().toString();
-    userDatabase.setString(userDatabase.lastRowIndex(), "Salt1", salt1);
-    userDatabase.setString(userDatabase.lastRowIndex(), "Salt2", salt2);
+    if (userDatabase.findRowIndex(email, "Email") > -1) println("Email already exists");
+    else{
+        println("Welcome!");
+        userDatabase.addRow();
+        userDatabase.setString(userDatabase.lastRowIndex(), "Username", username);
+        userDatabase.setString(userDatabase.lastRowIndex(), "Email", email);
+        String salt1 = UUID.randomUUID().toString()+UUID.randomUUID().toString();
+        String salt2 = UUID.randomUUID().toString()+UUID.randomUUID().toString();
+        userDatabase.setString(userDatabase.lastRowIndex(), "Salt1", salt1);
+        userDatabase.setString(userDatabase.lastRowIndex(), "Salt2", salt2);
 
-    String encryption = "" + encryptedPassword(password, salt1, salt2);
-    userDatabase.setString(userDatabase.lastRowIndex(), "Password", encryption);
-    saveTable(userDatabase, "data/users.csv");
+        String encryption = "" + encryptedPassword(password, salt1, salt2);
+        userDatabase.setString(userDatabase.lastRowIndex(), "Password", encryption);
+        saveTable(userDatabase, "data/users.csv");
 
-    switchScreen(2);
+        switchScreen(2);
+    }
   }
 }
 

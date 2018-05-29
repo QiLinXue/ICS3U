@@ -45,7 +45,7 @@ void exercise10(String sentence) {
   int[] frequency = new int[26];
   letterCount = sentence.length();
   for (int i=0; i<letterCount; i++) {
-    char c = sentence.charAt(i); 
+    char c = sentence.charAt(i);
     if (Character.isUpperCase(c)) capitalLettersCount++;
     if (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u' ||
       c == 'A' || c == 'E' || c == 'I' || c == 'O' || c == 'U') vowelCount++;
@@ -80,7 +80,7 @@ class TextAnalyzer {
   int hFreq = 0;
   int[] frequency = new int[26];
 
-  TextAnalyzer() {  
+  TextAnalyzer() {
     int capitalLettersCount = 0;
     int vowelCount = 0;
     int letterCount = 0;
@@ -137,7 +137,7 @@ class TextAnalyzer {
       char c = sentence.charAt(i);
       if (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u' ||
         c == 'A' || c == 'E' || c == 'I' || c == 'O' || c == 'U') vowelCount++;
-    }    
+    }
     println("# Vowels: " + vowelCount);
   }
 
@@ -146,12 +146,12 @@ class TextAnalyzer {
     for (int i=0; i<letterCount; i++) {
       char c = sentence.charAt(i);
       if (c == ' ') words++;
-    }    
+    }
     println("# Words: " + (words+1));
   }
 
   void charCount(String sentence) {
-    letterCount = sentence.length(); 
+    letterCount = sentence.length();
     println("# Letters: " + letterCount);
   }
 
@@ -160,7 +160,7 @@ class TextAnalyzer {
     for (int i=0; i<letterCount; i++) {
       char c = sentence.charAt(i);
       if (c == '\'' || c == ':' || c == ';' || c == ',' || c == '.' || c == '!' || c == '?') punctuationCount++;
-    }    
+    }
     println("# Punctuations: " + punctuationCount);
   }
 

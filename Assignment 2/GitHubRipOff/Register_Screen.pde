@@ -3,13 +3,18 @@ PImage registerScreenImage;
 void showRegisterScreen() {
   imageMode(CORNER);
   image(registerScreenImage, 0, 0, width, height);
-  inputBox(289,192,512,209, 0, 0, 1, userRegisterInputs); //Username
-  inputBox(290,240,509,256, 0, 0, 2, userRegisterInputs); //Email
-  inputBox(290,299,510,314, 0, 0, 3, userRegisterInputs); //Password
+  inputBox(214,245,529,266, 0, 0, 1, userRegisterInputs); //Username
+  inputBox(214,309,529,330, 0, 0, 2, userRegisterInputs); //Email
+  inputBox(214,381,529,403, 0, 0, 3, userRegisterInputs); //Password
+
+  buttonPressed(212, 495, 311, 518, 0, 0, false);
+  buttonPressed(644,12,681,31,0,0,false);
 }
 
 void mouseRegister() {
-  if (buttonPressed(342, 332, 606, 365, 0, 0, false) && !userLoginInputs[1].equals("") && !userLoginInputs[2].equals("")) {
-    login(userLoginInputs[1], userLoginInputs[2]);
-  }
+  if (buttonPressed(212, 495, 311, 518, 0, 0, false)
+      && !userRegisterInputs[1].equals("")
+      && !userRegisterInputs[2].equals("")
+      && !userRegisterInputs[3].equals("")) actuallyRegister();
+  if(buttonPressed(644,12,681,31,0,0,false)) switchScreen(1);
 }
