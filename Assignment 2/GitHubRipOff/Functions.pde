@@ -25,33 +25,40 @@ void switchScreen(int newScreenMode) {
 void inputBox(int x1, int y1, int x2, int y2, int originalShift, int screenShift, int localMode, String[] inputArray) {
   int inputWidth = x2-x1;
   int inputHeight = y2-y1;
-  String text = inputArray[localMode];
+  String text = inputArray[localMode]; //the nth index of the selected array which the user wants to edit
   fill(255);
   rect(x1, y1+originalShift+screenShift, inputWidth, inputHeight);
 
+  //Styling
   fill(0);
   stroke(0);
   textSize(10);
   textAlign(LEFT, CENTER);
+
   text(text, x1+5, y1+originalShift+screenShift, inputWidth, inputHeight);
+
+  //Activates the input box
   if (mousePressed && mouseX>x1 && mouseX<x2 && mouseY>y1+originalShift+sShift && mouseY<y2+originalShift+sShift) {
     activeMode = localMode;
   }
+
 }
 
 boolean buttonPressed(int x1, int y1, int x2, int y2, int originalShift, int screenShift, boolean showButton) {
-  if(showButton || showAllButtons){
+  if(showButton || showAllButtons){ //Either user requests to show all buttons or built in
       int w = x2-x1;
       int h = y2-y1;
-      fill(0,100,100);
+      fill(0,100,100); //dark blue
       rect(x1,y1+originalShift+screenShift,w,h);
-      fill(255);
 
+      //Styling
+      fill(255);
       textSize(10);
       textAlign(CENTER,CENTER);
       text("Click Me",x1,y1+originalShift+screenShift,w,h);
   }
 
+  //Activation
   if (mouseX>x1 && mouseX<x2 && mouseY>y1+originalShift+sShift && mouseY<y2+originalShift+sShift) {
     return true;
   } else return false;
@@ -60,27 +67,36 @@ boolean buttonPressed(int x1, int y1, int x2, int y2, int originalShift, int scr
 
 
 void login(String username, String password) {
+  //Tries to login with username
   try {
+    //encrypts user inputted info
     String salt1 = userDatabase.getString(userDatabase.findRowIndex(username, "Username"), "Salt1");
     String salt2 = userDatabase.getString(userDatabase.findRowIndex(username, "Username"), "Salt2");
     String encryption = "" + encryptedPassword(password, salt1, salt2);
+
+    //test
     if (encryption.equals(userDatabase.getString(userDatabase.findRowIndex(username, "Username"), "Password"))) {
       activeUser = username;
       println("Welcome " + activeUser);
-      switchScreen(2);
+      switchScreen(2); //go to wiki screen
     } else println("password is incorrect");
   }
   catch(ArrayIndexOutOfBoundsException e) {
+    //Tries to login with email
     try {
+      //encrypts user inputted info
       String salt1 = userDatabase.getString(userDatabase.findRowIndex(username, "Email"), "Salt1");
       String salt2 = userDatabase.getString(userDatabase.findRowIndex(username, "Email"), "Salt2");
       String encryption = "" + encryptedPassword(password, salt1, salt2);
+
+      //test
       if (encryption.equals(userDatabase.getString(userDatabase.findRowIndex(username, "Email"), "Password"))) {
         activeUser = userDatabase.getString(userDatabase.findRowIndex(username, "Email"), "Username");
         println("Welcome " + activeUser);
-        switchScreen(2);
+        switchScreen(2); //go to wiki screen
       } else println("password is incorrect");
     }
+    //If all else fails
     catch(ArrayIndexOutOfBoundsException f) {
       println("username does not exist");
     }
@@ -88,7 +104,9 @@ void login(String username, String password) {
 }
 
 void register(String username, String email, String password) {
+    //Tries to first login
   try {
+      //follows same procedure as login()
       String salt1 = userDatabase.getString(userDatabase.findRowIndex(username, "Username"), "Salt1");
       String salt2 = userDatabase.getString(userDatabase.findRowIndex(username, "Username"), "Salt2");
       String encryption = "" + encryptedPassword(password, salt1, salt2);
@@ -98,22 +116,30 @@ void register(String username, String email, String password) {
         switchScreen(2);
       } else println("username already exists");
   }
+  //If username doesn't exist
   catch(ArrayIndexOutOfBoundsException e) {
+    //If email already exists
     if (userDatabase.findRowIndex(email, "Email") > -1) println("Email already exists");
+
+    //Register
     else{
         println("Welcome!");
         userDatabase.addRow();
         userDatabase.setString(userDatabase.lastRowIndex(), "Username", username);
         userDatabase.setString(userDatabase.lastRowIndex(), "Email", email);
+
+        //Creates salt with random UUID (this is ugly but it gets the job done)
         String salt1 = UUID.randomUUID().toString()+UUID.randomUUID().toString();
         String salt2 = UUID.randomUUID().toString()+UUID.randomUUID().toString();
         userDatabase.setString(userDatabase.lastRowIndex(), "Salt1", salt1);
         userDatabase.setString(userDatabase.lastRowIndex(), "Salt2", salt2);
 
+        //Writes encryption to csv file
         String encryption = "" + encryptedPassword(password, salt1, salt2);
         userDatabase.setString(userDatabase.lastRowIndex(), "Password", encryption);
         saveTable(userDatabase, "data/users.csv");
 
+        //Go to wiki screen
         switchScreen(2);
     }
   }
