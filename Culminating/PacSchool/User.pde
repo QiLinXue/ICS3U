@@ -1,5 +1,6 @@
 class User {
   int[] pos = {1, 2};
+  int[] pastPos = {1, 1};
   int currentDirection = 2; //0-5-2-3  N-E-S-W correspondingly
   int proposedDirection = 1; //used to switch direction if user tries to switch direction just a bit before a turn;
   boolean topSpaceEmpty = (tiles[pos[1]-1][pos[0]] == 0);
@@ -13,6 +14,14 @@ class User {
       rightSpaceEmpty = (tiles[pos[1]][pos[0]+1] == 0);
       bottomSpaceEmpty = (tiles[pos[1]+1][pos[0]] == 0);
       ellipse(size*pos[0],size*pos[1], size, size);
+  }
+  
+  void reset(){
+        int currentDirection = 2; //0-5-2-3  N-E-S-W correspondingly
+
+      studentDead = false;
+      pos[0] = 1;
+      pos[1] = 1;
   }
 
   boolean atOpenIntersection(){
@@ -34,7 +43,7 @@ class User {
   }
 
   void changeDirections(){
-    if(keyCode == ENTER) println(currentDirection);
+    //if(keyCode == ENTER) println(currentDirection);
 
     if(atStraightEdge()){
         if(keyCode == UP) proposedDirection=0;
@@ -65,6 +74,7 @@ class User {
         proposedDirection = -5;
         //if(keyCode == UP && topSpaceEmpty) println(currentDirection);
     }
+    
     if(atClosedIntersection()){
         if(keyCode == LEFT && leftSpaceEmpty) currentDirection=3;
         else if(keyCode == RIGHT && rightSpaceEmpty) currentDirection=1;
@@ -76,7 +86,9 @@ class User {
 
   void step(){
       //println(tiles[pos[1]][pos[0]+1]);
-      if(atOpenIntersection()
+      pastPos[0] = pos[0];
+      pastPos[1] = pos[1];
+      if(atOpenIntersection() || atClosedIntersection()
         // && abs(proposedDirection-currentDirection) != 2
         // && proposedDirection != -5
          ){
