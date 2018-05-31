@@ -1,17 +1,20 @@
 class Coins {
 
   int[][] location = new int[tiles.length][tiles.length];
+  int coinsCollected = 0; //256 total
 
   Coins() {
-    int tileLength = tiles.length;
-    for (int i=0; i<tileLength; i++) {
-      for (int j=0; j<tileLength; j++) {
-        if (tiles[i][j] == 0) location[i][j] = 1;
+      coinsCollected = 0;
+      int tileLength = tiles.length;
+
+      //Gives the coordinates of all the coins
+      for (int i=0; i<tileLength; i++){
+          for (int j=0; j<tileLength; j++) if (tiles[i][j] == 0) location[i][j] = 1;
       }
-    }
   }
 
   void reset(){
+      coinsCollected = 0;
     int tileLength = tiles.length;
     for (int i=0; i<tileLength; i++) {
       for (int j=0; j<tileLength; j++) {
@@ -19,14 +22,17 @@ class Coins {
       }
     }
   }
+
   void step() {
     int tileLength = location.length;
     for (int i=0; i<tileLength; i++) {
       for (int j=0; j<tileLength; j++) {
-          if(j == Player.pos[0] && i == Player.pos[1]) location[i][j] = 0;
+          if(j == Player.pos[0] && i == Player.pos[1] && location[i][j] == 1){
+              location[i][j] = 0;
+              coinsCollected++;
+          }
       }
     }
-    
   }
 
   void show(float size) {
@@ -41,4 +47,8 @@ class Coins {
     fill(255);
     ellipseMode(CORNER);
   }
+
+  //------------------------------------------------------------------------
+  //Info
+
 }
