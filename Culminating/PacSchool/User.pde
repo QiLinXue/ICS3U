@@ -37,6 +37,11 @@ class User {
     if(keyCode == ENTER) println(currentDirection);
 
     if(atStraightEdge()){
+        if(keyCode == UP) proposedDirection=0;
+        else if(keyCode == RIGHT) proposedDirection=1;
+        else if(keyCode == DOWN) proposedDirection=2;
+        else if(keyCode == LEFT) proposedDirection=3;
+
         if(abs(proposedDirection-currentDirection) != 2){
             if(keyCode == UP) proposedDirection=0;
             else if(keyCode == RIGHT) proposedDirection=1;
@@ -44,7 +49,7 @@ class User {
             else if(keyCode == LEFT) proposedDirection=3;
         }
         else{
-            println("what?",proposedDirection,currentDirection);
+            proposedDirection = -5;
             if(keyCode == UP) currentDirection=0;
             else if(keyCode == RIGHT) currentDirection=1;
             else if(keyCode == DOWN) currentDirection=2;

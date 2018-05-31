@@ -1,4 +1,8 @@
-User player;
+User Player;
+Teacher Kikot;
+Teacher Seidel;
+Teacher Mahan;
+
 void settings() {
   //fullScreen();
   size(2000,1000);
@@ -7,7 +11,11 @@ void settings() {
 void setup() {
   //frameRate(10);
   ellipseMode(CORNER);
-  player = new User();
+  Player = new User();
+  Kikot = new Teacher();
+  Seidel = new Teacher();
+  Mahan = new Teacher();
+
 }
 
 //int[][] tiles = {
@@ -63,15 +71,18 @@ void draw() {
     }
 
     step();
-    player.show(nodeWidth);
+    Player.show(nodeWidth);
+    Kikot.show(nodeWidth);
+    Seidel.show(nodeWidth);
+    Mahan.show(nodeWidth);
 
 }
 
 void keyPressed(){
-  player.changeDirections();
+  Player.changeDirections();
 
 }
 
 void step(){
-    if(frameCount % 10 == 0) player.step();
+    if(frameCount % 10 == 0) Player.step();
 }
