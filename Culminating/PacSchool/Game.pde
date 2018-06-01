@@ -46,7 +46,7 @@ void gameMode(){
 
     //CLoses Game
     if(timer == 60 || Homework.coinsCollected == 256){
-        println("Your final score was " + (Homework.coinsCollected + timer - 60));
+        println("Your final score was " + (Homework.coinsCollected + 60 - timer));
         mode = 0;
     }
 
@@ -86,7 +86,7 @@ void keyPressed(){
 
 void reset(){
     mode = 1;
-    startTime = frameCount;
+    startTime = frameCount  ;
     Player.reset();
     Homework.reset();
 }
