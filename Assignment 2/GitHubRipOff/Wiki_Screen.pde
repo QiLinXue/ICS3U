@@ -5,13 +5,13 @@ void showWikiScreen(){
 
   scollScreen();
 
-  buttonPressed(246,473,305,489,0,sShift,false);
-  buttonPressed(246,483,305,497,0,sShift,false);
+  buttonPressed(246,473,305,489,0,sShift,false); //Exercise A
+  buttonPressed(246,483,305,497,0,sShift,false); //Exercise B
 }
 
 void mouseWiki(){
-  if(buttonPressed(246,473,305,489,0,sShift,false)) switchScreen(3);
-  if(buttonPressed(246,483,305,497,0,sShift,false)){
+  if(buttonPressed(246,473,305,489,0,sShift,false)) switchScreen(3); //Exercise A
+  if(buttonPressed(246,483,305,497,0,sShift,false)){ //Exercise B
     if(activePermissions == "true") switchScreen(4);
     else println("Sorry but only users with gmail accounts can access this.");
   }
