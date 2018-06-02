@@ -11,7 +11,10 @@ void showWikiScreen(){
 
 void mouseWiki(){
   if(buttonPressed(246,473,305,489,0,sShift,false)) switchScreen(3);
-  else if(buttonPressed(246,483,305,497,0,sShift,false)) switchScreen(4);
+  if(buttonPressed(246,483,305,497,0,sShift,false)){
+    if(activePermissions == "true") switchScreen(4);
+    else println("Sorry but only users with gmail accounts can access this.");
+  }
   else println("Please click 'Exercises (Set A)' or 'Exercises (Set B)' to proceed.");
 }
 

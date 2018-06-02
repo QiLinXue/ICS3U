@@ -4,7 +4,7 @@ import java.io.UnsupportedEncodingException;
 import javax.xml.bind.DatatypeConverter;
 
 String activeUser = "";
-Boolean[] activePermissions = {true, true, false};
+String activePermissions = ""; //true or false *not boolean
 
 void getPermissions(String user) {
 }
@@ -74,8 +74,9 @@ void login(String username, String password) {
     String salt2 = userDatabase.getString(userDatabase.findRowIndex(username, "Username"), "Salt2");
     String encryption = "" + encryptedPassword(password, salt1, salt2);
 
-    //test
+    //test if stuff matches
     if (encryption.equals(userDatabase.getString(userDatabase.findRowIndex(username, "Username"), "Password"))) {
+      activePermissions = userDatabase.getString(userDatabase.findRowIndex(username, "Username"), "Permissions");
       activeUser = username;
       println("Welcome " + activeUser);
       switchScreen(2); //go to wiki screen
@@ -89,8 +90,9 @@ void login(String username, String password) {
       String salt2 = userDatabase.getString(userDatabase.findRowIndex(username, "Email"), "Salt2");
       String encryption = "" + encryptedPassword(password, salt1, salt2);
 
-      //test
+      //test if stuff matches
       if (encryption.equals(userDatabase.getString(userDatabase.findRowIndex(username, "Email"), "Password"))) {
+        activePermissions = userDatabase.getString(userDatabase.findRowIndex(username, "Email"), "Permissions");
         activeUser = userDatabase.getString(userDatabase.findRowIndex(username, "Email"), "Username");
         println("Welcome " + activeUser);
         switchScreen(2); //go to wiki screen
@@ -106,11 +108,12 @@ void login(String username, String password) {
 void register(String username, String email, String password) {
     //Tries to first login
   try {
-      //follows same procedure as login()
+      //follows same procedure as login() aka tests if account + password already exists
       String salt1 = userDatabase.getString(userDatabase.findRowIndex(username, "Username"), "Salt1");
       String salt2 = userDatabase.getString(userDatabase.findRowIndex(username, "Username"), "Salt2");
       String encryption = "" + encryptedPassword(password, salt1, salt2);
       if (encryption.equals(userDatabase.getString(userDatabase.findRowIndex(username, "Username"), "Password"))) {
+        activePermissions = userDatabase.getString(userDatabase.findRowIndex(username, "Username"), "Permissions");
         activeUser = username;
         println("Welcome " + activeUser);
         switchScreen(2);
@@ -133,6 +136,12 @@ void register(String username, String email, String password) {
         String salt2 = UUID.randomUUID().toString()+UUID.randomUUID().toString();
         userDatabase.setString(userDatabase.lastRowIndex(), "Salt1", salt1);
         userDatabase.setString(userDatabase.lastRowIndex(), "Salt2", salt2);
+
+        //Checks if user has permissios to view exercise 2
+        boolean containsGmail = email.indexOf("gmail.com") !=-1? true: false; //checks if email is from google
+        String permissions = Boolean.toString(containsGmail);
+        userDatabase.setString(userDatabase.lastRowIndex(), "Permissions", permissions);
+        activePermissions = permissions; //sets active permissions
 
         //Writes encryption to csv file
         String encryption = "" + encryptedPassword(password, salt1, salt2);
