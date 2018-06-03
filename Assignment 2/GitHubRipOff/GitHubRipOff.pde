@@ -13,7 +13,7 @@ void setup() {
   exercisesASetup();
   exercisesBSetup();
 
-  println("Welcome to Github Beta! Because of this, only basic features are enabled. Press BACKSPACE to move back screens and press TAB to view clikable buttons. All instructions are found in the readme file.");
+  println("Welcome to Github Beta! Because of this, only basic features are enabled. Press BACKSPACE to move back screens and press TAB to view clikable buttons. Use arrow keys to scroll when applicable.");
 }
 
 void settings() {

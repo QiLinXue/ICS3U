@@ -102,18 +102,12 @@ class TextAnalyzer {
   }
 
   void analyzePoetries() {
-    //String s1 = String.join(",", loadStrings("othello.txt");
-    //String s2 = String.join(",", loadStrings("illiad.txt");
-    //String s3 = String.join(",", loadStrings("romeoAndJuliet.txt");
-    //String s4 = String.join(",", loadStrings("theOdyssey.txt");
-    //String s5 = String.join(",", loadStrings("hamlet.txt");
-    //String s6 = String.join(",", loadStrings("macbeth.txt");
-    String s1 = "a23f0238r y9f8cg9fg8";
-    String s2 = "a23f0238r y9f8cg9fg8";
-    String s3 = "a23f0238r y9f8cg9fg8";
-    String s4 = "a23f0238r y9f8cg9fg8";
-    String s5 = "a23f0238r y9f8cg9fg8";
-    String s6 = "a23f0238r y9f8cg9fg8";
+    String s1 = String.join(",", loadStrings("othello.txt"));
+    String s2 = String.join(",", loadStrings("illiad.txt"));
+    String s3 = String.join(",", loadStrings("romeoAndJuliet.txt"));
+    String s4 = String.join(",", loadStrings("theOdyssey.txt"));
+    String s5 = String.join(",", loadStrings("hamlet.txt"));
+    String s6 = String.join(",", loadStrings("macbeth.txt"));
 
     print("For Othello: "); charCount(s1);
     print("For Illiad: "); capitalLetterCount(s2);
