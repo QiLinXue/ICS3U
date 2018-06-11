@@ -18,7 +18,6 @@ class Paddle{
 
         fill(255);
         rect(xcor,ycor,w,h);
-        ellipse(xcor,ycor,70,70);
     }
 
 }
