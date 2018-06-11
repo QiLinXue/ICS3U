@@ -9,5 +9,4 @@ int[][] castleGrid = {
 };
 
 //
-int size = castleGrid[0].length * castleGrid.length;
-Square[] sq = new Square[size];
+Square[] castle = new Square[castleGrid[0].length * castleGrid.length];

@@ -26,8 +26,10 @@ void draw() {
 void reset() {
   balls = new Ball[1]; //Resets Balls
   balls[0] = new Ball(); //Creates One Ball
-  for (int i = 0; i < size; i++) {
-    sq[i] = new Square(i, castleGrid);
+
+  //Resets the castle
+  for (int i=0; i<castleGrid[0].length * castleGrid.length; i++) {
+    castle[i] = new Square(i, castleGrid);
   }
 
   paddle = new Paddle();
@@ -38,8 +40,8 @@ void reset() {
 void step() {
 
     //Squares
-    for (int i = 0; i < size; i++) {
-        for (int j=0; j<balls.length; j++) sq[i].step(balls[j]);
+    for (int i=0; i<castleGrid[0].length * castleGrid.length; i++) {
+        for (int j=0; j<balls.length; j++) castle[i].step(balls[j]);
     }
 
     //Balls
