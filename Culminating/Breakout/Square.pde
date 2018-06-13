@@ -4,7 +4,11 @@ class Square {
 
     float w = (float)width/(castleGrid[0].length);
     float h = (float)width/(castleGrid[0].length);
+
+    //----------------------------------------------------------------------------------
     int lives;
+
+    int type = 1; //1 normal; 2 spawner
 
     //----------------------------------------------------------------------------------
 
@@ -13,22 +17,31 @@ class Square {
 
         //Coordinates
         xcor = i*w % width;
-        ycor = floor(i/(width/w)) * h + height/5;
+        ycor = floor(i/(width/w)) * h + height/12;
 
         //Sets the lives based off of width and height corresponding to the grid array
-        int j = Math.round((ycor-height/5)/h);
+        int j = Math.round((ycor-height/12)/h);
         lives = grid[j][i % grid[0].length];
+
+        //changes type
+        if(lives == 100){
+          type = 2;
+          lives = 1;
+        }
+
 
     }
 
 
     void step(Ball b) {
-        if (lives == 3) fill(255, 0, 0);
-        if (lives == 2) fill(255, 255, 0);
-        if (lives == 1) fill(255);
-        if (lives > 0) rect(xcor, ycor, w, h);
+      if(lives > 0){
+        //Select color
+        switchColor(lives);
 
+        //Displays
+        rect(xcor, ycor, w, h);
         gotHit(b);
+      }
 
     }
 
@@ -39,7 +52,9 @@ class Square {
 
             b.ycor += b.yv;
             b.xcor += b.xv;
-            lives--;
+            lives-= b.strength;
+
+            if(type == 2) for(int i=0;i<10;i++) createNewBall(i);
         }
     }
 }

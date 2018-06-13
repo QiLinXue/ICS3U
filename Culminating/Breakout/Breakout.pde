@@ -9,6 +9,7 @@ void settings() {
 
 void setup() {
   reset();
+  noCursor();
 }
 
 //--------------------------------------------------------------------------------------------------
@@ -25,7 +26,7 @@ void draw() {
 
 void reset() {
   balls = new Ball[1]; //Resets Balls
-  balls[0] = new Ball(); //Creates One Ball
+  balls[0] = new Ball(6); //Creates One Ball
 
   //Resets the castle
   for (int i=0; i<castleGrid[0].length * castleGrid.length; i++) {
@@ -41,7 +42,7 @@ void step() {
 
     //Squares
     for (int i=0; i<castleGrid[0].length * castleGrid.length; i++) {
-        for (int j=0; j<balls.length; j++) castle[i].step(balls[j]);
+         for (int j=0; j<balls.length; j++) castle[i].step(balls[j]);
     }
 
     //Balls
@@ -50,22 +51,26 @@ void step() {
     //Paddle
     paddle.step();
 
-    //Checks if all balls are dead
-    if(everyonDead()) reset();
 
 }
 
 //--------------------------------------------------------------------------------------------------
 
 void mousePressed(){
-    balls = (Breakout.Ball[])expand(balls,balls.length+1);
-    balls[balls.length-1] = new Ball();
+createNewBall(20);
 }
 
 //---------------------------------------------------------------------------------------------------
 
-boolean everyonDead(){
+boolean everyoneDead(){
     boolean allDead = true;
     for(Ball b: balls) if(b.alive) allDead = false;
     return allDead;
+}
+
+//---------------------------------------------------------------------------------------------------
+
+void createNewBall(int strength){
+    balls = (Breakout.Ball[])expand(balls,balls.length+1);
+    balls[balls.length-1] = new Ball(strength);
 }

@@ -14,7 +14,7 @@ class Paddle{
 
     void step(){
         xVel = (mouseX-w/2)-xcor;
-        xcor = mouseX-w/2;
+        xcor = mouseX-w/2;  
 
         fill(255);
         rect(xcor,ycor,w,h);
