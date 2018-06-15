@@ -42,7 +42,7 @@ void homeMenuMode() {
   text("COLLECT as much HOMEWORk as you can in 60 seconds",width/15,height/2.5+5*height/50);
   text("Don't let your teachers CATCH you",width/15,height/2.5+9*height/50);
   text("You can't get caught in your spawn location",width/15,height/2.5+13*height/50);
-
+  text("Created by QiLin Xue (2018)",width/15,height/2.5+17*height/50);
 
 
 }
